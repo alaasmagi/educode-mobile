@@ -4,7 +4,6 @@
     "slug": "educode-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./app/assets/logos/main-logo.png",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {

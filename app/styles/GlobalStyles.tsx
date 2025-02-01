@@ -14,7 +14,7 @@ export default StyleSheet.create({
 
     // Default button
     normalButton: {
-        backgroundColor: "#2B2B2B",
+        backgroundColor: "#1E1E1E",
         borderRadius: 20,
         borderWidth: 2,
         borderColor: "#4492EA",
@@ -27,7 +27,7 @@ export default StyleSheet.create({
         color: '#BCBCBD', 
         fontSize: 24,
         fontWeight: 'bold',
-        margin: 20,
+        margin: 15,
     },
 
     //Separator line
