@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "educode-mobile",
+    "slug": "educode-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./app/assets/logos/main-logo.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./app/assets/logos/main-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2B2B2B"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./app/assets/logos/main-logo.png",
+        "backgroundColor": "#2B2B2B"
+      }
+    },
+    "web": {
+      "favicon": "./app/assets/favicon.png"
+    }
+  }
+}
