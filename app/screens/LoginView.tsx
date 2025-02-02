@@ -1,10 +1,23 @@
 import React, {useState} from 'react';
-import { Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
+import NavigationProps from '../../types'
+import { Alert,  Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
+import { useCameraPermissions } from 'expo-camera';
+
 
 function LoginView({ navigation } : NavigationProps) {
 
     const [name, setName] = useState('');
+    const [permission, requestPermission] = useCameraPermissions();
+
+    const handleLogin = async () => {
+        const response = await requestPermission();
+        if (response.granted) {
+            navigation.navigate('MainView', { name });
+        } else {
+            Alert.alert("Permission Denied", "You need to allow camera access to continue.");
+        }
+    };
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -32,7 +45,7 @@ function LoginView({ navigation } : NavigationProps) {
                     />
                 </View>
                 <View style={globalStyles.underline} />
-                <TouchableOpacity style={globalStyles.normalButton} onPress={() => navigation.navigate('MainView', {name})}>
+                <TouchableOpacity style={globalStyles.normalButton} onPress={handleLogin}>
                     <Text style={globalStyles.buttonText}>Log in</Text>
                 </TouchableOpacity>
             </View>

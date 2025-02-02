@@ -18,10 +18,25 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/logos/main-logo.png",
         "backgroundColor": "#2B2B2B"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA"
+      ],
+      "package": "com.anonymous.educodemobile"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "recordAudioAndroid": false
+        }
+      ]
+    ]
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import NavigationProps from '../../types'
 import { Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 
