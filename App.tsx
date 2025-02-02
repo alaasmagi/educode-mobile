@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import InitialSelection from './app/screens/InitialSelection';
 import LoginView from './app/screens/LoginView';
 import MainView from './app/screens/MainView';
+import CreateAccountView from './app/screens/CreateAccountView'
 import {NavigationContainer}  from '@react-navigation/native';
 import  {createStackNavigator}  from '@react-navigation/stack';
 
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="InitialSelection" component={InitialSelection} />
         <Stack.Screen name="LoginView" component={LoginView} />
         <Stack.Screen name="MainView" component={MainView} />
+        <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
       </Stack.Navigator>
     </NavigationContainer>
     </>

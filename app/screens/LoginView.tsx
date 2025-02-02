@@ -3,6 +3,8 @@ import NavigationProps from '../../types'
 import { Alert,  Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import { useCameraPermissions } from 'expo-camera';
+import TextBox from '../components/TextBox';
+import NormalButton from '../components/NormalButton';
 
 
 function LoginView({ navigation } : NavigationProps) {
@@ -24,30 +26,9 @@ function LoginView({ navigation } : NavigationProps) {
             <View style={styles.view}>
                 <Image style={styles.logo} source={require("../assets/logos/main-logo.png")}/>
                 <Text style={styles.greeting}>Oh, hello again!</Text>
-                <View style={globalStyles.inputContainer}>
-                    <Image source={require('../assets/icons/person-icon.png')} style={globalStyles.icon} />
-                    <TextInput
-                    value={name}
-                    onChangeText={setName}
-                    placeholder="Uni-ID"
-                    placeholderTextColor="#BCBCBD"
-                    style={globalStyles.input}
-                    />
-                </View>
-                <View style={globalStyles.underline} />
-                <View style={globalStyles.inputContainer}>
-                    <Image source={require('../assets/icons/lock-icon.png')} style={globalStyles.icon} />
-                    <TextInput
-                    placeholder="Password"
-                    placeholderTextColor="#BCBCBD"
-                    style={globalStyles.input}
-                    secureTextEntry={true}
-                    />
-                </View>
-                <View style={globalStyles.underline} />
-                <TouchableOpacity style={globalStyles.normalButton} onPress={handleLogin}>
-                    <Text style={globalStyles.buttonText}>Log in</Text>
-                </TouchableOpacity>
+                <TextBox iconName='person-icon' placeHolder='Uni-ID'/>
+                <TextBox iconName='lock-icon' placeHolder='Password' isPassword={true}/>
+                <NormalButton text='Log in' onPress={handleLogin}/>
             </View>
         </SafeAreaView>
     );
