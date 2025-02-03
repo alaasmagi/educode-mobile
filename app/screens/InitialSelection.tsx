@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         alignContent: "center"
     },
     headerContainer:{
-        flex: 2,
+        flex: 1.5,
         justifyContent: "flex-end"
     },
     mainLoginContainer: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         gap: 25
     },
     alternateLoginContainer: {
-        flex: 2,
+        flex: 2.1,
         justifyContent:"center",
         gap: 25
     }

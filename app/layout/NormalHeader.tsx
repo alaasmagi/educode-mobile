@@ -3,7 +3,7 @@ import { Image, StyleSheet, View} from 'react-native';
 import LanguageSwitch from '../components/LanguageSwitch';
 import SettingsButton from '../components/SettingsButton';
 
-function Header({ navigation }: NavigationProps) {
+function NormalHeader({ navigation }: NavigationProps) {
     return (
         <View style={styles.structure}>
             <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/main-logo.png')}/>
@@ -15,14 +15,14 @@ function Header({ navigation }: NavigationProps) {
 
 const styles = StyleSheet.create({
     logo: {
-        width: 150,
-        height: 30,
+        width: 225,
+        height: 45,
+        alignSelf: "center"
     },
     structure: {
-        flex: 1,
         flexDirection: "row",
-        height: 70,
+        justifyContent: "space-between"
     }
 })
 
-export default Header;
+export default NormalHeader;

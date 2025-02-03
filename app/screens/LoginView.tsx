@@ -6,7 +6,6 @@ import { useCameraPermissions } from 'expo-camera';
 import TextBox from '../components/TextBox';
 import NormalButton from '../components/NormalButton';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitch from '../components/LanguageSwitch';
 import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
@@ -58,11 +57,12 @@ const styles = StyleSheet.create({
         alignContent: "center"
     },
     headerContainer:{
-        flex: 3,
+        flex: 2.2,
+        gap: 70,
         justifyContent: "flex-end",
     },
     textBoxContainer: {
-        flex: 3,
+        flex: 2,
         justifyContent: "center",
     },
     textBoxes: {
@@ -74,13 +74,11 @@ const styles = StyleSheet.create({
         width: "90%",
     },
     buttonContainer:{
-        flex: 1.6,
+        flex: 1 ,
         justifyContent: "center",
         alignItems: "center"
     }
-
-    
-})
+});
 
 export default LoginView;
 
