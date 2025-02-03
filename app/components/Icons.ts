@@ -8,5 +8,7 @@ export const Icons = {
     'mail-icon': require('../assets/icons/mail-icon.png'),
     'pincode-icon': require('../assets/icons/pincode-icon.png'),
     'school-icon': require('../assets/icons/school-icon.png'),
-    'work-icon': require('../assets/icons/work-icon.png')
+    'work-icon': require('../assets/icons/work-icon.png'),
+    'est-flag': require('../assets/icons/est-flag.png'),
+    'eng-flag': require('../assets/icons/eng-flag.png')
 };

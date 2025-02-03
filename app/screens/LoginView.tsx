@@ -5,10 +5,16 @@ import globalStyles from '../styles/GlobalStyles';
 import { useCameraPermissions } from 'expo-camera';
 import TextBox from '../components/TextBox';
 import NormalButton from '../components/NormalButton';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitch from '../components/LanguageSwitch';
+import FormHeader from '../layout/FormHeader';
+import Greeting from '../components/Greeting';
+import NormalLink from '../components/NormalLink';
 
 
 function LoginView({ navigation } : NavigationProps) {
 
+    const { t } = useTranslation();
     const [name, setName] = useState('');
     const [permission, requestPermission] = useCameraPermissions();
 
@@ -23,34 +29,62 @@ function LoginView({ navigation } : NavigationProps) {
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
-            <View style={styles.view}>
-                <Image style={styles.logo} source={require("../assets/logos/main-logo.png")}/>
-                <Text style={styles.greeting}>Oh, hello again!</Text>
-                <TextBox iconName='person-icon' placeHolder='Uni-ID'/>
-                <TextBox iconName='lock-icon' placeHolder='Password' isPassword={true}/>
-                <NormalButton text='Log in' onPress={handleLogin}/>
+            <View style={styles.formContainer}>
+                <View style={styles.headerContainer}>
+                    <FormHeader/>
+                    <Greeting text={t("oh-hello-again")}/>
+                </View>
+                <View style={styles.textBoxContainer}>
+                    <View style={styles.textBoxes}>
+                        <TextBox iconName='person-icon' placeHolder='Uni-ID'/>
+                        <TextBox iconName='lock-icon' placeHolder={t("password")} isPassword={true}/>
+                    </View>
+                    <View style={styles.forgotPasswordContainer}>
+                        <NormalLink text={t("forgot-password")} onPress={() => {console.log("Link pressed")}}/>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <NormalButton text={t("log-in")} onPress={handleLogin}/>
+                    <NormalLink text={t("register-now")} onPress={() => {console.log("Link pressed")}}/>
+                </View>
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    logo: {
-        width: 375,
-        height: 76,
-        marginBottom: 60,
-    },
-    view: {
+    formContainer: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        alignContent: "center"
     },
-    greeting: {
-        fontWeight: "bold",
-        color: "#BCBCBD",
-        fontSize: 36,
-        marginBottom: 40,
+    headerContainer:{
+        flex: 3,
+        justifyContent: "flex-end",
+    },
+    textBoxContainer: {
+        flex: 3,
+        justifyContent: "center",
+    },
+    textBoxes: {
+        gap: 25
+    },
+    forgotPasswordContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        width: "90%",
+    },
+    buttonContainer:{
+        flex: 1.6,
+        justifyContent: "center",
+        alignItems: "center"
     }
+
+    
 })
 
 export default LoginView;
+
+
+
+
+

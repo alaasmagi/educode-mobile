@@ -8,10 +8,8 @@ import TextBox from '../components/TextBox';
 import QrScanner from '../components/QrScanner';
 import QrGenerator from '../components/QrGenerator';
 import { useTranslation } from 'react-i18next';
-import Header from '../layout/NormalHeader';
 
 function MainView({ navigation , route}: NavigationProps) {
-    const { name } = route.params;
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
@@ -30,19 +28,30 @@ function MainView({ navigation , route}: NavigationProps) {
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
             <View style={styles.view}>
-                
-                <QrScanner onQrScanned={handleBarcodeScanned}/>
-                <SeparatorLine text={t("or-enter-id-manually")}/>
-                <TextBox iconName='key-icon' placeHolder={t("attendance-id")} value={attendanceId} onChangeText={setAttendanceId}/>
+                <Text style={styles.greeting}>Hello</Text>
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    view: {
-        
+    logo: {
+        width: 375,
+        height: 76,
+        marginBottom: 60,
     },
+
+    view: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    greeting: {
+        fontWeight: "bold",
+        color: "#BCBCBD",
+        fontSize: 36,
+        marginBottom: 40,
+    }
 })
 
 export default MainView;

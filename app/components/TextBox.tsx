@@ -16,7 +16,6 @@ const styles= StyleSheet.create({
     textBoxContainer:{
         width: '80%',
         alignSelf: 'center',
-        marginBottom: 40,
     },
     inputContainer: {
         flexDirection: 'row',

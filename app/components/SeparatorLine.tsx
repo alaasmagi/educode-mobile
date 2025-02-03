@@ -10,8 +10,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        marginBottom: 30,
-        marginTop: 5,
     },
     line: {
         flex: 1,
