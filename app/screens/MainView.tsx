@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import Header from '../layout/NormalHeader';
 import NormalHeader from '../layout/NormalHeader';
 import NormalButton from '../components/NormalButton';
+import ModeToggle from '../components/ModeToggle';
 
 function MainView({ navigation , route}: NavigationProps) {
     const { name } = route.params;
@@ -36,7 +37,7 @@ function MainView({ navigation , route}: NavigationProps) {
                     <NormalHeader navigation={navigation} route={route}/>
                 </View>
                 <View style={styles.onlineToggleContainer}>
-
+                    <ModeToggle textLeft={t("offline-mode")} textRight={t("online-mode")} onPressLeft={() => {console.log("Left pressed")}} onPressRight={() => {console.log("Right pressed")}}/>
                 </View>
                 <View style={styles.qrContainer}>
                     <QrScanner onQrScanned={handleBarcodeScanned}/>

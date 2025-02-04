@@ -2,13 +2,15 @@
     "or-enter-id-manually": "Või sisesta ID käsitsi",
     "attendance-id": "Kohaloleku ID",
     "log-in": "Logi sisse",
-    "register-as-student": "Registreeri üliõpilasena",
+    "register-as-student": "Registreeru üliõpilaseks",
     "or-use-offline-only": "Või kasuta ainult offline režiimi",
     "student-code": "Üliõpilaskood",
     "continue": "Jätka",
     "oh-hello-again": "Oi, tere taas!",
     "password": "Salasõna",
-    "register-now": "Pole kasutajat? Registreeri nüüd?",
-    "forgot-password": "Unustasite salasõna?"
+    "register-now": "Pole kasutajat? Registreeru kohe!",
+    "forgot-password": "Unustasid salasõna?",
+    "offline-mode": "Offline režiim",
+    "online-mode": "Online režiim"
   }
   

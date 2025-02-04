@@ -9,5 +9,7 @@
     "oh-hello-again": "Oh, hello again!",
     "password": "Password",
     "register-now": "Don't have an account? Register now!",
-    "forgot-password": "Forgot your password?"
+    "forgot-password": "Forgot your password?",
+    "offline-mode": "Offline mode",
+    "online-mode": "Online mode"
 }
