@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       borderWidth: 2,
       borderColor: "#4492EA",
-      height: 65,
       paddingVertical: 15,
       paddingHorizontal: 10,
-      justifyContent: "center"
+      justifyContent: "center",
+      alignSelf: "center"
     },
     image: {
-      height: 25,
-      width: 38,
+      height: 20,
+      width: 30,
     },
 });
 

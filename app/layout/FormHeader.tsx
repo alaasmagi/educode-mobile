@@ -14,7 +14,7 @@ const FormHeader = () => {
 
 const styles = StyleSheet.create({
     logo: {
-        width: 280,
+        width: 298,
         height: 60,
         alignSelf: "center"
     },

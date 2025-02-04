@@ -13,12 +13,13 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 2,
         borderColor: "#4492EA",
-        height: 65
+        alignSelf: "center",
+        paddingHorizontal: 10,
+        paddingVertical: 10
     },
     icon: {
-        height: 40,
-        width: 40,
-        margin: 10
+        height: 30,
+        width: 30,
     }
 });
 
