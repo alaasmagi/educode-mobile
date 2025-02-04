@@ -20,7 +20,6 @@
         "backgroundColor": "#2B2B2B"
       },
       "permissions": [
-        "android.permission.CAMERA",
         "android.permission.CAMERA"
       ],
       "package": "com.anonymous.educodemobile"
@@ -37,6 +36,14 @@
           "recordAudioAndroid": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a297ec64-f077-48eb-a79a-ea348ce7235c"
+      }
+    }
   }
 }
