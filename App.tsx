@@ -13,7 +13,7 @@ import { StyleSheet, Image, ActivityIndicator, View, Text, TouchableOpacity } fr
 const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
-const API_URL = "https://google.com";
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function App() {
   useEffect(() => {

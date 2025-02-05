@@ -8,12 +8,16 @@ import TextBox from '../components/TextBox';
 import QrScanner from '../components/QrScanner';
 import QrGenerator from '../components/QrGenerator';
 import { useTranslation } from 'react-i18next';
+import NormalButton from '../components/NormalButton';
+import Storage from '../data/LocalDataAccess';
+
 
 function MainView({ navigation , route}: NavigationProps) {
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
 
+    const STORAGE_KEY = '@user_profile';
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
@@ -29,6 +33,7 @@ function MainView({ navigation , route}: NavigationProps) {
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
             <View style={styles.view}>
                 <Text style={styles.greeting}>Hello</Text>
+                <NormalButton text="LOGOUT" onPress={() => Storage.removeData(STORAGE_KEY)}/>
             </View>
         </SafeAreaView>
     );
