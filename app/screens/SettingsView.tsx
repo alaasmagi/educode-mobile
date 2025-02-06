@@ -10,6 +10,9 @@ import QrGenerator from '../components/QrGenerator';
 import { useTranslation } from 'react-i18next';
 import NormalButton from '../components/NormalButton';
 import Storage from '../data/LocalDataAccess';
+import StepDivider from '../components/StepDivider';
+import Checkbox from '../components/Checkbox';
+import DataText from '../components/DataText';
 
 
 function MainView({ navigation , route}: NavigationProps) {
@@ -35,6 +38,7 @@ function MainView({ navigation , route}: NavigationProps) {
                 <Text style={styles.greeting}>Hello</Text>
                 <NormalButton text="LOGOUT" onPress={() => Storage.removeData(STORAGE_KEY)}/>
             </View>
+            <DataText text="huifheiuhf" iconName='lock-icon' />
         </SafeAreaView>
     );
 }

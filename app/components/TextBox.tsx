@@ -20,11 +20,11 @@ const styles= StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        gap: 5
     },
     icon: {
         width: 30,
         height: 30,
-        marginRight: 5,
         resizeMode: 'contain',
     },
     input: {
