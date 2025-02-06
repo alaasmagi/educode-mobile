@@ -11,5 +11,14 @@
     "register-now": "Don't have an account? Register now!",
     "forgot-password": "Forgot your password?",
     "offline-mode": "Offline mode",
-    "online-mode": "Online mode"
+    "online-mode": "Online mode",
+    "step1-online-offline": "Scan the QR on the board",
+    "step2-online-offline": "Scan the QR at the workplace",
+    "step3-offline": "Show the QR code to the teacher",
+    "step3-online": "Complete the attendance check",
+    "add-workplace": "Add workplace",
+    "something-wrong-back": "Something wrong? Go back!",
+    "verify-details": "Verify the details",
+    "workplace-id": "Workplace ID",
+    "refresh-qr": "Refresh the QR code"
 }

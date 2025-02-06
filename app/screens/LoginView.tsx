@@ -22,7 +22,7 @@ function LoginView({ navigation }: NavigationProps) {
     const fetchUserData = async () => {
       const storedUserData = await Storage.getData(STORAGE_KEY);
       if (storedUserData) {
-        navigation.navigate('MainView', { userData: storedUserData });
+        navigation.navigate('QRBoardScan', { userData: storedUserData });
       }
     };
     fetchUserData();
@@ -41,7 +41,7 @@ function LoginView({ navigation }: NavigationProps) {
     };
 
     await Storage.saveData(STORAGE_KEY, userData);
-    navigation.navigate('MainView', { userData });
+    navigation.navigate('QRBoardScan', { userData });
   };
 
   return (
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   },
   textBoxes: {
     gap: 25,
+    alignItems:"center"
   },
   forgotPasswordContainer: {
     flexDirection: 'row',

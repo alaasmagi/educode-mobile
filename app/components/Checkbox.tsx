@@ -30,7 +30,6 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange })
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignSelf: "center",
     alignItems: "center",
     gap: 10,
   },
@@ -45,8 +44,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#1E1E1E",
   },
   innerCircle: {
-    width: 18,
-    height: 18,
+    width: 17,
+    height: 17,
     borderRadius: 3,
     backgroundColor: "#4492EA",
   },

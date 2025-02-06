@@ -11,6 +11,16 @@
     "register-now": "Pole kasutajat? Registreeru kohe!",
     "forgot-password": "Unustasid salasõna?",
     "offline-mode": "Offline režiim",
-    "online-mode": "Online režiim"
+    "online-mode": "Online režiim",
+    "step1-online-offline": "Skänneeri tahvlil olev QR kood",
+    "step2-online-offline": "Skänneeri töökoha QR kood",
+    "step3-offline": "Näita õpetajale QR koodi",
+    "step3-online": "Vii kohaloleku kontroll lõpuni",
+    "add-workplace": "Lisa töökoht",
+    "something-wrong-back": "Midagi läks valesti? Mine tagasi!",
+    "verify-details": "Kontrolli andmete õigsust",
+    "workplace-id": "Töökoha ID",
+    "refresh-qr": "Värskenda QR koodi"
+
   }
   

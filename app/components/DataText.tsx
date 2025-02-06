@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { Icons } from './Icons';
 
 interface DataTextProperties {
@@ -7,12 +7,22 @@ interface DataTextProperties {
     text:string;
 }
 
+
+
+const DataText: React.FC<DataTextProperties> = ({ iconName, text }) => {
+    return (
+        <View style= {styles.container}>
+            <Image source={Icons[iconName]} style={styles.icon} />
+            <Text style={styles.text}>{text}</Text>
+        </View>
+    );
+};
+
 const styles= StyleSheet.create({
-    container:{
-        flexDirection: "row",
-        alignSelf: "center",
-        alignItems: "center",
-        gap: 5
+    container: {
+        flexDirection:"row",
+        gap: 10,
+        width: "auto",
     },
     icon: {
         width: 30,
@@ -22,18 +32,8 @@ const styles= StyleSheet.create({
     text: {
         color: '#BCBCBD',
         fontSize: 20,
-        flex: 1,
     },
 });
-
-const DataText: React.FC<DataTextProperties> = ({ iconName, text }) => {
-    return (
-        <View style={styles.container}>
-            <Image source={Icons[iconName]} style={styles.icon} />
-            <Text style={styles.text}>{text}</Text>
-        </View>
-    );
-};
 
 export default DataText;
 

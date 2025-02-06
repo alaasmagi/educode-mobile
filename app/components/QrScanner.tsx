@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 10,
         borderColor: "#525252",
-        alignSelf: "center"
     }
 });
 

@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#BCBCBD",
         fontSize: 40,
-        alignSelf: "center",
+        alignSelf: "center"
     },
 });
 

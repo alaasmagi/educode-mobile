@@ -1,6 +1,6 @@
 import React from 'react';
 import NavigationProps from '../../types'
-import { Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, View, KeyboardAvoidingView, ScrollView } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import NormalButton from '../components/NormalButton'
 import SeparatorLine from '../components/SeparatorLine';
@@ -42,12 +42,14 @@ const styles = StyleSheet.create({
     },
     mainLoginContainer: {
         justifyContent: "center",
+        alignItems: "center",
         flex: 2,
         gap: 25
     },
     alternateLoginContainer: {
         flex: 2.1,
         justifyContent:"center",
+        alignItems:"center",
         gap: 25
     }
 });

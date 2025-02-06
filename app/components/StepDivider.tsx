@@ -3,16 +3,16 @@ import { View, Text, StyleSheet } from "react-native";
 
 interface StepDividerProps {
   stepNumber: number;
-  text: string;
+  label: string;
 }
 
-const StepDivider: React.FC<StepDividerProps> = ({ stepNumber, text }) => {
+const StepDivider: React.FC<StepDividerProps> = ({ stepNumber, label }) => {
   return (
     <View style={styles.container}>
       <View style={styles.circle}>
         <Text style={styles.number}>{stepNumber}</Text>
       </View>
-      <Text style={styles.text}>{text}</Text>
+      <Text style={styles.text}>{label}</Text>
     </View>
   );
 };
@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    alignSelf: "center"
   },
   circle: {
     width: 50,

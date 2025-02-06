@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
       paddingVertical: 15,
       paddingHorizontal: 10,
       justifyContent: "center",
-      alignSelf: "center"
     },
     image: {
       height: 20,
