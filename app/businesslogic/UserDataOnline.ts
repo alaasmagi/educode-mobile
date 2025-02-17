@@ -3,7 +3,7 @@ import User from '../models/UserData'
 
 export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
     try {
-        const response = await fetch(`${process.env.API_URL}/User/UniId/${uniId}`);
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`);
         if (!response.ok) {
             throw new Error("Failed to fetch user data");
         }

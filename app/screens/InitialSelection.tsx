@@ -8,13 +8,14 @@ import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
 import Storage from '../data/LocalDataAccess';
+import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
 
 function InitialSelection({ navigation }: NavigationProps) {
     const { t } = useTranslation();
 
     useEffect(() => {
         const fetchUserData = async () => {
-          const storedUserData = await Storage.getData("@user_profile");
+          const storedUserData = await Storage.getData(LocalKeys.userProfile);
           if (storedUserData) {
             navigation.navigate('QRBoardScan', { userData: storedUserData });
           }

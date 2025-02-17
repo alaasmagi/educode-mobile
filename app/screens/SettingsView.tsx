@@ -13,6 +13,7 @@ import Storage from '../data/LocalDataAccess';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
 import DataText from '../components/DataText';
+import SuccessMessage from '../components/SuccessMessage';
 
 interface PostData {
     title: string;
@@ -43,6 +44,7 @@ function MainView({ navigation , route}: NavigationProps) {
                 <Text style={styles.greeting}>Hello</Text>
                 <NormalButton text={"LOGOUT"} onPress={() => Storage.removeData(STORAGE_KEY)}/>
             </View>
+            <SuccessMessage text="siofhioehf"/>
             <DataText text="huifheiuhf" iconName='lock-icon' />
         </SafeAreaView>
     );
