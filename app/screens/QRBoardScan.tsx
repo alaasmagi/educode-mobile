@@ -12,8 +12,10 @@ import NormalButton from '../components/NormalButton';
 import ModeToggle from '../components/ModeToggle';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
+import DataText from '../components/DataText';
 
 function QRBoardScan({ navigation , route}: NavigationProps) {
+    const {userData} = route.params;
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
@@ -69,6 +71,7 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton text={t("continue")} onPress={() => navigation.navigate("QRWorkplaceScan")}></NormalButton>
                     </View>
+                    <DataText iconName="key-icon" text={userData.userType.userType}/>
                 </View>   
             </SafeAreaView>
         </TouchableWithoutFeedback>

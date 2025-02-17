@@ -12,25 +12,8 @@ import QRWorkplaceScan from './app/screens/QRWorkplaceScan';
 import CompleteAttendance from './app/screens/CompleteAttendance';
 
 const Stack = createStackNavigator();
-SplashScreen.preventAutoHideAsync();
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function App() {
-  useEffect(() => {
-    checkAPIConnection();
-  }, []);
-
-  const checkAPIConnection = async () => {
-
-  const response = await fetch(API_URL);
-    if (response.ok) {
-      setTimeout(() => SplashScreen.hideAsync(), 3000);
-    } else {
-      throw new Error("Server error");
-    }
-  };
-
   return (
     <>
     <StatusBar style="light"/>

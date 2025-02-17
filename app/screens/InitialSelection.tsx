@@ -1,15 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import NavigationProps from '../../types'
-import { Image, SafeAreaView, StyleSheet, View, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import NormalButton from '../components/NormalButton'
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
+import Storage from '../data/LocalDataAccess';
 
 function InitialSelection({ navigation }: NavigationProps) {
     const { t } = useTranslation();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          const storedUserData = await Storage.getData("@user_profile");
+          if (storedUserData) {
+            navigation.navigate('QRBoardScan', { userData: storedUserData });
+          }
+        };
+        fetchUserData();
+      }, []);
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>

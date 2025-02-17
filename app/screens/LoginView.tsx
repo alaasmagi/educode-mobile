@@ -10,6 +10,7 @@ import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
 import Storage from '../data/LocalDataAccess';
+import { GetUserDataByUniId } from '../businesslogic/UserDataOnline';
 
 function LoginView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -18,16 +19,6 @@ function LoginView({ navigation }: NavigationProps) {
   const [password, setPassword] = useState<string>('');
   const STORAGE_KEY = '@user_profile';
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const storedUserData = await Storage.getData(STORAGE_KEY);
-      if (storedUserData) {
-        navigation.navigate('QRBoardScan', { userData: storedUserData });
-      }
-    };
-    fetchUserData();
-  }, []);
-
   const handleLogin = async () => {
     const response = await requestPermission();
     if (!response.granted) {
@@ -35,13 +26,14 @@ function LoginView({ navigation }: NavigationProps) {
       return;
     }
 
-    const userData = {
-      'Uni-ID': uniId,
-      Password: password,
-    };
-
-    await Storage.saveData(STORAGE_KEY, userData);
-    navigation.navigate('QRBoardScan', { userData });
+    const userData = await GetUserDataByUniId(uniId);
+    
+    if (userData) {
+      navigation.navigate('QRBoardScan', { userData });
+      Storage.saveData(STORAGE_KEY, userData);
+    } else {
+      Alert.alert('Error', 'User not found.');
+  }
   };
 
   return (

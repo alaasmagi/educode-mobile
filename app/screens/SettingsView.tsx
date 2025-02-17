@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavigationProps from '../../types'
 import { SafeAreaView, Image, TextInput, StyleSheet, View, Text, } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
@@ -13,6 +13,11 @@ import Storage from '../data/LocalDataAccess';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
 import DataText from '../components/DataText';
+
+interface PostData {
+    title: string;
+    body: string;
+  }
 
 
 function MainView({ navigation , route}: NavigationProps) {
@@ -36,7 +41,7 @@ function MainView({ navigation , route}: NavigationProps) {
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
             <View style={styles.view}>
                 <Text style={styles.greeting}>Hello</Text>
-                <NormalButton text="LOGOUT" onPress={() => Storage.removeData(STORAGE_KEY)}/>
+                <NormalButton text={"LOGOUT"} onPress={() => Storage.removeData(STORAGE_KEY)}/>
             </View>
             <DataText text="huifheiuhf" iconName='lock-icon' />
         </SafeAreaView>
