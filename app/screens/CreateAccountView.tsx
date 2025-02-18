@@ -12,7 +12,6 @@ const App = () => {
   };
 
   const handleLoginPress = () => {
-    // Handle login navigation
     console.log('Navigating to login screen');
   };
 

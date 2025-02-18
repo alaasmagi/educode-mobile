@@ -17,7 +17,6 @@ function LoginView({ navigation }: NavigationProps) {
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const STORAGE_KEY = '@user_profile';
 
   const handleLogin = async () => {
     const response = await requestPermission();
@@ -30,7 +29,7 @@ function LoginView({ navigation }: NavigationProps) {
     
     if (userData) {
       navigation.navigate('QRBoardScan', { userData });
-      Storage.saveData(STORAGE_KEY, userData);
+      Storage.saveData(process.env.EXPO_PUBLIC_USER_DATA, userData);
     } else {
       Alert.alert('Error', 'User not found.');
   }

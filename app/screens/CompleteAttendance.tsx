@@ -11,6 +11,7 @@ import QrGenerator from '../components/QrGenerator';
 import DataText from '../components/DataText';
 
 function QRBoardScan({ navigation , route}: NavigationProps) {
+    const { userData, attendanceId, workplaceId = 0 } = route.params;
     const { t } = useTranslation();
 
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -43,12 +44,12 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                         <StepDivider label={t("step3-offline")} stepNumber={3} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
-                        <QrGenerator value='1234567'/>
+                        <QrGenerator value={attendanceId + "-" + workplaceId + "-" + userData.matriculationNumber}/>
                     </View>}
                     <View style={styles.dataContainer}>
-                        <DataText iconName='person-icon' text="213453IACB"/>
-                        <DataText iconName='key-icon' text="347-378-364"/>
-                        <DataText iconName='work-icon' text="546-456-789"/>
+                        <DataText iconName='person-icon' text={userData.matriculationNumber}/>
+                        <DataText iconName='key-icon' text={attendanceId}/>
+                        <DataText iconName="work-icon" text={workplaceId == 0 ? "-" : workplaceId} />
                     </View>
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton text={t("refresh-qr")} onPress={() => {console.log("End of the flow")}}></NormalButton>

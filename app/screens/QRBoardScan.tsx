@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, ScrollView, KeyboardAvoidingView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import * as Haptics from 'expo-haptics';
 import SeparatorLine from '../components/SeparatorLine';
@@ -9,7 +9,6 @@ import QrScanner from '../components/QrScanner';
 import { useTranslation } from 'react-i18next';
 import NormalHeader from '../layout/NormalHeader';
 import NormalButton from '../components/NormalButton';
-import ModeToggle from '../components/ModeToggle';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
 import DataText from '../components/DataText';
@@ -19,20 +18,28 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
+    const [scanForWorkplace, setScanForWorkplace] = useState(false);
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); 
             console.log("Scanned Data:", data); 
-            
             setAttendanceId(data);
             setTimeout(() => setScanned(false), 5000);
         }
     };
 
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const handleNextStep = () => {
+        if (scanForWorkplace == true)
+        {
+            navigation.navigate("QRWorkplaceScan", { userData, attendanceId });
+        }
 
+        navigation.navigate("CompleteAttendance", { userData, attendanceId });
+    } 
+
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setKeyboardVisible(true);
@@ -66,10 +73,10 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                         <TextBox iconName='key-icon' placeHolder={t("attendance-id")} value={attendanceId} onChangeText={setAttendanceId}/>
                     </View>
                     <View style={styles.checkboxContainer}>
-                        <Checkbox label={t("add-workplace")}/>
+                        <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace(prev => !prev)}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("continue")} onPress={() => navigation.navigate("QRWorkplaceScan")}></NormalButton>
+                        <NormalButton text={t("continue")} onPress={handleNextStep}></NormalButton>
                     </View>
                     <DataText iconName="key-icon" text={userData.userType.userType}/>
                 </View>   

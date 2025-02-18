@@ -14,17 +14,17 @@ import Checkbox from '../components/Checkbox';
 import NormalLink from '../components/NormalLink';
 
 function QRWorkPlaceScan({ navigation , route}: NavigationProps) {
+    const {userData, attendanceId} = route.params; 
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
-    const [attendanceId, setAttendanceId] = useState('');
+    const [workplaceId, setWorkplaceId] = useState('');
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); 
             console.log("Scanned Data:", data); 
-            
-            setAttendanceId(data);
+            setWorkplaceId(data);
             setTimeout(() => setScanned(false), 5000);
         }
     };
@@ -61,13 +61,13 @@ function QRWorkPlaceScan({ navigation , route}: NavigationProps) {
                     </View>}
                     <View style={styles.alternativeMethodContainer}>
                         <SeparatorLine text={t("or-enter-id-manually")}/>
-                        <TextBox iconName='work-icon' placeHolder={t("workplace-id")} value={attendanceId} onChangeText={setAttendanceId}/>
+                        <TextBox iconName='work-icon' placeHolder={t("workplace-id")} value={attendanceId} onChangeText={setWorkplaceId}/>
                     </View>
                     <View style={styles.linkContainer}>
                         <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("continue")} onPress={() => navigation.navigate("CompleteAttendance")}></NormalButton>
+                        <NormalButton text={t("continue")} onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId})}></NormalButton>
                     </View>
                 </View>   
             </SafeAreaView>
