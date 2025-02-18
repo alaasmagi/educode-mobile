@@ -20,6 +20,7 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
     const [attendanceId, setAttendanceId] = useState('');
     const [scanForWorkplace, setScanForWorkplace] = useState(false);
 
+    let stepNr = 1;
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
@@ -31,12 +32,12 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
     };
 
     const handleNextStep = () => {
-        if (scanForWorkplace == true)
-        {
-            navigation.navigate("QRWorkplaceScan", { userData, attendanceId });
+        if (scanForWorkplace == true) {
+            navigation.navigate("QRWorkplaceScan", { userData, attendanceId, stepNr });
         }
-
-        navigation.navigate("CompleteAttendance", { userData, attendanceId });
+        else {
+            navigation.navigate("CompleteAttendance", { userData, attendanceId, stepNr });
+        }
     } 
 
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -63,7 +64,7 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                         <NormalHeader navigation={navigation} route={route}/>
                     </View>
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step1-online-offline")} stepNumber={1} />
+                        <StepDivider label={t("step1-online-offline")} stepNumber={stepNr} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
@@ -78,7 +79,6 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton text={t("continue")} onPress={handleNextStep}></NormalButton>
                     </View>
-                    <DataText iconName="key-icon" text={userData.userType.userType}/>
                 </View>   
             </SafeAreaView>
         </TouchableWithoutFeedback>

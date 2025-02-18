@@ -20,5 +20,6 @@
     "something-wrong-back": "Something wrong? Go back!",
     "verify-details": "Verify the details",
     "workplace-id": "Workplace ID",
-    "refresh-qr": "Refresh the QR code"
+    "refresh-qr": "Refresh the QR code",
+    "no-workplace": "No workplace added"
 }

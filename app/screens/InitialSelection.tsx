@@ -15,7 +15,7 @@ function InitialSelection({ navigation }: NavigationProps) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-          const storedUserData = await Storage.getData(LocalKeys.userProfile);
+          const storedUserData = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
           if (storedUserData) {
             navigation.navigate('QRBoardScan', { userData: storedUserData });
           }

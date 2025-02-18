@@ -9,10 +9,21 @@ import ModeToggle from '../components/ModeToggle';
 import StepDivider from '../components/StepDivider';
 import QrGenerator from '../components/QrGenerator';
 import DataText from '../components/DataText';
+import { GenerateQrString } from '../businesslogic/QrGenLogic';
 
-function QRBoardScan({ navigation , route}: NavigationProps) {
+function CompleteAttendance({ navigation , route}: NavigationProps) {
     const { userData, attendanceId, workplaceId = 0 } = route.params;
+
+    let {stepNr} = route.params;
+    stepNr++;
+    
     const { t } = useTranslation();
+
+    const [qrValue, setQrValue] = useState(GenerateQrString(userData.matriculationNumber, attendanceId, workplaceId));
+
+    const refreshQrCode = () => {
+        setQrValue(GenerateQrString(userData.matriculationNumber, attendanceId, workplaceId));
+    };
 
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     useEffect(() => {
@@ -41,18 +52,18 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                     <ModeToggle textLeft={t("offline-mode")} textRight={t("online-mode")} onPressLeft={() => {console.log("Left pressed")}} onPressRight={() => {console.log("Right pressed")}}/>
                     </View>
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step3-offline")} stepNumber={3} />
+                        <StepDivider label={t("step3-offline")} stepNumber={stepNr} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
-                        <QrGenerator value={attendanceId + "-" + workplaceId + "-" + userData.matriculationNumber}/>
+                        <QrGenerator value={qrValue}/>
                     </View>}
                     <View style={styles.dataContainer}>
                         <DataText iconName='person-icon' text={userData.matriculationNumber}/>
                         <DataText iconName='key-icon' text={attendanceId}/>
-                        <DataText iconName="work-icon" text={workplaceId == 0 ? "-" : workplaceId} />
+                        <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("refresh-qr")} onPress={() => {console.log("End of the flow")}}></NormalButton>
+                        <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
                     </View>
                 </View>   
             </SafeAreaView>
@@ -99,4 +110,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default QRBoardScan;
+export default CompleteAttendance;

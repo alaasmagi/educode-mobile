@@ -14,10 +14,14 @@ import Checkbox from '../components/Checkbox';
 import NormalLink from '../components/NormalLink';
 
 function QRWorkPlaceScan({ navigation , route}: NavigationProps) {
-    const {userData, attendanceId} = route.params; 
+    const {userData, attendanceId} = route.params;
+    let {stepNr} = route.params;
+    stepNr++;
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [workplaceId, setWorkplaceId] = useState('');
+
+    
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
@@ -54,20 +58,20 @@ function QRWorkPlaceScan({ navigation , route}: NavigationProps) {
                         <NormalHeader navigation={navigation} route={route}/>
                     </View>
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step2-online-offline")} stepNumber={2} />
+                        <StepDivider label={t("step2-online-offline")} stepNumber={stepNr} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
                     </View>}
                     <View style={styles.alternativeMethodContainer}>
                         <SeparatorLine text={t("or-enter-id-manually")}/>
-                        <TextBox iconName='work-icon' placeHolder={t("workplace-id")} value={attendanceId} onChangeText={setWorkplaceId}/>
+                        <TextBox iconName='work-icon' placeHolder={t("workplace-id")} value={workplaceId} onChangeText={setWorkplaceId}/>
                     </View>
                     <View style={styles.linkContainer}>
                         <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("continue")} onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId})}></NormalButton>
+                        <NormalButton text={t("continue")} onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}></NormalButton>
                     </View>
                 </View>   
             </SafeAreaView>

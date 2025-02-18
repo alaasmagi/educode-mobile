@@ -8,7 +8,6 @@ export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
             throw new Error("Failed to fetch user data");
         }
         const data: User = await response.json();
-        console.log(data.lastName);
         return data;
     } catch (error) {
         console.error("Error fetching user data:", error);
