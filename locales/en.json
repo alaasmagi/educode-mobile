@@ -22,5 +22,10 @@
     "workplace-id": "Workplace ID",
     "refresh-qr": "Refresh the QR code",
     "no-workplace": "No workplace added",
-    "login-error": "Wrong username or password"
+    "login-error": "Wrong username or password",
+    "exit-app": "Exit app",
+    "exit-app-prompt": "Do you want to exit from the app?",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "log-out": "Log out"
 }

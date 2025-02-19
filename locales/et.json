@@ -22,6 +22,11 @@
     "workplace-id": "Töökoha ID",
     "refresh-qr": "Värskenda QR koodi",
     "no-workplace": "Töökohta ei lisatud",
-    "login-error": "Viga kasutajanimes või paroolis"
+    "login-error": "Viga kasutajanimes või paroolis",
+    "exit-app": "Rakendusest väljumine",
+    "exit-app-prompt": "Kas soovite rakendusest väljuda?",
+    "yes": "Jah",
+    "cancel": "Tühista",
+    "log-out": "Logi välja"
   }
   

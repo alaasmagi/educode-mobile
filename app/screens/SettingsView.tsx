@@ -16,18 +16,11 @@ import DataText from '../components/DataText';
 import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
 
-interface PostData {
-    title: string;
-    body: string;
-  }
-
 
 function MainView({ navigation , route}: NavigationProps) {
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
-
-    const STORAGE_KEY = '@user_profile';
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
@@ -43,11 +36,8 @@ function MainView({ navigation , route}: NavigationProps) {
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
             <View style={styles.view}>
                 <Text style={styles.greeting}>Hello</Text>
-                <NormalButton text={"LOGOUT"} onPress={() => Storage.removeData(STORAGE_KEY)}/>
+                <NormalButton text={t("log-out")} onPress={() => {Storage.removeData(process.env.EXPO_PUBLIC_LOCAL_DATA), navigation.navigate("InitialSelection")}}/>
             </View>
-            <ErrorMessage text= "siofhioehf"/>
-            <SuccessMessage text="siofhioehf"/>
-            <DataText text="huifheiuhf" iconName='lock-icon' />
         </SafeAreaView>
     );
 }

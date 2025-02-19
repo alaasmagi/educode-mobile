@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { useFocusEffect } from "@react-navigation/native";
+import { SafeAreaView, StyleSheet, View, BackHandler, Alert } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import NormalButton from '../components/NormalButton'
 import SeparatorLine from '../components/SeparatorLine';
@@ -12,6 +13,20 @@ import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
 
 function InitialSelection({ navigation }: NavigationProps) {
     const { t } = useTranslation();
+
+    useFocusEffect(
+        useCallback(() => {
+          const backAction = () => {
+            Alert.alert(t("exit-app"), t("exit-app-prompt"), [
+              { text: t("cancel"), onPress: () => null, style: "cancel" },
+              { text: t("yes"), onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+          };
+          const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+          
+          return () => backHandler.remove();
+        }, []));
 
     useEffect(() => {
         const fetchUserData = async () => {

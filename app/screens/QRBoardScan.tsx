@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, BackHandler, Alert} from 'react-native';
+import { useFocusEffect } from "@react-navigation/native";
 import globalStyles from '../styles/GlobalStyles';
 import * as Haptics from 'expo-haptics';
 import SeparatorLine from '../components/SeparatorLine';
@@ -19,7 +20,6 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
     const [scanForWorkplace, setScanForWorkplace] = useState(false);
-
     let stepNr = 1;
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
@@ -30,6 +30,22 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
             setTimeout(() => setScanned(false), 5000);
         }
     };
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const backAction = () => {
+            Alert.alert(t("exit-app"), t("exit-app-prompt"), [
+                { text: t("cancel"), onPress: () => null, style: "cancel" },
+                { text: t("yes"), onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+            };
+            const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+            
+            return () => backHandler.remove();
+        }, []));
+    
 
     const handleNextStep = () => {
         if (scanForWorkplace == true) {
