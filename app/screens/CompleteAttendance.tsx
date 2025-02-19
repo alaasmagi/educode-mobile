@@ -10,6 +10,7 @@ import StepDivider from '../components/StepDivider';
 import QrGenerator from '../components/QrGenerator';
 import DataText from '../components/DataText';
 import { GenerateQrString } from '../businesslogic/QrGenLogic';
+import NormalLink from '../components/NormalLink';
 
 function CompleteAttendance({ navigation , route}: NavigationProps) {
     const { userData, attendanceId, workplaceId = 0 } = route.params;
@@ -62,6 +63,9 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                         <DataText iconName='key-icon' text={attendanceId}/>
                         <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
+                    <View style={styles.linkContainer}>
+                        <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
+                    </View>
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
                     </View>
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     qrContainer: {
-        flex: 5,
+        flex: 6,
         justifyContent: "center",
         alignItems: "center"
     },
@@ -100,14 +104,19 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     dataContainer: {
-        flex: 2,
+        flex: 3,
         gap: 5,
         alignItems: "center"
+    },
+    linkContainer: {
+        paddingBottom: 2,
+        alignSelf:"center"
     },
     lowNavButtonContainer: {
         flex: 2,
         alignItems: "center"
-    }
+    },
+    
 })
 
 export default CompleteAttendance;

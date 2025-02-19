@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
  
 
 interface SuccessMessageProperties {
@@ -7,21 +7,31 @@ interface SuccessMessageProperties {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        alignSelf: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#1e3f20",
+        padding: 15,
+        width: "90%",
+        borderRadius: 20,
+        borderColor: "#57a773",
+        borderWidth: 2,
+    },
     content: {
         fontWeight: "bold",
-        backgroundColor: "#051b11",
-        color: "#0a4040",
+        color: "#57a773",
         fontSize: 18,
-        height: 70,
-        width: 300,
-        alignSelf: "center"
-    },
+    }
 });
 
 
 const SuccessMessage: React.FC<SuccessMessageProperties> = ({ text }) => {
     return (
-        <Text style={styles.content}>{text}</Text>
+        <View style = {styles.container}>
+            <Text style={styles.content}>{text}</Text>
+        </View>
+        
     );
 };
 

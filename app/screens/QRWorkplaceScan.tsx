@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     linkContainer: {
-        flex: 1,
+        paddingBottom: 2,
         alignItems: "center",
         justifyContent: "flex-end",
     },
