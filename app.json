@@ -7,18 +7,19 @@
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./app/assets/logos/main-logo.png",
+      "image": "./app/assets/logos/splash-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#2B2B2B"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./app/assets/logos/app-icon.png"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./app/assets/logos/main-logo.png",
-        "backgroundColor": "#2B2B2B"
-      },
+        "adaptiveIcon": {
+    "foregroundImage": "./app/assets/logos/app-icon.png",
+    "backgroundColor": "#2B2B2B",
+  },
       "permissions": [
         "android.permission.CAMERA"
       ],

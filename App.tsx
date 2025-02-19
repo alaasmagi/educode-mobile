@@ -7,7 +7,6 @@ import CreateAccountView from './app/screens/CreateAccountView'
 import SettingsView from './app/screens/SettingsView'
 import {NavigationContainer}  from '@react-navigation/native';
 import  {createStackNavigator}  from '@react-navigation/stack';
-import { SplashScreen } from 'expo-router';
 import QRWorkplaceScan from './app/screens/QRWorkplaceScan';
 import CompleteAttendance from './app/screens/CompleteAttendance';
 

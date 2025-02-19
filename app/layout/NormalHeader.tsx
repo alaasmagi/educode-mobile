@@ -6,7 +6,7 @@ import SettingsButton from '../components/SettingsButton';
 function NormalHeader({ navigation }: NavigationProps) {
     return (
         <View style={styles.structure}>
-            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/main-logo.png')}/>
+            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/splash-logo.png')}/>
             <View style={styles.buttonContainer}>
                 <LanguageSwitch/>
                 <SettingsButton onPress={() => navigation.navigate('SettingsView')}/>

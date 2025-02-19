@@ -21,7 +21,7 @@ const App = () => {
       style={styles.container}
     >
       <View style={styles.content}>
-        <Image source={require('../assets/logos/main-logo.png')} style={styles.logo} />
+        <Image source={require('../assets/logos/splash-logo.png')} style={styles.logo} />
 
         <Text style={styles.title}>Welcome to EduCode!</Text>
 

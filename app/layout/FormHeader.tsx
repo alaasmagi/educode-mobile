@@ -6,7 +6,7 @@ import LanguageSwitch from '../components/LanguageSwitch';
 const FormHeader = () => {
     return (
         <View style={styles.structure}>
-            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/main-logo.png')}/>
+            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/splash-logo.png')}/>
             <LanguageSwitch/>
         </View>
     );

@@ -16,6 +16,7 @@
     "expo-camera": "~16.0.14",
     "expo-haptics": "~14.0.1",
     "expo-router": "^4.0.17",
+    "expo-splash-screen": "^0.29.22",
     "expo-status-bar": "~2.0.1",
     "i18next": "^24.2.2",
     "react": "18.3.1",
