@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useCameraPermissions } from 'expo-camera';
 import NavigationProps from '../../types';
@@ -11,14 +11,33 @@ import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
 import Storage from '../data/LocalDataAccess';
 import { GetUserDataByUniId } from '../businesslogic/UserDataOnline';
+import ErrorMessage from '../components/ErrorMessage';
 
 function LoginView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+      useEffect(() => {
+          const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+              setKeyboardVisible(true);
+          });
+  
+          const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+              setKeyboardVisible(false);
+          });
+  
+          return () => {
+              keyboardDidShowListener.remove();
+              keyboardDidHideListener.remove();
+          };
+      }, []);
 
   const handleLogin = async () => {
+
     const response = await requestPermission();
     if (!response.granted) {
       Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
@@ -31,11 +50,16 @@ function LoginView({ navigation }: NavigationProps) {
       navigation.navigate('QRBoardScan', { userData });
       Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
     } else {
-      Alert.alert('Error', 'User not found.');
+      setErrorMessage(t("login-error"));
+    
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
   }
   };
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
       <View style={styles.formContainer}>
         <View style={styles.headerContainer}>
@@ -50,13 +74,17 @@ function LoginView({ navigation }: NavigationProps) {
           <View style={styles.forgotPasswordContainer}>
             <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
           </View>
+          <View style={styles.errorContainer}>
+          {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+          </View>
         </View>
         <View style={styles.buttonContainer}>
-          <NormalButton text={t('log-in')} onPress={handleLogin} />
+          <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
           <NormalLink text={t('register-now')} onPress={() => console.log('Link pressed')} />
         </View>
       </View>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -82,6 +110,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '90%',
+  },
+  errorContainer: {
+    marginTop: 10,
   },
   buttonContainer: {
     flex: 1,
