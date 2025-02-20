@@ -13,6 +13,8 @@ import NormalButton from '../components/NormalButton';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
 import NormalLink from '../components/NormalLink';
+import { RegexFilters } from '../helpers/RegexFilters';
+import ErrorMessage from '../components/ErrorMessage';
 
 function StudentQRScan({ navigation , route}: NavigationProps) {
     const {userData} = route.params;
@@ -22,15 +24,21 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
     const [workplaceId, setWorkplaceId] = useState('');
     const [scanForWorkplace, setScanForWorkplace] = useState(false);
     const [stepNr, setStepNr] = useState(1);
-
+    const [showError, setShowError] = useState(false);
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
-            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); 
-            console.log("Scanned Data:", data); 
-            setAttendanceId(data);
+            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            if (RegexFilters.defaultId.test(data)) {
+                console.log("Scanned Data:", data); 
+                setAttendanceId(data);
+            }
+            else {
+                setShowError(true);
+            }
             setTimeout(() => setScanned(false), 5000);
+            setTimeout(() => setShowError(false), 3000)
         }
     };
 
@@ -94,12 +102,20 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                                 <SeparatorLine text={t("or-enter-id-manually")}/>
                                 <TextBox iconName='key-icon' placeHolder={t("attendance-id")} value={attendanceId} onChangeText={setAttendanceId}/>
                             </View>
-                            <View style={styles.checkboxContainer}>
-                                <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace(prev => !prev)}/>
-                            </View>
-                            <View style={styles.lowNavButtonContainer}>
-                                <NormalButton text={t("continue")} onPress={handleNextStep}></NormalButton>
-                            </View>
+                            {showError && (
+                                <ErrorMessage text={"ERROR"}/>
+                            )}
+                            {RegexFilters.defaultId.test(attendanceId) && (
+                                <>
+                                    <View style={styles.checkboxContainer}>
+                                        <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace(prev => !prev)}/>
+                                    </View>
+                                    <View style={styles.lowNavButtonContainer}>
+                                        <NormalButton text={t("continue")} onPress={handleNextStep}></NormalButton>
+                                    </View>
+                                </>
+                            )}
+                            
                         </View>
                     ) : (
                         <View style={styles.bottomContainer}>
@@ -110,11 +126,18 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                             <View style={styles.linkContainer}>
                                 <NormalLink text={t("something-wrong-back")} onPress={() => {setStepNr(1)}}/>
                             </View>
-                            <View style={styles.lowNavButtonContainer}>
-                                <NormalButton text={t("continue")} onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}></NormalButton>
-                            </View>
+                            {showError && (
+                                <ErrorMessage text={"ERROR"}/>
+                            )}
+                            {RegexFilters.defaultId.test(workplaceId) && (
+                                <View style={styles.lowNavButtonContainer}>
+                                    <NormalButton 
+                                        text={t("continue")} 
+                                        onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}>
+                                    </NormalButton>
+                                </View>
+                            )}
                         </View>)}
-                        
                 </View>   
             </SafeAreaView>
         </TouchableWithoutFeedback>
