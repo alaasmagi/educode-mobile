@@ -58,8 +58,8 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                             <View style={styles.stepDividerContainer}>
                                 <StepDivider label={t("step3-online")} stepNumber={stepNr} />
                             </View>
-                            <View>
-                                <DataText iconName='person-icon' text={userData.matriculationNumber}/>
+                            <View style={styles.dataContainer}>
+                                <DataText iconName='person-icon' text={userData.firstName + " " + userData.lastName}/>
                                 <DataText iconName='key-icon' text={attendanceId}/>
                                 <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                             </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         flex: 6,
     },
     dataContainer: {
-        flex: 4,
+        flex: 3,
         gap: 5,
         alignItems: "center",
         justifyContent:"center"
