@@ -47,7 +47,7 @@ function LoginView({ navigation }: NavigationProps) {
     const userData = await GetUserDataByUniId(uniId);
     
     if (userData) {
-      navigation.navigate('QRBoardScan', { userData });
+      navigation.navigate('StudentQRScan', { userData });
       Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
     } else {
       setErrorMessage(t("login-error"));

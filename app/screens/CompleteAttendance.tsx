@@ -51,7 +51,12 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                         <NormalHeader navigation={navigation} route={route}/>
                     </View>
                     <View style={styles.onlineToggleContainer}>
-                        <ModeToggle textLeft={t("offline-mode")} textRight={t("online-mode")} onPressLeft={() => setIsOnline(false)} onPressRight={() => {setIsOnline(true)}}/>
+                        <ModeToggle 
+                        textLeft={t("offline-mode")} 
+                        textRight={t("online-mode")} 
+                        onPressLeft={() => setIsOnline(false)} 
+                        onPressRight={() => setIsOnline(true)}
+                        />
                     </View>
                     {isOnline ? (
                         <View style={styles.onlineContainer}> 
@@ -84,7 +89,7 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                                 <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                             </View>
                             <View style={styles.linkContainer}>
-                                <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
+                                <NormalLink text={t("something-wrong-back")} onPress={() => {navigation.navigate("StudentQRScan", {userData, attendanceId, workplaceId, stepNr})}}/>
                             </View>
                             <View style={styles.lowNavButtonContainer}>
                                 <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>

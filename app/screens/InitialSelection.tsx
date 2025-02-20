@@ -32,7 +32,7 @@ function InitialSelection({ navigation }: NavigationProps) {
         const fetchUserData = async () => {
           const storedUserData = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
           if (storedUserData) {
-            navigation.navigate('QRBoardScan', { userData: storedUserData });
+            navigation.navigate('StudentQRScan', { userData: storedUserData });
           }
         };
         fetchUserData();

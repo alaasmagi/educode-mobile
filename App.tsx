@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import InitialSelection from './app/screens/InitialSelection';
 import LoginView from './app/screens/LoginView';
-import QRBoardScan from './app/screens/QRBoardScan';
+import StudentQRScan from './app/screens/StudentQRScan';
 import CreateAccountView from './app/screens/CreateAccountView'
 import SettingsView from './app/screens/SettingsView'
 import {NavigationContainer}  from '@react-navigation/native';
@@ -20,7 +20,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="InitialSelection" component={InitialSelection} />
         <Stack.Screen name="LoginView" component={LoginView} />
-        <Stack.Screen name="QRBoardScan" component={QRBoardScan} options={{ gestureEnabled: false }}/>
+        <Stack.Screen name="StudentQRScan" component={StudentQRScan} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="QRWorkplaceScan" component={QRWorkplaceScan} />
         <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
         <Stack.Screen name="SettingsView" component={SettingsView} />
