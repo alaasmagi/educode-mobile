@@ -42,10 +42,10 @@ function InitialSelection({ navigation }: NavigationProps) {
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
-            <View style={styles.formContainer}>
-                <View style={styles.headerContainer}>
-                    <FormHeader/>
-                </View>
+            <View style={styles.headerContainer}>
+                <FormHeader/>
+            </View>
+            <View style={styles.mainContainer}>
                 <View style={styles.mainLoginContainer}>
                     <NormalButton text={t("log-in")} onPress={() => navigation.navigate('LoginView')}/>
                     <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccountView')}/>
@@ -61,9 +61,8 @@ function InitialSelection({ navigation }: NavigationProps) {
 }
 
 const styles = StyleSheet.create({
-    formContainer: {
-        flex: 1,
-        alignContent: "center"
+    mainContainer : {
+        flex: 4
     },
     headerContainer:{
         flex: 1.5,

@@ -77,83 +77,76 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
-                <View style={styles.mainContainer}>
-                    <View style={styles.headerContainer}>
-                        <NormalHeader navigation={navigation} route={route}/>
+                <View style={styles.headerContainer}>
+                    <NormalHeader navigation={navigation} route={route}/>
+                </View>
+                <View style={styles.stepDividerContainer}>
+                    <StepDivider label={t("step1-online-offline")} 
+                        stepNumber={stepNr}/>
+                </View>
+                {!isKeyboardVisible && <View style={styles.qrContainer}>
+                    <QrScanner onQrScanned={handleBarcodeScanned}/>
+                </View>}
+                {stepNr === 1 ? (<View style={styles.attendanceHandlerContainer}>
+                    <View style={styles.alternativeMethodContainer}>
+                        <SeparatorLine text={t("or-enter-id-manually")}/>
+                        <TextBox iconName='key-icon' 
+                            placeHolder={t("attendance-id")} 
+                            value={attendanceId} 
+                            onChangeText={setAttendanceId}
+                        />
                     </View>
-                    <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step1-online-offline")} 
-                            stepNumber={stepNr}/>
-                    </View>
-                    {!isKeyboardVisible && <View style={styles.qrContainer}>
-                        <QrScanner onQrScanned={handleBarcodeScanned}/>
-                    </View>}
-                    {stepNr === 1 ? (<View style={styles.attendanceHandlerContainer}>
-                            <View style={styles.alternativeMethodContainer}>
-                                <SeparatorLine text={t("or-enter-id-manually")}/>
-                                <TextBox iconName='key-icon' 
-                                    placeHolder={t("attendance-id")} 
-                                    value={attendanceId} 
-                                    onChangeText={setAttendanceId}
+                    {showError && (
+                        <ErrorMessage text={"ERROR"}/>
+                    )}
+                    {RegexFilters.defaultId.test(attendanceId) && (
+                        <>
+                            <View style={styles.checkboxContainer}>
+                                <Checkbox label={t("add-workplace")} 
+                                    onChange={() => setScanForWorkplace(prev => !prev)}
                                 />
                             </View>
-                            {showError && (
-                                <ErrorMessage text={"ERROR"}/>
-                            )}
-                            {RegexFilters.defaultId.test(attendanceId) && (
-                                <>
-                                    <View style={styles.checkboxContainer}>
-                                        <Checkbox label={t("add-workplace")} 
-                                            onChange={() => setScanForWorkplace(prev => !prev)}
-                                        />
-                                    </View>
-                                    <View style={styles.lowNavButtonContainer}>
-                                        <NormalButton text={t("continue")} 
-                                            onPress={handleNextStep}
-                                        />
-                                    </View>
-                                </>
-                            )}
-                            
+                            <View style={styles.lowNavButtonContainer}>
+                                <NormalButton text={t("continue")} 
+                                    onPress={handleNextStep}
+                                />
+                            </View>
+                        </>
+                    )}
+                    </View>
+                ) : (
+                    <View style={styles.workplaceHandlerContainer}>
+                        <View style={styles.alternativeMethodContainer}>
+                            <SeparatorLine text={t("or-enter-id-manually")}/>
+                            <TextBox iconName='work-icon' 
+                                placeHolder={t("workplace-id")} 
+                                value={workplaceId} 
+                                onChangeText={setWorkplaceId}
+                            />
                         </View>
-                    ) : (
-                        <View style={styles.workplaceHandlerContainer}>
-                            <View style={styles.alternativeMethodContainer}>
-                                <SeparatorLine text={t("or-enter-id-manually")}/>
-                                <TextBox iconName='work-icon' 
-                                    placeHolder={t("workplace-id")} 
-                                    value={workplaceId} 
-                                    onChangeText={setWorkplaceId}
-                                />
+                        <View style={styles.linkContainer}>
+                            <NormalLink text={t("something-wrong-back")} 
+                                onPress={() => {setStepNr(1)}}
+                            />
+                        </View>
+                        {showError && (
+                            <ErrorMessage text={"ERROR"}/>
+                        )}
+                        {RegexFilters.defaultId.test(workplaceId) && (
+                            <View style={styles.lowNavButtonContainer}>
+                                <NormalButton 
+                                    text={t("continue")} 
+                                    onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}
+                                />                                    
                             </View>
-                            <View style={styles.linkContainer}>
-                                <NormalLink text={t("something-wrong-back")} 
-                                    onPress={() => {setStepNr(1)}}
-                                />
-                            </View>
-                            {showError && (
-                                <ErrorMessage text={"ERROR"}/>
-                            )}
-                            {RegexFilters.defaultId.test(workplaceId) && (
-                                <View style={styles.lowNavButtonContainer}>
-                                    <NormalButton 
-                                        text={t("continue")} 
-                                        onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}
-                                    />                                    
-                                </View>
-                            )}
-                        </View>)}
-                </View>   
+                        )}
+                    </View>)}
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignContent: "center"
-    },
     headerContainer:{
         flex: 2,
         justifyContent: "center",

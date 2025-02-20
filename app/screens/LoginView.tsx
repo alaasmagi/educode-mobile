@@ -46,27 +46,25 @@ function LoginView({ navigation }: NavigationProps) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
-      <View style={styles.formContainer}>
-        <View style={styles.headerContainer}>
-          <FormHeader />
-          <Greeting text={t('oh-hello-again')} />
+      <View style={styles.headerContainer}>
+        <FormHeader />
+        <Greeting text={t('oh-hello-again')} />
+      </View>
+      <View style={styles.textBoxContainer}>
+        <View style={styles.textBoxes}>
+          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
+          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
         </View>
-        <View style={styles.textBoxContainer}>
-          <View style={styles.textBoxes}>
-            <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
-            <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
-          </View>
-          <View style={styles.forgotPasswordContainer}>
-            <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
-          </View>
-          <View style={styles.errorContainer}>
-          {errorMessage && (<ErrorMessage text={errorMessage}/>)}
-          </View>
+        <View style={styles.forgotPasswordContainer}>
+          <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
         </View>
-        <View style={styles.buttonContainer}>
-          <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
-          <NormalLink text={t('register-now')} onPress={() => console.log('Link pressed')} />
+        <View style={styles.errorContainer}>
+        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
+        <NormalLink text={t('register-now')} onPress={() => console.log('Link pressed')} />
       </View>
     </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -74,10 +72,6 @@ function LoginView({ navigation }: NavigationProps) {
 }
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    alignContent: 'center',
-  },
   headerContainer: {
     flex: 2.2,
     gap: 70,
