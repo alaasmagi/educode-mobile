@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, ScrollView, KeyboardAvoidingView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, Text} from 'react-native';
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, Text} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import { useTranslation } from 'react-i18next';
 import NormalHeader from '../layout/NormalHeader';
@@ -11,11 +11,12 @@ import QrGenerator from '../components/QrGenerator';
 import DataText from '../components/DataText';
 import { GenerateQrString } from '../businesslogic/QrGenLogic';
 import NormalLink from '../components/NormalLink';
+import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
 function CompleteAttendance({ navigation , route}: NavigationProps) {
     const { userData, attendanceId, workplaceId = 0 } = route.params;
     const [isOnline, setIsOnline] = useState(false);
-
+    const isKeyboardVisible = KeyboardVisibilityHandler();
     let {stepNr} = route.params;
     stepNr++;
     
@@ -26,22 +27,6 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
     const refreshQrCode = () => {
         setQrValue(GenerateQrString(userData.matriculationNumber, attendanceId, workplaceId));
     };
-
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true);
-        });
-
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false);
-        });
-
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, []);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -59,7 +44,7 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                         />
                     </View>
                     {isOnline ? (
-                        <View style={styles.onlineContainer}> 
+                        <> 
                             <View style={styles.stepDividerContainer}>
                                 <StepDivider label={t("step3-online")} stepNumber={stepNr} />
                             </View>
@@ -74,9 +59,9 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                             <View style={styles.lowNavButtonContainer}>
                                 <NormalButton text={t("check-in")} onPress={() => {console.log("hfiourehfg")}}></NormalButton>
                             </View>
-                        </View>
+                        </>
                     ) : (
-                        <View style={styles.offlineContainer}>
+                        <>
                             <View style={styles.stepDividerContainer}>
                                 <StepDivider label={t("step3-offline")} stepNumber={stepNr} />
                             </View>
@@ -89,12 +74,12 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                                 <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                             </View>
                             <View style={styles.linkContainer}>
-                                <NormalLink text={t("something-wrong-back")} onPress={() => {navigation.navigate("StudentQRScan", {userData, attendanceId, workplaceId, stepNr})}}/>
+                                <NormalLink text={t("something-wrong-back")} onPress={() => {navigation.navigate("StudentQRScan", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
                             </View>
                             <View style={styles.lowNavButtonContainer}>
                                 <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
                             </View>
-                        </View>
+                        </>
                     )}
                 </View>   
             </SafeAreaView>
@@ -113,35 +98,30 @@ const styles = StyleSheet.create({
     },
     onlineToggleContainer: {
         flex: 1,
-        justifyContent:"center"
+        justifyContent: "center"
     },
     stepDividerContainer: {
         flex: 1,
-        justifyContent: "flex-start",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center"
     },
     qrContainer: {
+        flex: 3,
         justifyContent: "center",
         alignItems: "center"
     },
-    onlineContainer: {
-        flex: 6
-    },
-    offlineContainer: {
-        flex: 6,
-    },
     dataContainer: {
-        flex: 3,
+        flex: 2,
         gap: 5,
         alignItems: "center",
         justifyContent:"center"
     },
     linkContainer: {
-        paddingBottom: 2,
+        paddingBottom: 4,
         alignSelf:"center"
     },
     lowNavButtonContainer: {
-        flex: 2,
+        flex: 1.5,
         alignItems: "center"
     },
     

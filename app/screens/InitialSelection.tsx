@@ -9,11 +9,13 @@ import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
 import Storage from '../data/LocalDataAccess';
-import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
+import BackButtonHandler from '../../hooks/BackButtonHandler';
+
 
 function InitialSelection({ navigation }: NavigationProps) {
     const { t } = useTranslation();
 
+    BackButtonHandler(navigation);
     useFocusEffect(
         useCallback(() => {
           const backAction = () => {

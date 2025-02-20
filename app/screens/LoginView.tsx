@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useCameraPermissions } from 'expo-camera';
@@ -12,6 +12,7 @@ import NormalLink from '../components/NormalLink';
 import Storage from '../data/LocalDataAccess';
 import { GetUserDataByUniId } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
+import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
 function LoginView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -19,25 +20,9 @@ function LoginView({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-      useEffect(() => {
-          const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-              setKeyboardVisible(true);
-          });
-  
-          const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-              setKeyboardVisible(false);
-          });
-  
-          return () => {
-              keyboardDidShowListener.remove();
-              keyboardDidHideListener.remove();
-          };
-      }, []);
+  const isKeyboardVisible = KeyboardVisibilityHandler();
 
   const handleLogin = async () => {
-
     const response = await requestPermission();
     if (!response.granted) {
       Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
@@ -115,7 +100,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    flex: 1,
+    flex: 1.1,
     justifyContent: 'center',
     alignItems: 'center',
   },
