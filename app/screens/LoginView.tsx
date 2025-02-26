@@ -10,7 +10,7 @@ import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
 import Storage from '../data/LocalDataAccess';
-import { GetUserDataByUniId } from '../businesslogic/UserDataOnline';
+import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
@@ -28,18 +28,19 @@ function LoginView({ navigation }: NavigationProps) {
       Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
       return;
     }
-
-    const userData = await GetUserDataByUniId(uniId);
     
-    if (userData) {
-      navigation.navigate('StudentQRScan', { userData });
-      Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
+    if (await UserLogin(uniId, password)) {
+      const userData = await GetUserDataByUniId(uniId);
+      if (userData) {
+        navigation.navigate('StudentQRScan', { userData });
+        Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
     } else {
       setErrorMessage(t("login-error"));
     
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
+    }
   }
   };
 
