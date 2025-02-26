@@ -1,5 +1,4 @@
 import User from '../models/UserData';
-import bcrypt from 'react-native-bcrypt';
 import Storage from '../data/LocalDataAccess';
 import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
 
@@ -28,6 +27,35 @@ export async function UserLogin (uniId:string, password:string) : Promise<boolea
         return false;
     }
 }
+
+export async function CreateUserAccount(userData:User, password:string) : Promise<boolean> {
+    try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fullName: userData.fullName,
+                uniId: userData.uniId,
+                studentCode: userData.studentCode,
+                password: password,
+                userRole: "Student",
+                creator: "educode-mobile"
+            })
+          });
+        if (!response.ok) {
+            return false;
+        }
+
+        const data = await response.json();
+        Storage.saveData(LocalKeys.localToken, data.token);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
     const token = await Storage.getData(LocalKeys.localToken);
     try {
@@ -46,3 +74,4 @@ export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
         return null;
     }
 }
+

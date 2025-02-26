@@ -34,8 +34,6 @@ function LoginView({ navigation }: NavigationProps) {
       if (userData) {
         navigation.navigate('StudentQRScan', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-        console.log("NAME: " + userData.fullName);
-        console.log("STDCODE: "+ userData.studentCode);
       } else {
       setErrorMessage(t("login-error"));
     

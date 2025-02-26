@@ -15,28 +15,25 @@ import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
 function CreateAccount({ navigation }: NavigationProps) {
-  const { t } = useTranslation();
-  const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>('');
+  const [studentCode, setStudentCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  
+  const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
 
-  const handleLogin = async () => {
-    const response = await requestPermission();
-    if (!response.granted) {
-      Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
-      return;
-    }
-    
+  const handleRegister = async () => {    
     if (await UserLogin(uniId, password)) {
       const userData = await GetUserDataByUniId(uniId);
       if (userData) {
         navigation.navigate('StudentQRScan', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
         console.log("NAME: " + userData.fullName);
-        console.log("STDCODE: "+ userData.studentCode);
+        console.log("STDCODE: " + userData.studentCode);
       } else {
       setErrorMessage(t("login-error"));
     
