@@ -14,13 +14,14 @@ import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
-function LoginView({ navigation }: NavigationProps) {
+function CreateAccount({ navigation }: NavigationProps) {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isKeyboardVisible = KeyboardVisibilityHandler();
+  const [stepNr, setStepNr] = useState(1);
 
   const handleLogin = async () => {
     const response = await requestPermission();
@@ -51,24 +52,43 @@ function LoginView({ navigation }: NavigationProps) {
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <FormHeader />
-        <Greeting text={t('oh-hello-again')} />
+        <Greeting text={t('welcome')} />
       </View>
-      <View style={styles.textBoxContainer}>
+      {stepNr === 1 ? (
+        <>
+        <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
-          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
-        </View>
-        <View style={styles.forgotPasswordContainer}>
-          <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
+          <TextBox iconName="person-icon" placeHolder={t('first-name')} onChangeText={setUniId} />
+          <TextBox iconName="person-icon" placeHolder={t('last-name')} onChangeText={setUniId} />
+          <TextBox iconName="person-icon" placeHolder={t('student-code')} onChangeText={setUniId} />
         </View>
         <View style={styles.errorContainer}>
         {errorMessage && (<ErrorMessage text={errorMessage}/>)}
         </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
-        <NormalLink text={t('register-now')} onPress={() => console.log('Link pressed')} />
-      </View>
+        </View>
+        <View style={styles.buttonContainer}>
+            <NormalButton text={t('continue')} onPress={() => {setStepNr(2)}} />
+            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+        </View>
+        </>
+      ):(
+        <>
+        <View style={styles.textBoxContainer}>
+        <View style={styles.textBoxes}>
+          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
+          <TextBox iconName="lock-icon" placeHolder={t('repeat-password')} isPassword onChangeText={setPassword} />
+        </View>
+        <View style={styles.errorContainer}>
+        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+        </View>
+        </View>
+        <View style={styles.buttonContainer}>
+            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(1)}} />
+            <NormalButton text={t('create-account')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
+            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+        </View>
+        </>
+      )}
     </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -103,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginView;
+export default CreateAccount;

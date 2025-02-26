@@ -48,12 +48,12 @@ function InitialSelection({ navigation }: NavigationProps) {
             <View style={styles.mainContainer}>
                 <View style={styles.mainLoginContainer}>
                     <NormalButton text={t("log-in")} onPress={() => navigation.navigate('LoginView')}/>
-                    <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccountView')}/>
+                    <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccount')}/>
                 </View>
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
                     <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('LoginView')}/>
+                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('StudentQRScan')}/>
                 </View>
             </View>
         </SafeAreaView>

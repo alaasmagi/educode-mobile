@@ -5,9 +5,8 @@ interface User {
         id: number;
     };
     uniId: string;
-    matriculationNumber?: string;
-    firstName: string;
-    lastName: string;
+    studentCode?: string;
+    fullName: string;
 }
 
 export default User;

@@ -8,6 +8,7 @@ import {NavigationContainer}  from '@react-navigation/native';
 import  {createStackNavigator}  from '@react-navigation/stack';
 import CompleteAttendance from './app/screens/CompleteAttendance';
 import * as ScreenCapture from 'expo-screen-capture';
+import CreateAccount from './app/screens/CreateAccount';
 
 
 const Stack = createStackNavigator();
@@ -36,6 +37,7 @@ export default function App() {
         <Stack.Screen name="StudentQRScan" component={StudentQRScan} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="SettingsView" component={SettingsView} />
         <Stack.Screen name="CompleteAttendance" component={CompleteAttendance} />
+        <Stack.Screen name="CreateAccount" component={CreateAccount} />
       </Stack.Navigator>
     </NavigationContainer>
     </>

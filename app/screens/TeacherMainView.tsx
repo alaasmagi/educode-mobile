@@ -12,7 +12,6 @@ import NormalHeader from '../layout/NormalHeader';
 import NormalButton from '../components/NormalButton';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
-import DataText from '../components/DataText';
 
 function QRBoardScan({ navigation , route}: NavigationProps) {
     const {userData} = route.params;
@@ -73,14 +72,16 @@ function QRBoardScan({ navigation , route}: NavigationProps) {
                         <NormalHeader navigation={navigation} route={route}/>
                     </View>
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step1-online-offline")} stepNumber={3} />
+                        <StepDivider label={t("step-scan-board")} stepNumber={3} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
                     </View>}
                     <View style={styles.alternativeMethodContainer}>
                         <SeparatorLine text={t("or-enter-id-manually")}/>
-                        <TextBox iconName='key-icon' placeHolder={t("attendance-id")} value={attendanceId} onChangeText={setAttendanceId}/>
+                        <TextBox iconName='key-icon' placeHolder={t("attendance-id")} 
+                                value={attendanceId} 
+                                onChangeText={setAttendanceId}/>
                     </View>
                     <View style={styles.checkboxContainer}>
                         <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace(prev => !prev)}/>

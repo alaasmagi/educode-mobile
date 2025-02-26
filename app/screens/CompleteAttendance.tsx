@@ -45,10 +45,10 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                 {isOnline ? (
                     <> 
                         <View style={styles.stepDividerContainer}>
-                            <StepDivider label={t("step3-online")} stepNumber={stepNr} />
+                            <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
                         </View>
                         <View style={styles.dataContainer}>
-                            <DataText iconName='person-icon' text={userData.firstName + " " + userData.lastName}/>
+                            <DataText iconName='person-icon' text={userData.fullName}/>
                             <DataText iconName='key-icon' text={attendanceId}/>
                             <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                         </View>
@@ -62,13 +62,13 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                 ) : (
                     <>
                         <View style={styles.stepDividerContainer}>
-                            <StepDivider label={t("step3-offline")} stepNumber={stepNr} />
+                            <StepDivider label={t("step-show-qr")} stepNumber={stepNr} />
                         </View>
                         {!isKeyboardVisible && <View style={styles.qrContainer}>
                             <QrGenerator value={qrValue}/>
                         </View>}
                         <View style={styles.dataContainer}>
-                            <DataText iconName='person-icon' text={userData.matriculationNumber}/>
+                            <DataText iconName='person-icon' text={userData.studentCode}/>
                             <DataText iconName='key-icon' text={attendanceId}/>
                             <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                         </View>
@@ -118,8 +118,7 @@ const styles = StyleSheet.create({
     lowNavButtonContainer: {
         flex: 1.5,
         alignItems: "center"
-    },
-    
+    }
 })
 
 export default CompleteAttendance;

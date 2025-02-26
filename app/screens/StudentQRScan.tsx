@@ -81,8 +81,7 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                     <NormalHeader navigation={navigation} route={route}/>
                 </View>
                 <View style={styles.stepDividerContainer}>
-                    <StepDivider label={t("step1-online-offline")} 
-                        stepNumber={stepNr}/>
+                    <StepDivider  stepNumber={stepNr} label={stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")} />
                 </View>
                 {!isKeyboardVisible && <View style={styles.qrContainer}>
                     <QrScanner onQrScanned={handleBarcodeScanned}/>

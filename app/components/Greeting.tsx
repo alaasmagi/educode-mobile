@@ -9,6 +9,7 @@ interface GreetingProperties {
 const styles = StyleSheet.create({
     content: {
         fontWeight: "bold",
+        textAlign: "center",
         color: "#BCBCBD",
         fontSize: 40,
         alignSelf: "center"
