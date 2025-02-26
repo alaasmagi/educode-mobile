@@ -18,6 +18,7 @@ function CreateAccount({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
   const [studentCode, setStudentCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [passwordAgain, setPasswordAgain] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -81,7 +82,7 @@ function CreateAccount({ navigation }: NavigationProps) {
         </View>
         <View style={styles.buttonContainer}>
             <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(1)}} />
-            <NormalButton text={t('create-account')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
+            <NormalButton text={t('create-account')} onPress={() => {handleRegister(); Keyboard.dismiss()}} />
             <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
         </View>
         </>
