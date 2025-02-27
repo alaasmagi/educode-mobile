@@ -4,7 +4,8 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface NormalButtonProperties {
     text: string;
-    onPress: () => void;   
+    onPress: () => void;
+    disabled?: boolean;   
 }
 
 const styles = StyleSheet.create({
@@ -16,7 +17,19 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: '90%',
-        padding: 15
+        padding: 15,
+        opacity: 1
+        },
+    structureDisabled: {
+        backgroundColor: "#1E1E1E",
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#4492EA",
+        justifyContent: "center",
+        alignItems: "center",
+        width: '90%',
+        padding: 15,
+        opacity: 0.5
         },
     content: {
         color: '#BCBCBD', 
@@ -26,9 +39,9 @@ const styles = StyleSheet.create({
 });
 
 
-const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress }) => {
+const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress, disabled }) => {
     return (
-        <TouchableOpacity style={styles.structure} onPress={onPress}>
+        <TouchableOpacity style={disabled ? styles.structureDisabled : styles.structure} onPress={onPress} disabled={disabled} >
             <Text style={styles.content}>{text}</Text>
         </TouchableOpacity>
     );

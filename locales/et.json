@@ -34,6 +34,9 @@
     "last-name": "Perenimi",
     "welcome": "Tere tulemast EduCode'i!",
     "create-account": "Registreeri",
-    "already-registered": "Juba konto loodud? Logi sisse!"
+    "already-registered": "Juba konto loodud? Logi sisse!",
+    "password-length-error": "Salasõna pikkus peab olema vähemalt 8 tähemärki",
+    "password-match-error": "Mõlemad salasõnad peavad olema ühesugused",
+    "all-fields-required-error": "Kõik väljad peavad olema täidetud"
   }
   

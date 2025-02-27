@@ -30,9 +30,12 @@
     "yes": "Yes",
     "cancel": "Cancel",
     "log-out": "Log out",
-    "first-name": "Firstname",
-    "last-name": "Lastname",
+    "first-name": "First name",
+    "last-name": "Last name",
     "welcome": "Welcome to EduCode!",
     "create-account": "Register",
-    "already-registered": "Already registered? Log in!"
+    "already-registered": "Already registered? Log in!",
+    "password-length-error": "Password length must be at least 8 characters",
+    "password-match-error": "Both passwords need to match",
+    "all-fields-required-error": "All fields need to be filled"
 }

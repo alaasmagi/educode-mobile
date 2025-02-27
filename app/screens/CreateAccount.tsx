@@ -33,8 +33,6 @@ function CreateAccount({ navigation }: NavigationProps) {
       if (userData) {
         navigation.navigate('StudentQRScan', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-        console.log("NAME: " + userData.fullName);
-        console.log("STDCODE: " + userData.studentCode);
       } else {
       setErrorMessage(t("login-error"));
     
@@ -50,31 +48,34 @@ function CreateAccount({ navigation }: NavigationProps) {
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <FormHeader />
-        <Greeting text={t('welcome')} />
+        {!isKeyboardVisible && (
+          <Greeting text={t('welcome')} />
+        )}
       </View>
-      {stepNr === 1 ? (
+      {stepNr === 1 && (
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder={t('first-name')} onChangeText={setUniId} />
-          <TextBox iconName="person-icon" placeHolder={t('last-name')} onChangeText={setUniId} />
-          <TextBox iconName="person-icon" placeHolder={t('student-code')} onChangeText={setUniId} />
+          <TextBox iconName="person-icon" placeHolder={t('first-name')} onChangeText={setFirstName} />
+          <TextBox iconName="person-icon" placeHolder={t('last-name')} onChangeText={setLastName} />
         </View>
+        {firstName == '' || lastName == ''}
         <View style={styles.errorContainer}>
-        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+          <ErrorMessage text={t('all-fields-required-error')}/>
         </View>
         </View>
         <View style={styles.buttonContainer}>
-            <NormalButton text={t('continue')} onPress={() => {setStepNr(2)}} />
+            <NormalButton text={t('continue')} onPress={() => {setStepNr(2)}} disabled={true} />
             <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
         </View>
         </>
-      ):(
+      )}
+      {stepNr === 2 && (
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
-          <TextBox iconName="lock-icon" placeHolder={t('repeat-password')} isPassword onChangeText={setPassword} />
+          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
+          <TextBox iconName="person-icon" placeHolder={t('student-code')} onChangeText={setStudentCode} />
         </View>
         <View style={styles.errorContainer}>
         {errorMessage && (<ErrorMessage text={errorMessage}/>)}
@@ -82,11 +83,36 @@ function CreateAccount({ navigation }: NavigationProps) {
         </View>
         <View style={styles.buttonContainer}>
             <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(1)}} />
+            <NormalButton text={t('continue')} onPress={() => {setStepNr(3)}} />
+            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+        </View>
+        </>
+      )}
+      {stepNr === 3 && (
+        <>
+        <View style={styles.textBoxContainer}>
+        <View style={styles.textBoxes}>
+        {password !== '' && !isKeyboardVisible && (
+          (password.length < 8 || password !== passwordAgain) && (
+          <ErrorMessage 
+            text={t(password.length < 8 ? 'password-length-error' : 'password-match-error')}/>
+          )
+        )}
+          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword}/>
+          <TextBox iconName="lock-icon" placeHolder={t('repeat-password')} isPassword onChangeText={setPasswordAgain}/>
+        </View>
+        <View style={styles.errorContainer}>
+        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+        </View>
+        </View>
+        <View style={styles.buttonContainer}>
+            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(2)}} />
             <NormalButton text={t('create-account')} onPress={() => {handleRegister(); Keyboard.dismiss()}} />
             <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
         </View>
         </>
       )}
+        
     </SafeAreaView>
     </TouchableWithoutFeedback>
   );

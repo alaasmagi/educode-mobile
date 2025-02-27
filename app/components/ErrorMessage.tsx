@@ -9,7 +9,7 @@ interface ErrorMessageProperties {
 const styles = StyleSheet.create({
     container: {
         alignSelf: "center",
-        justifyContent: "center",
+        textAlign: "center",
         alignItems: "center",
         backgroundColor: "#3f1e20",
         padding: 15,
