@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useCameraPermissions } from 'expo-camera';
 import NavigationProps from '../../types';
@@ -13,6 +13,9 @@ import Storage from '../data/LocalDataAccess';
 import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
+import NormalMessage from '../components/NormalMessage';
+import DataText from '../components/DataText';
+import UnderlineText from '../components/UnderlineText';
 
 function CreateAccount({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
@@ -22,7 +25,7 @@ function CreateAccount({ navigation }: NavigationProps) {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
@@ -56,17 +59,26 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder={t('first-name')} onChangeText={setFirstName} />
-          <TextBox iconName="person-icon" placeHolder={t('last-name')} onChangeText={setLastName} />
+          <TextBox iconName="person-icon" 
+            placeHolder={t('first-name') + ' *'} 
+            onChangeText={setFirstName} 
+            value = {firstName}/>
+          <TextBox iconName="person-icon" 
+            placeHolder={t('last-name') + ' *'} 
+            onChangeText={setLastName}
+            value={lastName}/>
         </View>
-        {firstName == '' || lastName == ''}
-        <View style={styles.errorContainer}>
-          <ErrorMessage text={t('all-fields-required-error')}/>
-        </View>
+        {(firstName == '' || lastName == '') && !isKeyboardVisible && (
+          <View style={styles.errorContainer}>
+            <NormalMessage text={t('all-fields-required-error')}/>
+          </View>
+        )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalButton text={t('continue')} onPress={() => {setStepNr(2)}} disabled={true} />
-            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+            <NormalButton text={t('continue')} 
+              onPress={() => {setStepNr(2)}} 
+              disabled={firstName == '' || lastName == ''} />
+            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -74,17 +86,28 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
-          <TextBox iconName="person-icon" placeHolder={t('student-code')} onChangeText={setStudentCode} />
+          <TextBox iconName="person-icon" 
+            placeHolder="Uni-ID *" 
+            onChangeText={setUniId}
+            value={uniId}/>
+          <TextBox iconName="person-icon" 
+            placeHolder={t('student-code') + ' *'} 
+            onChangeText={setStudentCode}
+            value={studentCode}/>
         </View>
-        <View style={styles.errorContainer}>
-        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
-        </View>
+        {(uniId == '' || studentCode == '') && !isKeyboardVisible && (
+          <View style={styles.errorContainer}>
+          <NormalMessage text={t('all-fields-required-error')}/>
+          </View>
+        )}
         </View>
         <View style={styles.buttonContainer}>
             <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(1)}} />
-            <NormalButton text={t('continue')} onPress={() => {setStepNr(3)}} />
-            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+            <NormalButton 
+              text={t('continue')} 
+              onPress={() => {setStepNr(3)}}
+              disabled={uniId == '' || studentCode == '' }/>
+            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -98,8 +121,16 @@ function CreateAccount({ navigation }: NavigationProps) {
             text={t(password.length < 8 ? 'password-length-error' : 'password-match-error')}/>
           )
         )}
-          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword}/>
-          <TextBox iconName="lock-icon" placeHolder={t('repeat-password')} isPassword onChangeText={setPasswordAgain}/>
+          <TextBox iconName="lock-icon" 
+            placeHolder={t('password')} 
+            isPassword 
+            onChangeText={setPassword}
+            value={password}/>
+          <TextBox iconName="lock-icon" 
+            placeHolder={t('repeat-password')} 
+            isPassword 
+            onChangeText={setPasswordAgain}
+            value={passwordAgain}/>
         </View>
         <View style={styles.errorContainer}>
         {errorMessage && (<ErrorMessage text={errorMessage}/>)}
@@ -107,8 +138,33 @@ function CreateAccount({ navigation }: NavigationProps) {
         </View>
         <View style={styles.buttonContainer}>
             <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(2)}} />
-            <NormalButton text={t('create-account')} onPress={() => {handleRegister(); Keyboard.dismiss()}} />
-            <NormalLink text={t('already-registered')} onPress={() => console.log('Link pressed')} />
+            <NormalButton 
+              text={t('continue')} 
+              onPress={() => {setStepNr(4)}}
+              disabled={password.length < 8 || password !== passwordAgain}/>
+            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
+        </View>
+        </>
+      )}
+      {stepNr === 4 && (
+        <>
+        <View style={styles.textBoxContainer}>
+        <UnderlineText text="Verify your details:"/>
+        <View style={styles.data}>
+          <DataText iconName='person-icon' text={firstName + ' ' + lastName}/>
+          <DataText iconName="person-icon" text={uniId} />
+          <DataText iconName='person-icon' text={studentCode}/>
+        </View>
+        <View style={styles.errorContainer}>
+        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+        </View>
+        </View>
+        <View style={styles.buttonContainer}>
+            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(2)}} />
+            <NormalButton 
+              text={t('create-account')}
+              onPress={() => {handleRegister(); Keyboard.dismiss()}} />
+            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -128,9 +184,18 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
   },
+  data: {
+    alignSelf: "center",
+    width: "80%",
+    borderWidth: 2,
+    borderColor: "#BCBCBD",
+    borderRadius: 20,
+    gap: 25,
+    padding: 10
+  },
   textBoxes: {
     gap: 25,
-    alignItems:"center"
+    alignItems:"center",
   },
   forgotPasswordContainer: {
     flexDirection: 'row',

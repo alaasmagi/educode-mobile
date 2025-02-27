@@ -12,6 +12,7 @@ import DataText from '../components/DataText';
 import { GenerateQrString } from '../businesslogic/QrGenLogic';
 import NormalLink from '../components/NormalLink';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
+import UnderlineText from '../components/UnderlineText';
 
 function CompleteAttendance({ navigation , route}: NavigationProps) {
     const { userData, attendanceId, workplaceId = 0 } = route.params;
@@ -47,6 +48,7 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                         <View style={styles.stepDividerContainer}>
                             <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
                         </View>
+                        <UnderlineText text="Verify your details:"/>
                         <View style={styles.dataContainer}>
                             <DataText iconName='person-icon' text={userData.fullName}/>
                             <DataText iconName='key-icon' text={attendanceId}/>

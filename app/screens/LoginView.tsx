@@ -27,21 +27,21 @@ function LoginView({ navigation }: NavigationProps) {
     if (!response.granted) {
       Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
       return;
-    }
+    };
     
     if (await UserLogin(uniId, password)) {
       const userData = await GetUserDataByUniId(uniId);
       if (userData) {
         navigation.navigate('StudentQRScan', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-    } else {
+      } else {
       setErrorMessage(t("login-error"));
     
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
-    }
-  }
+    };
+  };
   };
 
   return (
@@ -49,7 +49,7 @@ function LoginView({ navigation }: NavigationProps) {
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <FormHeader />
-        <Greeting text={t('oh-hello-again')} />
+        {!isKeyboardVisible && <Greeting text={t('oh-hello-again')} />}
       </View>
       <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
@@ -65,7 +65,7 @@ function LoginView({ navigation }: NavigationProps) {
       </View>
       <View style={styles.buttonContainer}>
         <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
-        <NormalLink text={t('register-now')} onPress={() => console.log('Link pressed')} />
+        <NormalLink text={t('register-now')} onPress={() => navigation.navigate("CreateAccount")} />
       </View>
     </SafeAreaView>
     </TouchableWithoutFeedback>
