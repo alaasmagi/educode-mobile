@@ -31,7 +31,7 @@ function CreateAccount({ navigation }: NavigationProps) {
   const [stepNr, setStepNr] = useState(1);
 
   const handleRegister = async () => {    
-    if (await UserLogin(uniId, password)) {
+    if (await CreateUserAccount(uniId, password)) {
       const userData = await GetUserDataByUniId(uniId);
       if (userData) {
         navigation.navigate('StudentQRScan', { userData });
