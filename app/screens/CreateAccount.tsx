@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Text, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useCameraPermissions } from 'expo-camera';
 import NavigationProps from '../../types';
 import globalStyles from '../styles/GlobalStyles';
 import TextBox from '../components/TextBox';
@@ -9,13 +8,13 @@ import NormalButton from '../components/NormalButton';
 import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
-import Storage from '../data/LocalDataAccess';
-import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
+import { CreateUserAccount} from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import NormalMessage from '../components/NormalMessage';
 import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
+import CreateUserModel from '../models/CreateUserModel';
 
 function CreateAccount({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
@@ -25,29 +24,62 @@ function CreateAccount({ navigation }: NavigationProps) {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [normalMessage, setNormalMessage] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
 
-  const handleRegister = async () => {    
-    if (await CreateUserAccount(uniId, password)) {
-      const userData = await GetUserDataByUniId(uniId);
-      if (userData) {
-        navigation.navigate('StudentQRScan', { userData });
-        Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-      } else {
-      setErrorMessage(t("login-error"));
-    
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+
+  const isNameFormValid = () => firstName !== '' && lastName !== '';
+  useEffect(() => {
+    if (!isNameFormValid()) {
+      setErrorMessage(t('all-fields-required-error'));
+    } else {
+      setErrorMessage('');
     }
-  }
+  }, [firstName, lastName]);
+
+  const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
+  useEffect(() => {
+    if (!isStudentIDFormValid()) {
+      setNormalMessage(t('all-fields-required-error'));
+    } else {
+      setNormalMessage('');
+    }
+  }, [uniId, studentCode]);
+
+  const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
+  useEffect(() => {
+    if (!(password === passwordAgain) && password !== '') {
+      setNormalMessage(t('password-match-error'));
+    } else if (!(password.length < 8) && password !== ''){
+      setNormalMessage(t('password-length-error'));
+    } else {
+      setNormalMessage('');
+    }
+  }, [password, passwordAgain]);
+
+  const handleRegister = async () => {
+    let userData:CreateUserModel = {
+      uniId: uniId,
+      studentCode: studentCode,
+      fullName: firstName + ' '+ lastName,
+      password: password
+    }    
+    
+    if(await CreateUserAccount(userData)) {
+      const message = t('create-account-success');
+      navigation.navigate('LoginView', {message});
+    } else {
+      setErrorMessage(t('account-create-error'));
+    }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback 
+      onPress={Keyboard.dismiss} 
+      accessible={false}>
     <SafeAreaView style={globalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <FormHeader />
@@ -59,26 +91,31 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" 
+          <TextBox 
+            iconName="person-icon" 
             placeHolder={t('first-name') + ' *'} 
             onChangeText={setFirstName} 
             value = {firstName}/>
-          <TextBox iconName="person-icon" 
+          <TextBox 
+            iconName="person-icon" 
             placeHolder={t('last-name') + ' *'} 
             onChangeText={setLastName}
             value={lastName}/>
         </View>
-        {(firstName == '' || lastName == '') && !isKeyboardVisible && (
+        {normalMessage && (
           <View style={styles.errorContainer}>
-            <NormalMessage text={t('all-fields-required-error')}/>
+            <NormalMessage text={normalMessage}/>
           </View>
         )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalButton text={t('continue')} 
+            <NormalButton 
+              text={t('continue')} 
               onPress={() => {setStepNr(2)}} 
-              disabled={firstName == '' || lastName == ''} />
-            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
+              disabled={!isNameFormValid()}/>
+            <NormalLink 
+              text={t('already-registered')} 
+              onPress={() => navigation.navigate("LoginView")}/>
         </View>
         </>
       )}
@@ -86,28 +123,34 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" 
+          <TextBox 
+            iconName="person-icon" 
             placeHolder="Uni-ID *" 
             onChangeText={setUniId}
             value={uniId}/>
-          <TextBox iconName="person-icon" 
+          <TextBox 
+            iconName="person-icon" 
             placeHolder={t('student-code') + ' *'} 
             onChangeText={setStudentCode}
             value={studentCode}/>
         </View>
-        {(uniId == '' || studentCode == '') && !isKeyboardVisible && (
+        {normalMessage && (
           <View style={styles.errorContainer}>
-          <NormalMessage text={t('all-fields-required-error')}/>
+            <NormalMessage text={normalMessage}/>
           </View>
         )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(1)}} />
+            <NormalLink 
+              text={t('something-wrong-back')} 
+              onPress={() => {setStepNr(1)}} />
             <NormalButton 
               text={t('continue')} 
               onPress={() => {setStepNr(3)}}
               disabled={uniId == '' || studentCode == '' }/>
-            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
+            <NormalLink 
+              text={t('already-registered')} 
+              onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -115,34 +158,41 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-        {password !== '' && !isKeyboardVisible && (
-          (password.length < 8 || password !== passwordAgain) && (
-          <ErrorMessage 
-            text={t(password.length < 8 ? 'password-length-error' : 'password-match-error')}/>
-          )
+        {normalMessage && (
+          <View style={styles.errorContainer}>
+            <NormalMessage text={normalMessage}/>
+          </View>
         )}
-          <TextBox iconName="lock-icon" 
+          <TextBox 
+            iconName="lock-icon" 
             placeHolder={t('password')} 
             isPassword 
             onChangeText={setPassword}
             value={password}/>
-          <TextBox iconName="lock-icon" 
+          <TextBox 
+            iconName="lock-icon" 
             placeHolder={t('repeat-password')} 
             isPassword 
             onChangeText={setPasswordAgain}
             value={passwordAgain}/>
         </View>
-        <View style={styles.errorContainer}>
-        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
-        </View>
+        {normalMessage && (
+          <View style={styles.errorContainer}>
+            <NormalMessage text={normalMessage}/>
+          </View>
+        )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(2)}} />
+            <NormalLink 
+              text={t('something-wrong-back')} 
+              onPress={() => {setStepNr(2)}} />
             <NormalButton 
               text={t('continue')} 
               onPress={() => {setStepNr(4)}}
-              disabled={password.length < 8 || password !== passwordAgain}/>
-            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
+              disabled={!isPasswordFormValid()}/>
+            <NormalLink 
+              text={t('already-registered')} 
+              onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -155,20 +205,25 @@ function CreateAccount({ navigation }: NavigationProps) {
           <DataText iconName="person-icon" text={uniId} />
           <DataText iconName='person-icon' text={studentCode}/>
         </View>
-        <View style={styles.errorContainer}>
-        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
-        </View>
+        {errorMessage && (
+          <View style={styles.errorContainer}>
+            <ErrorMessage text={errorMessage}/>
+          </View>
+        )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalLink text={t('something-wrong-back')} onPress={() => {setStepNr(2)}} />
+            <NormalLink 
+              text={t('something-wrong-back')} 
+              onPress={() => {setStepNr(2)}} />
             <NormalButton 
               text={t('create-account')}
               onPress={() => {handleRegister(); Keyboard.dismiss()}} />
-            <NormalLink text={t('already-registered')} onPress={() => navigation.navigate("LoginView")} />
+            <NormalLink 
+              text={t('already-registered')} 
+              onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
       )}
-        
     </SafeAreaView>
     </TouchableWithoutFeedback>
   );

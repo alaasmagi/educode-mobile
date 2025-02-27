@@ -51,8 +51,6 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
             setScanned(true);
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             if (RegexFilters.defaultId.test(data)) {
-
-                console.log("Scanned Data:", data); 
                 stepNr == 1 ? setAttendanceId(data) : setWorkplaceId(data);
             }
             else {
@@ -98,20 +96,17 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                     {showError && (
                         <ErrorMessage text={"ERROR"}/>
                     )}
-                    {RegexFilters.defaultId.test(attendanceId) && (
-                        <>
-                            <View style={styles.checkboxContainer}>
-                                <Checkbox label={t("add-workplace")} 
-                                    onChange={() => setScanForWorkplace(prev => !prev)}
-                                />
-                            </View>
-                            <View style={styles.lowNavButtonContainer}>
-                                <NormalButton text={t("continue")} 
-                                    onPress={handleNextStep}
-                                />
-                            </View>
-                        </>
-                    )}
+                    <View style={styles.checkboxContainer}>
+                        <Checkbox label={t("add-workplace")} 
+                            onChange={() => setScanForWorkplace(prev => !prev)}
+                        />
+                    </View>
+                    <View style={styles.lowNavButtonContainer}>
+                        <NormalButton text={t("continue")} 
+                            onPress={handleNextStep}
+                            disabled={!RegexFilters.defaultId.test(attendanceId)}
+                        />
+                    </View>
                     </View>
                 ) : (
                     <View style={styles.workplaceHandlerContainer}>
@@ -131,14 +126,13 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                         {showError && (
                             <ErrorMessage text={"ERROR"}/>
                         )}
-                        {RegexFilters.defaultId.test(workplaceId) && (
-                            <View style={styles.lowNavButtonContainer}>
-                                <NormalButton 
-                                    text={t("continue")} 
-                                    onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}
-                                />                                    
-                            </View>
-                        )}
+                        <View style={styles.lowNavButtonContainer}>
+                            <NormalButton 
+                                text={t("continue")} 
+                                onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}
+                                disabled={!RegexFilters.defaultId.test(workplaceId)}
+                            />                                    
+                        </View>
                     </View>)}
             </SafeAreaView>
         </TouchableWithoutFeedback>

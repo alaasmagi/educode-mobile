@@ -1,6 +1,7 @@
 import User from '../models/UserData';
 import Storage from '../data/LocalDataAccess';
 import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
+import CreateUserModel from '../models/CreateUserModel';
 
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
@@ -28,7 +29,7 @@ export async function UserLogin (uniId:string, password:string) : Promise<boolea
     }
 }
 
-export async function CreateUserAccount(userData:User, password:string) : Promise<boolean> {
+export async function CreateUserAccount(userData:CreateUserModel) : Promise<Boolean> {
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Login`, {
             method: 'POST',
@@ -39,7 +40,7 @@ export async function CreateUserAccount(userData:User, password:string) : Promis
                 fullName: userData.fullName,
                 uniId: userData.uniId,
                 studentCode: userData.studentCode,
-                password: password,
+                password: userData.password,
                 userRole: "Student",
                 creator: "educode-mobile"
             })
@@ -47,9 +48,6 @@ export async function CreateUserAccount(userData:User, password:string) : Promis
         if (!response.ok) {
             return false;
         }
-
-        const data = await response.json();
-        Storage.saveData(LocalKeys.localToken, data.token);
         return true;
     } catch (error) {
         return false;

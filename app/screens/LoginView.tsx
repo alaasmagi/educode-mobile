@@ -53,8 +53,8 @@ function LoginView({ navigation }: NavigationProps) {
       </View>
       <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} />
-          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} />
+          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} value={uniId} />
+          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} value={password}/>
         </View>
         <View style={styles.forgotPasswordContainer}>
           <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
@@ -64,7 +64,9 @@ function LoginView({ navigation }: NavigationProps) {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <NormalButton text={t('log-in')} onPress={() => {handleLogin(); Keyboard.dismiss()}} />
+        <NormalButton text={t('log-in')} 
+          onPress={() => {handleLogin(); Keyboard.dismiss()}} 
+          disabled={uniId=='' || password == ''}/>
         <NormalLink text={t('register-now')} onPress={() => navigation.navigate("CreateAccount")} />
       </View>
     </SafeAreaView>
