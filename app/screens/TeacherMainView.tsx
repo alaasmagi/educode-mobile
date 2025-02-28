@@ -13,7 +13,7 @@ import NormalButton from '../components/NormalButton';
 import StepDivider from '../components/StepDivider';
 import Checkbox from '../components/Checkbox';
 
-function QRBoardScan({ navigation , route}: NavigationProps) {
+function TeacherMainView({ navigation , route}: NavigationProps) {
     const {userData} = route.params;
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
@@ -129,4 +129,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default QRBoardScan;
+export default TeacherMainView;

@@ -12,15 +12,19 @@ import NormalLink from '../components/NormalLink';
 import Storage from '../data/LocalDataAccess';
 import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage'
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 
-function LoginView({ navigation }: NavigationProps) {
+function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
+  const successMessage = route?.params?.successMessage || null;
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isKeyboardVisible = KeyboardVisibilityHandler();
+
+  const isFormValid = () => uniId !== '' && password !== '';
 
   const handleLogin = async () => {
     const response = await requestPermission();
@@ -32,11 +36,10 @@ function LoginView({ navigation }: NavigationProps) {
     if (await UserLogin(uniId, password)) {
       const userData = await GetUserDataByUniId(uniId);
       if (userData) {
-        navigation.navigate('StudentQRScan', { userData });
+        navigation.navigate('StudentMainView', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
       } else {
       setErrorMessage(t("login-error"));
-    
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
@@ -53,21 +56,34 @@ function LoginView({ navigation }: NavigationProps) {
       </View>
       <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-          <TextBox iconName="person-icon" placeHolder="Uni-ID" onChangeText={setUniId} value={uniId} />
-          <TextBox iconName="lock-icon" placeHolder={t('password')} isPassword onChangeText={setPassword} value={password}/>
+          <TextBox 
+            iconName="person-icon" 
+            placeHolder="Uni-ID" 
+            onChangeText={setUniId} value={uniId} />
+          <TextBox 
+            iconName="lock-icon" 
+            placeHolder={t('password')} 
+            isPassword 
+            onChangeText={setPassword} value={password}/>
         </View>
         <View style={styles.forgotPasswordContainer}>
-          <NormalLink text={t('forgot-password')} onPress={() => console.log('Link pressed')} />
+          <NormalLink 
+            text={t('forgot-password')} 
+            onPress={() => console.log('Link pressed')} />
         </View>
         <View style={styles.errorContainer}>
-        {errorMessage && (<ErrorMessage text={errorMessage}/>)}
+        {!isKeyboardVisible && errorMessage && (<ErrorMessage text={errorMessage}/>)}
+        {!isKeyboardVisible && successMessage && (<SuccessMessage text={successMessage}/>)}
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <NormalButton text={t('log-in')} 
+        <NormalButton 
+          text={t('log-in')} 
           onPress={() => {handleLogin(); Keyboard.dismiss()}} 
-          disabled={uniId=='' || password == ''}/>
-        <NormalLink text={t('register-now')} onPress={() => navigation.navigate("CreateAccount")} />
+          disabled={!isFormValid()}/>
+        <NormalLink 
+          text={t('register-now')} 
+          onPress={() => navigation.navigate("CreateAccountView")} />
       </View>
     </SafeAreaView>
     </TouchableWithoutFeedback>

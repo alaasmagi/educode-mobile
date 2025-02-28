@@ -18,7 +18,7 @@ import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import ScreenCaptureHandler from '../../hooks/ScreenCaptureHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 
-function StudentQRScan({ navigation , route}: NavigationProps) {
+function StudentMainView({ navigation , route}: NavigationProps) {
     const {userData} = route.params;
     const { t } = useTranslation();
 
@@ -68,7 +68,7 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
             setScanForWorkplace(false);
         }
         else {
-            navigation.navigate("CompleteAttendance", { userData, attendanceId, stepNr });
+            navigation.navigate("CompleteAttendanceView", { userData, attendanceId, stepNr });
         }
     } 
 
@@ -79,7 +79,9 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                     <NormalHeader navigation={navigation} route={route}/>
                 </View>
                 <View style={styles.stepDividerContainer}>
-                    <StepDivider  stepNumber={stepNr} label={stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")} />
+                    <StepDivider 
+                        stepNumber={stepNr} 
+                        label={stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")} />
                 </View>
                 {!isKeyboardVisible && <View style={styles.qrContainer}>
                     <QrScanner onQrScanned={handleBarcodeScanned}/>
@@ -87,7 +89,8 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                 {stepNr === 1 ? (<View style={styles.attendanceHandlerContainer}>
                     <View style={styles.alternativeMethodContainer}>
                         <SeparatorLine text={t("or-enter-id-manually")}/>
-                        <TextBox iconName='key-icon' 
+                        <TextBox 
+                            iconName='key-icon' 
                             placeHolder={t("attendance-id")} 
                             value={attendanceId} 
                             onChangeText={setAttendanceId}
@@ -97,12 +100,14 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                         <ErrorMessage text={"ERROR"}/>
                     )}
                     <View style={styles.checkboxContainer}>
-                        <Checkbox label={t("add-workplace")} 
+                        <Checkbox 
+                            label={t("add-workplace")} 
                             onChange={() => setScanForWorkplace(prev => !prev)}
                         />
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("continue")} 
+                        <NormalButton 
+                            text={t("continue")} 
                             onPress={handleNextStep}
                             disabled={!RegexFilters.defaultId.test(attendanceId)}
                         />
@@ -112,14 +117,16 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                     <View style={styles.workplaceHandlerContainer}>
                         <View style={styles.alternativeMethodContainer}>
                             <SeparatorLine text={t("or-enter-id-manually")}/>
-                            <TextBox iconName='work-icon' 
+                            <TextBox 
+                                iconName='work-icon' 
                                 placeHolder={t("workplace-id")} 
                                 value={workplaceId} 
                                 onChangeText={setWorkplaceId}
                             />
                         </View>
                         <View style={styles.linkContainer}>
-                            <NormalLink text={t("something-wrong-back")} 
+                            <NormalLink 
+                                text={t("something-wrong-back")} 
                                 onPress={() => {setStepNr(1)}}
                             />
                         </View>
@@ -129,7 +136,7 @@ function StudentQRScan({ navigation , route}: NavigationProps) {
                         <View style={styles.lowNavButtonContainer}>
                             <NormalButton 
                                 text={t("continue")} 
-                                onPress={() => navigation.navigate("CompleteAttendance", {userData, attendanceId, workplaceId, stepNr})}
+                                onPress={() => navigation.navigate("CompleteAttendanceView", {userData, attendanceId, workplaceId, stepNr})}
                                 disabled={!RegexFilters.defaultId.test(workplaceId)}
                             />                                    
                         </View>
@@ -180,4 +187,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default StudentQRScan;
+export default StudentMainView;

@@ -31,7 +31,7 @@ export async function UserLogin (uniId:string, password:string) : Promise<boolea
 
 export async function CreateUserAccount(userData:CreateUserModel) : Promise<Boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Login`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

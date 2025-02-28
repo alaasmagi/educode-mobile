@@ -14,7 +14,7 @@ import NormalLink from '../components/NormalLink';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
 
-function CompleteAttendance({ navigation , route}: NavigationProps) {
+function CompleteAttendanceView({ navigation , route}: NavigationProps) {
     const { userData, attendanceId, workplaceId = 0 } = route.params;
     const [isOnline, setIsOnline] = useState(false);
     const isKeyboardVisible = KeyboardVisibilityHandler();
@@ -76,7 +76,7 @@ function CompleteAttendance({ navigation , route}: NavigationProps) {
                         </View>
                         <View style={styles.linkContainer}>
                             <NormalLink text={t("something-wrong-back")} 
-                            onPress={() => {navigation.navigate("StudentQRScan", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
+                            onPress={() => {navigation.navigate("StudentMainView", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
                         </View>
                         <View style={styles.lowNavButtonContainer}>
                             <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CompleteAttendance;
+export default CompleteAttendanceView;

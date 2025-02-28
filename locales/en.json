@@ -35,7 +35,9 @@
     "welcome": "Welcome to EduCode!",
     "create-account": "Register",
     "already-registered": "Already registered? Log in!",
-    "password-length-error": "Password length must be at least 8 characters",
-    "password-match-error": "Both passwords need to match",
-    "all-fields-required-error": "All fields need to be filled"
+    "password-length-message": "Password length must be at least 8 characters",
+    "password-match-message": "Both passwords need to match",
+    "all-fields-required-message": "All fields need to be filled",
+    "account-create-error": "User account creation failed",
+    "create-account-success": "Successfully created an account"
 }

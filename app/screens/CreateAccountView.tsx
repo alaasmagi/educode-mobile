@@ -16,7 +16,7 @@ import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
 import CreateUserModel from '../models/CreateUserModel';
 
-function CreateAccount({ navigation }: NavigationProps) {
+function CreateAccountView({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
   const [studentCode, setStudentCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -34,16 +34,16 @@ function CreateAccount({ navigation }: NavigationProps) {
   const isNameFormValid = () => firstName !== '' && lastName !== '';
   useEffect(() => {
     if (!isNameFormValid()) {
-      setErrorMessage(t('all-fields-required-error'));
+      setNormalMessage(t('all-fields-required-message'));
     } else {
-      setErrorMessage('');
+      setNormalMessage('');
     }
   }, [firstName, lastName]);
 
   const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
   useEffect(() => {
     if (!isStudentIDFormValid()) {
-      setNormalMessage(t('all-fields-required-error'));
+      setNormalMessage(t('all-fields-required-message'));
     } else {
       setNormalMessage('');
     }
@@ -51,10 +51,10 @@ function CreateAccount({ navigation }: NavigationProps) {
 
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
   useEffect(() => {
-    if (!(password === passwordAgain) && password !== '') {
-      setNormalMessage(t('password-match-error'));
-    } else if (!(password.length < 8) && password !== ''){
-      setNormalMessage(t('password-length-error'));
+    if (password.length < 8 && password !== '') {
+      setNormalMessage(t('password-length-message'));
+    } else if (!isPasswordFormValid() && password !== '' && passwordAgain !== '') {
+      setNormalMessage(t('password-match-message'));
     } else {
       setNormalMessage('');
     }
@@ -69,8 +69,8 @@ function CreateAccount({ navigation }: NavigationProps) {
     }    
     
     if(await CreateUserAccount(userData)) {
-      const message = t('create-account-success');
-      navigation.navigate('LoginView', {message});
+      const successMessage = t('create-account-success');
+      navigation.navigate('LoginView', {successMessage});
     } else {
       setErrorMessage(t('account-create-error'));
     }
@@ -102,7 +102,7 @@ function CreateAccount({ navigation }: NavigationProps) {
             onChangeText={setLastName}
             value={lastName}/>
         </View>
-        {normalMessage && (
+        {!isKeyboardVisible && normalMessage && (
           <View style={styles.errorContainer}>
             <NormalMessage text={normalMessage}/>
           </View>
@@ -134,7 +134,7 @@ function CreateAccount({ navigation }: NavigationProps) {
             onChangeText={setStudentCode}
             value={studentCode}/>
         </View>
-        {normalMessage && (
+        {!isKeyboardVisible && normalMessage && (
           <View style={styles.errorContainer}>
             <NormalMessage text={normalMessage}/>
           </View>
@@ -158,11 +158,6 @@ function CreateAccount({ navigation }: NavigationProps) {
         <>
         <View style={styles.textBoxContainer}>
         <View style={styles.textBoxes}>
-        {normalMessage && (
-          <View style={styles.errorContainer}>
-            <NormalMessage text={normalMessage}/>
-          </View>
-        )}
           <TextBox 
             iconName="lock-icon" 
             placeHolder={t('password')} 
@@ -176,7 +171,7 @@ function CreateAccount({ navigation }: NavigationProps) {
             onChangeText={setPasswordAgain}
             value={passwordAgain}/>
         </View>
-        {normalMessage && (
+        {!isKeyboardVisible && normalMessage && (
           <View style={styles.errorContainer}>
             <NormalMessage text={normalMessage}/>
           </View>
@@ -205,7 +200,7 @@ function CreateAccount({ navigation }: NavigationProps) {
           <DataText iconName="person-icon" text={uniId} />
           <DataText iconName='person-icon' text={studentCode}/>
         </View>
-        {errorMessage && (
+        {!isKeyboardVisible && errorMessage && (
           <View style={styles.errorContainer}>
             <ErrorMessage text={errorMessage}/>
           </View>
@@ -267,4 +262,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccount;
+export default CreateAccountView;

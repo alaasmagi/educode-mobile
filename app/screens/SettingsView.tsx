@@ -17,7 +17,7 @@ import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
 
 
-function MainView({ navigation , route}: NavigationProps) {
+function SettingsView({ navigation , route}: NavigationProps) {
     const { t } = useTranslation();
     const [scanned, setScanned] = useState(false);
     const [attendanceId, setAttendanceId] = useState('');
@@ -36,7 +36,7 @@ function MainView({ navigation , route}: NavigationProps) {
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
             <View style={styles.view}>
                 <Text style={styles.greeting}>Hello</Text>
-                <NormalButton text={t("log-out")} onPress={() => {Storage.removeData(process.env.EXPO_PUBLIC_LOCAL_DATA), navigation.navigate("InitialSelection")}}/>
+                <NormalButton text={t("log-out")} onPress={() => {Storage.removeData(process.env.EXPO_PUBLIC_LOCAL_DATA), navigation.navigate("InitialSelectionView")}}/>
             </View>
         </SafeAreaView>
     );
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default MainView;
+export default SettingsView;

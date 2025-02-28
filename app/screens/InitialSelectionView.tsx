@@ -12,7 +12,7 @@ import Storage from '../data/LocalDataAccess';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 
 
-function InitialSelection({ navigation }: NavigationProps) {
+function InitialSelectionView({ navigation }: NavigationProps) {
     const { t } = useTranslation();
 
     BackButtonHandler(navigation);
@@ -34,7 +34,7 @@ function InitialSelection({ navigation }: NavigationProps) {
         const fetchUserData = async () => {
           const storedUserData = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
           if (storedUserData) {
-            navigation.navigate('StudentQRScan', { userData: storedUserData });
+            navigation.navigate('StudentMainView', { userData: storedUserData });
           }
         };
         fetchUserData();
@@ -48,12 +48,12 @@ function InitialSelection({ navigation }: NavigationProps) {
             <View style={styles.mainContainer}>
                 <View style={styles.mainLoginContainer}>
                     <NormalButton text={t("log-in")} onPress={() => navigation.navigate('LoginView')}/>
-                    <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccount')}/>
+                    <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccountView')}/>
                 </View>
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
                     <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('StudentQRScan')}/>
+                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('StudentMainView')}/>
                 </View>
             </View>
         </SafeAreaView>
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default InitialSelection;
+export default InitialSelectionView;
