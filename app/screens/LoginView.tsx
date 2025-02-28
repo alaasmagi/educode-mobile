@@ -59,12 +59,15 @@ function LoginView({ navigation, route }: NavigationProps) {
           <TextBox 
             iconName="person-icon" 
             placeHolder="Uni-ID" 
-            onChangeText={setUniId} value={uniId} />
+            onChangeText={setUniId} 
+            value={uniId} 
+            autoCapitalize='none'/>
           <TextBox 
             iconName="lock-icon" 
             placeHolder={t('password')} 
             isPassword 
-            onChangeText={setPassword} value={password}/>
+            onChangeText={setPassword} 
+            value={password}/>
         </View>
         <View style={styles.forgotPasswordContainer}>
           <NormalLink 

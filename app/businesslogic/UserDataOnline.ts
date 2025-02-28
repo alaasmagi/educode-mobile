@@ -2,6 +2,7 @@ import User from '../models/UserData';
 import Storage from '../data/LocalDataAccess';
 import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
 import CreateUserModel from '../models/CreateUserModel';
+import ForgotPasswordModel from '../models/ForgotPasswordModel';
 
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
@@ -29,7 +30,7 @@ export async function UserLogin (uniId:string, password:string) : Promise<boolea
     }
 }
 
-export async function CreateUserAccount(userData:CreateUserModel) : Promise<Boolean> {
+export async function CreateUserAccount(model:CreateUserModel) : Promise<Boolean> {
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Register`, {
             method: 'POST',
@@ -37,10 +38,10 @@ export async function CreateUserAccount(userData:CreateUserModel) : Promise<Bool
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                fullName: userData.fullName,
-                uniId: userData.uniId,
-                studentCode: userData.studentCode,
-                password: userData.password,
+                fullName: model.fullName,
+                uniId: model.uniId,
+                studentCode: model.studentCode,
+                password: model.password,
                 userRole: "Student",
                 creator: "educode-mobile"
             })
@@ -73,3 +74,24 @@ export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
     }
 }
 
+
+export async function RequestPasswordResetCode(model: ForgotPasswordModel): Promise<boolean> {
+    try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestReset`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                uniId: model.uniId,
+                studentCode: model.studentCode
+            })
+          });
+        if (!response.ok) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        return false;
+    }
+}

@@ -1,130 +1,144 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, BackHandler, Alert} from 'react-native';
-import { useFocusEffect } from "@react-navigation/native";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
-import * as Haptics from 'expo-haptics';
-import SeparatorLine from '../components/SeparatorLine';
-import TextBox from '../components/TextBox';
-import QrScanner from '../components/QrScanner';
 import { useTranslation } from 'react-i18next';
+import * as Haptics from 'expo-haptics';
 import NormalHeader from '../layout/NormalHeader';
 import NormalButton from '../components/NormalButton';
+import ModeToggle from '../components/ModeToggle';
 import StepDivider from '../components/StepDivider';
-import Checkbox from '../components/Checkbox';
+import QrScanner from '../components/QrScanner';
+import DataText from '../components/DataText';
+import NormalLink from '../components/NormalLink';
+import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
+import UnderlineText from '../components/UnderlineText';
+import { RegexFilters } from '../helpers/RegexFilters';
+
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
-    const {userData} = route.params;
-    const { t } = useTranslation();
+    const [qrScanView, setQrScanView] = useState(true);
+    const isKeyboardVisible = KeyboardVisibilityHandler();
     const [scanned, setScanned] = useState(false);
-    const [attendanceId, setAttendanceId] = useState('');
-    const [scanForWorkplace, setScanForWorkplace] = useState(false);
-    const [isOnline, setIsOnline] = useState(false);
-
+    const [attendanceData, setAttendanceData] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     
+    const { t } = useTranslation();
+
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
-            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); 
-            console.log("Scanned Data:", data); 
-            setAttendanceId(data);
-            setTimeout(() => setScanned(false), 5000);
+            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            if (RegexFilters.attendanceData.test(data)) {
+               setAttendanceData(data);
+            }
+            else {
+                setErrorMessage(t('TEST'));
+            }
+            setTimeout(() => setScanned(false), 2000);
+            setTimeout(() => setErrorMessage(''), 2000);
         }
-    };
-
-
-    useFocusEffect(
-        useCallback(() => {
-            const backAction = () => {
-            Alert.alert(t("exit-app"), t("exit-app-prompt"), [
-                { text: t("cancel"), onPress: () => null, style: "cancel" },
-                { text: t("yes"), onPress: () => BackHandler.exitApp() }
-            ]);
-            return true;
-            };
-            const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-            
-            return () => backHandler.remove();
-        }, []));
-    
-
-    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-            setKeyboardVisible(true);
-        });
-
-        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-            setKeyboardVisible(false);
-        });
-
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, []);
+    };    
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
-                <View style={styles.mainContainer}>
-                    <View style={styles.headerContainer}>
-                        <NormalHeader navigation={navigation} route={route}/>
+                <View style={styles.headerContainer}>
+                    <NormalHeader navigation={navigation} route={route}/>
+                </View>
+                <View style={styles.onlineToggleContainer}>
+                    <ModeToggle 
+                    textLeft={t("add-student")} 
+                    textRight={t("view-students")} 
+                    onPressLeft={() => setQrScanView(true)} 
+                    onPressRight={() => setQrScanView(false)}
+                    />
+                </View>
+                <View style={styles.dataContainer}>
+                    <UnderlineText text={"Current attendance:"}/>
+                    <View style={styles.data}>
+                        <DataText iconName='school-icon' text={"userData.fullName"}/>
+                        <DataText iconName='key-icon' text={"attendanceId"}/>
                     </View>
-                    <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step-scan-board")} stepNumber={3} />
-                    </View>
-                    {!isKeyboardVisible && <View style={styles.qrContainer}>
-                        <QrScanner onQrScanned={handleBarcodeScanned}/>
-                    </View>}
-                    <View style={styles.alternativeMethodContainer}>
-                        <SeparatorLine text={t("or-enter-id-manually")}/>
-                        <TextBox iconName='key-icon' placeHolder={t("attendance-id")} 
-                                value={attendanceId} 
-                                onChangeText={setAttendanceId}/>
-                    </View>
-                    <View style={styles.checkboxContainer}>
-                        <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace(prev => !prev)}/>
-                    </View>
-                    <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("continue")} onPress={() => {console.log("fuiefhi")}}></NormalButton>
-                    </View>
-                </View>   
+                        </View>
+                {qrScanView ? (
+                    <> 
+                        {!isKeyboardVisible && <View style={styles.qrContainer}>
+                            <QrScanner onQrScanned={handleBarcodeScanned}/>
+                        </View>}
+                        <View style={styles.dataContainer}>
+                            <UnderlineText text="Last added student:"/>
+                            <View style={styles.data}>
+                                <DataText iconName='person-icon' text={"213453IACB"}/>
+                                <DataText iconName="work-icon" text={"123456"} />
+                            </View>
+                        </View>
+                    </>
+                ) : (
+                    <>
+                        <View style={styles.stepDividerContainer}>
+                            <StepDivider label={t("step-show-qr")} stepNumber={1} />
+                        </View>
+                        <View style={styles.dataContainer}>
+                            <DataText iconName='person-icon' text={"userData.studentCode"}/>
+                            <DataText iconName='key-icon' text={"attendanceId"}/>
+                            <DataText iconName="work-icon" text={t("no-workplace")} />
+                        </View>
+                        <View style={styles.linkContainer}>
+                            <NormalLink text={t("something-wrong-back")} 
+                            onPress={() => {navigation.navigate("StudentMainView", {})}}/>
+                        </View>
+                        <View style={styles.lowNavButtonContainer}>
+                            <NormalButton text={t("refresh-qr")} onPress={console.log}></NormalButton>
+                        </View>
+                    </>
+                )}
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignContent: "center"
-    },
     headerContainer:{
-        flex: 2,
+        flex: 1.5,
         justifyContent: "center",
+    },
+    onlineToggleContainer: {
+        flex: 1,
+        justifyContent: "center"
     },
     stepDividerContainer: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center"
     },
     qrContainer: {
-        flex: 5,
+        flex: 3,
         justifyContent: "center",
         alignItems: "center"
     },
-    alternativeMethodContainer: {
-        flex: 2,
-        gap: 25,
-        alignItems: "center"
+    dataContainer: {
+        flex: 3,
+        gap: 5,
+        alignItems: "center",
+        justifyContent:"center"
     },
-    checkboxContainer:{
-        flex: 1,
-        alignItems: "center"
+    data: {
+        alignSelf: "center",
+        width: "80%",
+        borderWidth: 2,
+        borderColor: "#BCBCBD",
+        borderRadius: 20,
+        gap: 25,
+        padding: 10
+    },
+    linkContainer: {
+        paddingBottom: 4,
+        alignSelf:"center"
     },
     lowNavButtonContainer: {
-        flex: 2,
+        flex: 1.5,
         alignItems: "center"
     }
 })

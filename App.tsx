@@ -9,6 +9,8 @@ import CreateAccountView from './app/screens/CreateAccountView';
 import InitialSelectionView from './app/screens/InitialSelectionView';
 import StudentMainView from './app/screens/StudentMainView';
 import CompleteAttendanceView from './app/screens/CompleteAttendanceVIew';
+import TeacherMainView from './app/screens/TeacherMainView';
+import ForgotPasswordView from './app/screens/ForgotPasswordView';
 
 
 const Stack = createStackNavigator();
@@ -38,6 +40,8 @@ export default function App() {
         <Stack.Screen name="SettingsView" component={SettingsView} />
         <Stack.Screen name="CompleteAttendanceView" component={CompleteAttendanceView} />
         <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
+        <Stack.Screen name="TeacherMainView" component={TeacherMainView} />
+        <Stack.Screen name="ForgotPasswordView" component={ForgotPasswordView} />
       </Stack.Navigator>
     </NavigationContainer>
     </>

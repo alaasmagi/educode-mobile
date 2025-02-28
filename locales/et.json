@@ -39,6 +39,8 @@
     "password-match-message": "Mõlemad salasõnad peavad olema ühesugused",
     "all-fields-required-message": "Kõik väljad peavad olema täidetud",
     "account-create-error": "Viga kasutaja loomisel",
-    "create-account-success": "Kasutaja loomine õnnestus"
+    "create-account-success": "Kasutaja loomine õnnestus",
+    "add-student": "Lisa üliõpilane",
+    "view-students": "Kuva üliõpilased"
   }
   

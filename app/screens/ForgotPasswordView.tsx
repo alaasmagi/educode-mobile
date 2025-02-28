@@ -8,37 +8,26 @@ import NormalButton from '../components/NormalButton';
 import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
-import { CreateUserAccount} from '../businesslogic/UserDataOnline';
+import { RequestPasswordResetCode} from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import NormalMessage from '../components/NormalMessage';
 import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
-import CreateUserModel from '../models/CreateUserModel';
+import ForgotPasswordModel from '../models/ForgotPasswordModel';
 
-function CreateAccountView({ navigation }: NavigationProps) {
+function ForgotPasswordView({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
   const [studentCode, setStudentCode] = useState<string>('');
+  const [emailCode, setEmailCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordAgain, setPasswordAgain] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
-
-
-  const isNameFormValid = () => firstName !== '' && lastName !== '';
-  useEffect(() => {
-    if (!isNameFormValid()) {
-      setNormalMessage(t('all-fields-required-message'));
-    } else {
-      setNormalMessage('');
-    }
-  }, [firstName, lastName]);
 
   const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
   useEffect(() => {
@@ -60,15 +49,21 @@ function CreateAccountView({ navigation }: NavigationProps) {
     }
   }, [password, passwordAgain]);
 
-  const handleRegister = async () => {
-    let userData:CreateUserModel = {
-      uniId: uniId,
-      studentCode: studentCode,
-      fullName: firstName + ' '+ lastName,
-      password: password
-    }    
-    
-    if(await CreateUserAccount(userData)) {
+  const handleEmailRequest = async () => {
+    const userData:ForgotPasswordModel = {
+        uniId: uniId,
+        studentCode: studentCode
+    }
+
+    if(await RequestPasswordResetCode(userData)) {
+      setStepNr(2);
+    } else {
+      setErrorMessage(t('account-create-error'));
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if(1) {
       const successMessage = t('create-account-success');
       navigation.navigate('LoginView', {successMessage});
     } else {
@@ -84,44 +79,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
       <View style={styles.headerContainer}>
         <FormHeader />
         {!isKeyboardVisible && (
-          <Greeting text={t('welcome')} />
+          <Greeting text={'Forgot your password?'} />
         )}
       </View>
       {stepNr === 1 && (
         <>
         <View style={styles.textBoxContainer}>
-        <View style={styles.textBoxes}>
-          <TextBox 
-            iconName="person-icon" 
-            placeHolder={t('first-name') + ' *'} 
-            onChangeText={setFirstName} 
-            value = {firstName}/>
-          <TextBox 
-            iconName="person-icon" 
-            placeHolder={t('last-name') + ' *'} 
-            onChangeText={setLastName}
-            value={lastName}/>
-        </View>
-        {!isKeyboardVisible && normalMessage && (
-          <View style={styles.errorContainer}>
-            <NormalMessage text={normalMessage}/>
-          </View>
-        )}
-        </View>
-        <View style={styles.buttonContainer}>
-            <NormalButton 
-              text={t('continue')} 
-              onPress={() => {setStepNr(2)}} 
-              disabled={!isNameFormValid()}/>
-            <NormalLink 
-              text={t('already-registered')} 
-              onPress={() => navigation.navigate("LoginView")}/>
-        </View>
-        </>
-      )}
-      {stepNr === 2 && (
-        <>
-        <View style={styles.textBoxContainer}>
+        <UnderlineText text={'Confirm your details:'}/>
         <View style={styles.textBoxes}>
           <TextBox 
             iconName="person-icon" 
@@ -143,6 +107,34 @@ function CreateAccountView({ navigation }: NavigationProps) {
         )}
         </View>
         <View style={styles.buttonContainer}>
+            <NormalButton 
+              text={t('continue')} 
+              onPress={() => {setStepNr(2)}}
+              disabled={uniId == '' || studentCode == '' }/>
+            <NormalLink 
+              text={t('Remember your password? Log in!')} 
+              onPress={() => navigation.navigate("LoginView")} />
+        </View>
+        </>
+      )}
+      {stepNr === 2 && (
+        <>
+        <View style={styles.textBoxContainer}>
+        <UnderlineText text={`One-time key was sent to ${uniId}@taltech.ee`}/>
+        <View style={styles.textBoxes}>
+          <TextBox 
+            iconName="key-icon" 
+            placeHolder={t("One-time key *")} 
+            onChangeText={setEmailCode}
+            value={emailCode}/>
+        </View>
+        {!isKeyboardVisible && normalMessage && (
+          <View style={styles.errorContainer}>
+            <NormalMessage text={normalMessage}/>
+          </View>
+        )}
+        </View>
+        <View style={styles.buttonContainer}>
             <NormalLink 
               text={t('something-wrong-back')} 
               onPress={() => {setStepNr(1)}} />
@@ -151,7 +143,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
               onPress={() => {setStepNr(3)}}
               disabled={uniId == '' || studentCode == '' }/>
             <NormalLink 
-              text={t('already-registered')} 
+              text={t('Remember your password? Log in!')} 
               onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
@@ -159,6 +151,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
       {stepNr === 3 && (
         <>
         <View style={styles.textBoxContainer}>
+        <UnderlineText text={t('Set new password:')}></UnderlineText>
         <View style={styles.textBoxes}>
           <TextBox 
             iconName="lock-icon" 
@@ -188,35 +181,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
               onPress={() => {setStepNr(4)}}
               disabled={!isPasswordFormValid()}/>
             <NormalLink 
-              text={t('already-registered')} 
-              onPress={() => navigation.navigate("LoginView")} />
-        </View>
-        </>
-      )}
-      {stepNr === 4 && (
-        <>
-        <View style={styles.textBoxContainer}>
-        <UnderlineText text="Verify your details:"/>
-        <View style={styles.data}>
-          <DataText iconName='person-icon' text={firstName + ' ' + lastName}/>
-          <DataText iconName="person-icon" text={uniId} />
-          <DataText iconName='person-icon' text={studentCode}/>
-        </View>
-        {!isKeyboardVisible && errorMessage && (
-          <View style={styles.errorContainer}>
-            <ErrorMessage text={errorMessage}/>
-          </View>
-        )}
-        </View>
-        <View style={styles.buttonContainer}>
-            <NormalLink 
-              text={t('something-wrong-back')} 
-              onPress={() => {setStepNr(2)}} />
-            <NormalButton 
-              text={t('create-account')}
-              onPress={() => {handleRegister(); Keyboard.dismiss()}} />
-            <NormalLink 
-              text={t('already-registered')} 
+              text={t('Remember your password? Log in!')} 
               onPress={() => navigation.navigate("LoginView")} />
         </View>
         </>
@@ -235,6 +200,7 @@ const styles = StyleSheet.create({
   textBoxContainer: {
     flex: 2,
     justifyContent: 'center',
+    gap: 20
   },
   data: {
     alignSelf: "center",
@@ -264,4 +230,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccountView;
+export default ForgotPasswordView;

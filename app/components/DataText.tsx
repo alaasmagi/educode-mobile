@@ -22,7 +22,7 @@ const styles= StyleSheet.create({
     container: {
         flexDirection:"row",
         gap: 10,
-        width: "50%"
+        width: "90%"
     },
     icon: {
         width: 30,

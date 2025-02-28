@@ -13,6 +13,8 @@ const styles= StyleSheet.create({
         fontSize: 25,
         textDecorationLine: "underline",
         textAlign: "center",
+        alignSelf: "center",
+        maxWidth: "80%",
         margin: 5
     }
 });

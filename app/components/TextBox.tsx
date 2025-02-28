@@ -8,7 +8,8 @@ interface TextBoxProperties {
     placeHolder: string;
     value?: string;
     onChangeText?: (text: string) => void;
-    isPassword?: boolean; 
+    isPassword?: boolean;
+    autoCapitalize?: "none" | "sentences" | "words" | "characters";
 }
 
 
@@ -37,13 +38,13 @@ const styles= StyleSheet.create({
     }
 });
 
-const TextBox: React.FC<TextBoxProperties> = ({ iconName, placeHolder, value, onChangeText, isPassword }) => {
+const TextBox: React.FC<TextBoxProperties> = ({ iconName, placeHolder, value, onChangeText, isPassword, autoCapitalize = "sentences" }) => {
     return (
         <View style={styles.textBoxContainer}>
             <View style={styles.inputContainer}>
                 <Image source={Icons[iconName]} style={styles.icon} />
                 <TextInput placeholder={placeHolder} placeholderTextColor="#BCBCBD" style={styles.input} scrollEnabled={true} numberOfLines={1} secureTextEntry={isPassword} 
-                            value={value} onChangeText={onChangeText} />
+                            value={value} onChangeText={onChangeText} autoCapitalize={autoCapitalize} />
             </View>
             <View style={styles.underline} />
         </View>

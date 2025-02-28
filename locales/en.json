@@ -39,5 +39,7 @@
     "password-match-message": "Both passwords need to match",
     "all-fields-required-message": "All fields need to be filled",
     "account-create-error": "User account creation failed",
-    "create-account-success": "Successfully created an account"
+    "create-account-success": "Successfully created an account",
+    "add-student": "Add student",
+    "view-students": "View students"
 }

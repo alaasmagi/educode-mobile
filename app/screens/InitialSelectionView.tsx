@@ -53,7 +53,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
                     <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('StudentMainView')}/>
+                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('ForgotPasswordView')}/>
                 </View>
             </View>
         </SafeAreaView>
