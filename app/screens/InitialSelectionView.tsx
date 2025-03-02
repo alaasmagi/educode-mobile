@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, useState} from 'react';
 import NavigationProps from '../../types'
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView, StyleSheet, View, BackHandler, Alert } from 'react-native';
@@ -10,10 +10,12 @@ import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
 import Storage from '../data/LocalDataAccess';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
+import User from '../models/UserData';
 
 
 function InitialSelectionView({ navigation }: NavigationProps) {
     const { t } = useTranslation();
+    const [studentCode, setStudentCode] = useState('');
 
     BackButtonHandler(navigation);
     useFocusEffect(
@@ -32,13 +34,24 @@ function InitialSelectionView({ navigation }: NavigationProps) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-          const storedUserData = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
+          const storedUserData:User|null = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
           if (storedUserData) {
-            navigation.navigate('StudentMainView', { userData: storedUserData });
-          }
+            storedUserData.userType.userType === "Teacher" ? 
+            navigation.navigate('TeacherMainView', { storedUserData }) :
+            navigation.navigate('StudentMainView', { storedUserData });
+           }
         };
         fetchUserData();
       }, []);
+
+      const handleOfflineLogin = () => {
+        const userData = {
+            studentCode: studentCode
+        }
+
+        Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
+        navigation.navigate('StudentMainView', {userData});
+      };
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -52,8 +65,8 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                 </View>
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
-                    <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                    <NormalButton text={t("continue")} onPress={() => navigation.navigate('ForgotPasswordView')}/>
+                    <TextBox iconName='person-icon' placeHolder={t("student-code")} onChangeText={setStudentCode} value={studentCode} autoCapitalize='characters'/>
+                    <NormalButton text={t("continue")} onPress={handleOfflineLogin}/>
                 </View>
             </View>
         </SafeAreaView>

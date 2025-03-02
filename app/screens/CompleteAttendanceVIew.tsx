@@ -15,18 +15,17 @@ import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
 
 function CompleteAttendanceView({ navigation , route}: NavigationProps) {
-    const { userData, attendanceId, workplaceId = 0 } = route.params;
+    const { userData, attendanceId, isOfflineOnly, workplaceId = 0 } = route.params;
     const [isOnline, setIsOnline] = useState(false);
     const isKeyboardVisible = KeyboardVisibilityHandler();
     let {stepNr} = route.params;
     stepNr++;
-    
     const { t } = useTranslation();
 
-    const [qrValue, setQrValue] = useState(GenerateQrString(userData.matriculationNumber, attendanceId, workplaceId));
+    const [qrValue, setQrValue] = useState(GenerateQrString(userData.studentCode, attendanceId, workplaceId));
 
     const refreshQrCode = () => {
-        setQrValue(GenerateQrString(userData.matriculationNumber, attendanceId, workplaceId));
+        setQrValue(GenerateQrString(userData.studentCode, attendanceId, workplaceId));
     };
 
     return (
@@ -37,50 +36,51 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                 </View>
                 <View style={styles.onlineToggleContainer}>
                     <ModeToggle 
-                    textLeft={t("offline-mode")} 
-                    textRight={t("online-mode")} 
-                    onPressLeft={() => setIsOnline(false)} 
-                    onPressRight={() => setIsOnline(true)}
+                        textLeft={t("offline-mode")} 
+                        textRight={t("online-mode")} 
+                        onPressLeft={() => setIsOnline(false)} 
+                        onPressRight={() => setIsOnline(true)}
+                        isDisabled={isOfflineOnly}
                     />
                 </View>
                 {isOnline ? (
                     <> 
-                        <View style={styles.stepDividerContainer}>
-                            <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
-                        </View>
-                        <UnderlineText text="Verify your details:"/>
-                        <View style={styles.dataContainer}>
-                            <DataText iconName='person-icon' text={userData.fullName}/>
-                            <DataText iconName='key-icon' text={attendanceId}/>
-                            <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
-                        </View>
-                        <View style={styles.linkContainer}>
-                            <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
-                        </View>
-                        <View style={styles.lowNavButtonContainer}>
-                            <NormalButton text={t("check-in")} onPress={() => {console.log("hfiourehfg")}}></NormalButton>
-                        </View>
+                    <View style={styles.stepDividerContainer}>
+                        <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
+                    </View>
+                    <UnderlineText text="Verify your details:"/>
+                    <View style={styles.dataContainer}>
+                        <DataText iconName='person-icon' text={userData.fullName}/>
+                        <DataText iconName='key-icon' text={attendanceId}/>
+                        <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                    </View>
+                    <View style={styles.linkContainer}>
+                        <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
+                    </View>
+                    <View style={styles.lowNavButtonContainer}>
+                        <NormalButton text={t("check-in")} onPress={() => {console.log("hfiourehfg")}}></NormalButton>
+                    </View>
                     </>
                 ) : (
                     <>
-                        <View style={styles.stepDividerContainer}>
-                            <StepDivider label={t("step-show-qr")} stepNumber={stepNr} />
-                        </View>
-                        {!isKeyboardVisible && <View style={styles.qrContainer}>
-                            <QrGenerator value={qrValue}/>
-                        </View>}
-                        <View style={styles.dataContainer}>
-                            <DataText iconName='person-icon' text={userData.studentCode}/>
-                            <DataText iconName='key-icon' text={attendanceId}/>
-                            <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
-                        </View>
-                        <View style={styles.linkContainer}>
-                            <NormalLink text={t("something-wrong-back")} 
-                            onPress={() => {navigation.navigate("StudentMainView", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
-                        </View>
-                        <View style={styles.lowNavButtonContainer}>
-                            <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
-                        </View>
+                    <View style={styles.stepDividerContainer}>
+                        <StepDivider label={t("step-show-qr")} stepNumber={stepNr} />
+                    </View>
+                    {!isKeyboardVisible && <View style={styles.qrContainer}>
+                        <QrGenerator value={qrValue}/>
+                    </View>}
+                    <View style={styles.dataContainer}>
+                        <DataText iconName='person-icon' text={userData.studentCode}/>
+                        <DataText iconName='key-icon' text={attendanceId}/>
+                        <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                    </View>
+                    <View style={styles.linkContainer}>
+                        <NormalLink text={t("something-wrong-back")} 
+                        onPress={() => {navigation.navigate("StudentMainView", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
+                    </View>
+                    <View style={styles.lowNavButtonContainer}>
+                        <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
+                    </View>
                     </>
                 )}
             </SafeAreaView>

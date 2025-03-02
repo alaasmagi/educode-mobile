@@ -12,11 +12,11 @@ import { RequestPasswordResetCode} from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import NormalMessage from '../components/NormalMessage';
-import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
 import ForgotPasswordModel from '../models/ForgotPasswordModel';
 
-function ForgotPasswordView({ navigation }: NavigationProps) {
+function ForgotPasswordView({ navigation, route }: NavigationProps) {
+  const isNormalPassChange:boolean = route?.params?.isNormalPassChange ?? false;
   const [uniId, setUniId] = useState<string>('');
   const [studentCode, setStudentCode] = useState<string>('');
   const [emailCode, setEmailCode] = useState<string>('');
@@ -79,7 +79,7 @@ function ForgotPasswordView({ navigation }: NavigationProps) {
       <View style={styles.headerContainer}>
         <FormHeader />
         {!isKeyboardVisible && (
-          <Greeting text={'Forgot your password?'} />
+          <Greeting text={isNormalPassChange ? t('ChangePassword') : t('Forgot your password?')} />
         )}
       </View>
       {stepNr === 1 && (
@@ -111,9 +111,9 @@ function ForgotPasswordView({ navigation }: NavigationProps) {
               text={t('continue')} 
               onPress={() => {setStepNr(2)}}
               disabled={uniId == '' || studentCode == '' }/>
-            <NormalLink 
-              text={t('Remember your password? Log in!')} 
-              onPress={() => navigation.navigate("LoginView")} />
+             <NormalLink 
+              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
+              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -123,7 +123,7 @@ function ForgotPasswordView({ navigation }: NavigationProps) {
         <UnderlineText text={`One-time key was sent to ${uniId}@taltech.ee`}/>
         <View style={styles.textBoxes}>
           <TextBox 
-            iconName="key-icon" 
+            iconName="pincode-icon" 
             placeHolder={t("One-time key *")} 
             onChangeText={setEmailCode}
             value={emailCode}/>
@@ -143,8 +143,8 @@ function ForgotPasswordView({ navigation }: NavigationProps) {
               onPress={() => {setStepNr(3)}}
               disabled={uniId == '' || studentCode == '' }/>
             <NormalLink 
-              text={t('Remember your password? Log in!')} 
-              onPress={() => navigation.navigate("LoginView")} />
+              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
+              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -181,8 +181,8 @@ function ForgotPasswordView({ navigation }: NavigationProps) {
               onPress={() => {setStepNr(4)}}
               disabled={!isPasswordFormValid()}/>
             <NormalLink 
-              text={t('Remember your password? Log in!')} 
-              onPress={() => navigation.navigate("LoginView")} />
+              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
+              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
         </View>
         </>
       )}

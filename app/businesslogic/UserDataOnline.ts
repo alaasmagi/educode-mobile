@@ -77,7 +77,7 @@ export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
 
 export async function RequestPasswordResetCode(model: ForgotPasswordModel): Promise<boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestReset`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Reset/Request`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

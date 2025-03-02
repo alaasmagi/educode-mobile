@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavigationProps from '../../types'
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
@@ -18,7 +18,7 @@ import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import ScreenCaptureHandler from '../../hooks/ScreenCaptureHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 
-function StudentMainView({ navigation , route}: NavigationProps) {
+function StudentMainView({ navigation , route }: NavigationProps) {
     const {userData} = route.params;
     const { t } = useTranslation();
 
@@ -36,6 +36,8 @@ function StudentMainView({ navigation , route}: NavigationProps) {
     const [stepNr, setStepNr] = useState(initialStepNr);
 
     const [showError, setShowError] = useState(false);
+
+    const [isOfflineOnly, setIsOfflineOnly] = useState(false);
 
     const isKeyboardVisible = KeyboardVisibilityHandler();
     const clearSensitiveData = () => {
@@ -68,9 +70,15 @@ function StudentMainView({ navigation , route}: NavigationProps) {
             setScanForWorkplace(false);
         }
         else {
-            navigation.navigate("CompleteAttendanceView", { userData, attendanceId, stepNr });
+            navigation.navigate("CompleteAttendanceView", { userData, attendanceId, stepNr, isOfflineOnly });
         }
-    } 
+    };
+
+    useEffect(() => {
+        if (userData.uniId == null) {
+            setIsOfflineOnly(true);
+        }
+    }, [userData.uniId]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -78,6 +86,7 @@ function StudentMainView({ navigation , route}: NavigationProps) {
                 <View style={styles.headerContainer}>
                     <NormalHeader navigation={navigation} route={route}/>
                 </View>
+                <View style={styles.mainContainer}>
                 <View style={styles.stepDividerContainer}>
                     <StepDivider 
                         stepNumber={stepNr} 
@@ -136,11 +145,12 @@ function StudentMainView({ navigation , route}: NavigationProps) {
                         <View style={styles.lowNavButtonContainer}>
                             <NormalButton 
                                 text={t("continue")} 
-                                onPress={() => navigation.navigate("CompleteAttendanceView", {userData, attendanceId, workplaceId, stepNr})}
+                                onPress={() => navigation.navigate("CompleteAttendanceView", {userData, attendanceId, workplaceId, stepNr, isOfflineOnly})}
                                 disabled={!RegexFilters.defaultId.test(workplaceId)}
                             />                                    
                         </View>
                     </View>)}
+                </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -148,8 +158,11 @@ function StudentMainView({ navigation , route}: NavigationProps) {
 
 const styles = StyleSheet.create({
     headerContainer:{
-        flex: 2,
+        flex: 3,
         justifyContent: "center",
+    },
+    mainContainer: {
+        flex: 14
     },
     stepDividerContainer: {
         flex: 1,

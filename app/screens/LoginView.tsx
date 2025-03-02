@@ -36,8 +36,10 @@ function LoginView({ navigation, route }: NavigationProps) {
     if (await UserLogin(uniId, password)) {
       const userData = await GetUserDataByUniId(uniId);
       if (userData) {
-        navigation.navigate('StudentMainView', { userData });
         Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
+        userData.userType.userType === "Teacher" ? 
+        navigation.navigate('TeacherMainView', { userData }) :
+        navigation.navigate('StudentMainView', { userData });
       } else {
       setErrorMessage(t("login-error"));
       setTimeout(() => {
@@ -72,7 +74,7 @@ function LoginView({ navigation, route }: NavigationProps) {
         <View style={styles.forgotPasswordContainer}>
           <NormalLink 
             text={t('forgot-password')} 
-            onPress={() => console.log('Link pressed')} />
+            onPress={() => navigation.navigate("ForgotPasswordView")} />
         </View>
         <View style={styles.errorContainer}>
         {!isKeyboardVisible && errorMessage && (<ErrorMessage text={errorMessage}/>)}
