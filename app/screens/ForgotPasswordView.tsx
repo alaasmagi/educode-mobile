@@ -25,6 +25,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
 
+  const {localData} = route.params
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
@@ -118,7 +119,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               disabled={uniId == ''}/>
              <NormalLink 
               text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
-              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
+              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView", { localData }) : navigation.navigate("LoginView")} />
         </View>
         </>
       )}
@@ -140,13 +141,13 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalLink 
-              text={t('something-wrong-back')} 
-              onPress={() => {setStepNr(1)}} />
             <NormalButton 
               text={t('continue')} 
               onPress={handleOTPVerification}
               disabled={uniId == ''}/>
+            <NormalLink 
+              text={t('something-wrong-back')} 
+              onPress={() => {setStepNr(1)}} />
         </View>
         </>
       )}
@@ -175,13 +176,13 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         )}
         </View>
         <View style={styles.buttonContainer}>
-            <NormalLink 
-              text={t('something-wrong-back')} 
-              onPress={() => {setStepNr(2)}} />
             <NormalButton 
               text={t('continue')} 
               onPress={() => {setStepNr(4)}}
               disabled={!isPasswordFormValid()}/>
+              <NormalLink 
+              text={t('something-wrong-back')} 
+              onPress={() => {setStepNr(2)}} />
         </View>
         </>
       )}

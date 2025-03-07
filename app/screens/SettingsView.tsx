@@ -33,7 +33,7 @@ function SettingsView({navigation, route}: NavigationProps) {
             <View style={styles.mainContainer}>
                 {!isOfflineOnly && (
                     <View style={styles.changePassword}>
-                        <NormalButton text={t('ChangePassword')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true })}/>
+                        <NormalButton text={t('ChangePassword')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
                     </View>
                 )}
 
