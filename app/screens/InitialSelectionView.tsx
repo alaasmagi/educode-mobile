@@ -8,14 +8,17 @@ import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
-import Storage from '../data/LocalDataAccess';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
-import User from '../models/UserData';
+import LocalUserData from '../models/LocalUserDataModel';
+import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
+import { FetchAndSaveUserDataByUniId } from '../businesslogic/UserDataOnline';
+import NormalMessage from '../components/NormalMessage';
 
 
 function InitialSelectionView({ navigation }: NavigationProps) {
     const { t } = useTranslation();
     const [studentCode, setStudentCode] = useState('');
+    const [normalMessage, setNormalMessage] = useState<string|null>(null);
 
     BackButtonHandler(navigation);
     useFocusEffect(
@@ -30,27 +33,44 @@ function InitialSelectionView({ navigation }: NavigationProps) {
           const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
           
           return () => backHandler.remove();
-        }, []));
+        },
+    []));
+
 
     useEffect(() => {
         const fetchUserData = async () => {
-          const storedUserData:User|null = await Storage.getData(process.env.EXPO_PUBLIC_LOCAL_DATA);
-          if (storedUserData) {
-            storedUserData.userType.userType === "Teacher" ? 
-            navigation.navigate('TeacherMainView', { storedUserData }) :
-            navigation.navigate('StudentMainView', { storedUserData });
-           }
+            let localData:LocalUserData|null = await GetOfflineUserData();
+            if (localData){
+                if (localData.offlineOnly) {
+                    navigation.navigate("StudentMainView", { localData });
+                } else {
+                    const loginStatus = await FetchAndSaveUserDataByUniId(localData.uniId!);
+                    if (loginStatus) {
+                        localData = await GetOfflineUserData();
+                        if (localData){
+                            localData.userType === "Teacher" ? navigation.navigate("TeacherMainView", { localData }) :
+                            navigation.navigate("StudentMainView", { localData });
+                        }
+                    } else {
+                        setNormalMessage(t("login-again"));
+                        setTimeout(() => {
+                            setNormalMessage(null);
+                          }, 3000);
+                    }
+                }
+            }
         };
         fetchUserData();
-      }, []);
+        }, []);
 
-      const handleOfflineLogin = () => {
-        const userData = {
-            studentCode: studentCode
+      const handleOfflineLogin = async () => {
+        const localData:LocalUserData = {
+            userType: "Student",
+            studentCode: studentCode,
+            offlineOnly: true,
         }
-
-        Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-        navigation.navigate('StudentMainView', {userData});
+        await SaveOfflineUserData(localData);
+        navigation.navigate('StudentMainView', {localData});
       };
 
     return (
@@ -62,6 +82,9 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                 <View style={styles.mainLoginContainer}>
                     <NormalButton text={t("log-in")} onPress={() => navigation.navigate('LoginView')}/>
                     <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccountView')}/>
+                    {normalMessage && (
+                        <NormalMessage text={normalMessage}/>
+                    )}
                 </View>
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>

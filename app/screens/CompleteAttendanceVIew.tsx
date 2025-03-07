@@ -9,24 +9,49 @@ import ModeToggle from '../components/ModeToggle';
 import StepDivider from '../components/StepDivider';
 import QrGenerator from '../components/QrGenerator';
 import DataText from '../components/DataText';
+import SuccessMessage from '../components/SuccessMessage'
+import ErrorMessage from '../components/ErrorMessage'
 import { GenerateQrString } from '../businesslogic/QrGenLogic';
 import NormalLink from '../components/NormalLink';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
+import { AddAttendanceCheck } from '../businesslogic/CourseAttendanceData';
+import AttendanceCheckData from '../models/AttendanceCheckData';
+
 
 function CompleteAttendanceView({ navigation , route}: NavigationProps) {
-    const { userData, attendanceId, isOfflineOnly, workplaceId = 0 } = route.params;
+    const { localData, attendanceId, workplaceId = 0 } = route.params;
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [errorMessage, setErrorMessage] = useState<string|null>(null);
     const [isOnline, setIsOnline] = useState(false);
     const isKeyboardVisible = KeyboardVisibilityHandler();
     let {stepNr} = route.params;
     stepNr++;
     const { t } = useTranslation();
 
-    const [qrValue, setQrValue] = useState(GenerateQrString(userData.studentCode, attendanceId, workplaceId));
+    const [qrValue, setQrValue] = useState(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
 
     const refreshQrCode = () => {
-        setQrValue(GenerateQrString(userData.studentCode, attendanceId, workplaceId));
+        setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
     };
+
+
+    const handleAttendanceCheckAdd = async () => {
+        const attendanceCheck:AttendanceCheckData = {
+            studentCode: localData.studentCode,
+            courseAttendanceId: attendanceId,
+            workplaceId: workplaceId ?? null
+        }
+        const status = await AddAttendanceCheck(attendanceCheck);
+        if (status) {
+            setSuccessMessage(t("attendance-add-success"));
+            setTimeout(() => {setSuccessMessage(null); 
+                            navigation.navigate("StudentMainView", localData)}, 3000);
+        } else {
+            setErrorMessage(t("attendance-add-error"));
+            setTimeout(() => setErrorMessage(null), 3000);
+        }
+    } 
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -40,7 +65,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                         textRight={t("online-mode")} 
                         onPressLeft={() => setIsOnline(false)} 
                         onPressRight={() => setIsOnline(true)}
-                        isDisabled={isOfflineOnly}
+                        isDisabled={localData.offlineOnly}
                     />
                 </View>
                 {isOnline ? (
@@ -50,15 +75,25 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                     </View>
                     <UnderlineText text="Verify your details:"/>
                     <View style={styles.dataContainer}>
-                        <DataText iconName='person-icon' text={userData.fullName}/>
+                        <DataText iconName='person-icon' text={localData.fullName}/>
                         <DataText iconName='key-icon' text={attendanceId}/>
                         <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
+                    <View style={styles.messageContainer}>
+                        {successMessage && (
+                            <SuccessMessage text={successMessage}/>)}
+                        {errorMessage && (
+                            <ErrorMessage text={errorMessage}/>)}
+                    </View>
                     <View style={styles.linkContainer}>
-                        <NormalLink text={t("something-wrong-back")} onPress={() => {console.log("link pressed")}}/>
+                        <NormalLink 
+                            text={t("something-wrong-back")} 
+                            onPress={() => {navigation.navigate("StudentMainView", {localData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("check-in")} onPress={() => {console.log("hfiourehfg")}}></NormalButton>
+                        <NormalButton 
+                            text={t("check-in")} 
+                            onPress={handleAttendanceCheckAdd}/>
                     </View>
                     </>
                 ) : (
@@ -70,13 +105,14 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                         <QrGenerator value={qrValue}/>
                     </View>}
                     <View style={styles.dataContainer}>
-                        <DataText iconName='person-icon' text={userData.studentCode}/>
+                        <DataText iconName='person-icon' text={localData.studentCode}/>
                         <DataText iconName='key-icon' text={attendanceId}/>
                         <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
                     <View style={styles.linkContainer}>
-                        <NormalLink text={t("something-wrong-back")} 
-                        onPress={() => {navigation.navigate("StudentMainView", {userData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
+                        <NormalLink 
+                            text={t("something-wrong-back")} 
+                            onPress={() => {navigation.navigate("StudentMainView", {localData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
@@ -110,6 +146,10 @@ const styles = StyleSheet.create({
     dataContainer: {
         flex: 2,
         gap: 5,
+        alignItems: "center",
+        justifyContent:"center"
+    },
+    messageContainer: {
         alignItems: "center",
         justifyContent:"center"
     },

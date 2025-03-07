@@ -13,7 +13,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import NormalMessage from '../components/NormalMessage';
 import UnderlineText from '../components/UnderlineText';
-import ForgotPasswordModel from '../models/ForgotPasswordModel';
+import ChangePasswordModel from '../models/ChangePasswordModel';
 
 function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const isNormalPassChange:boolean = route?.params?.isNormalPassChange ?? false;
@@ -50,9 +50,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   }, [password, passwordAgain]);
 
   const handleEmailRequest = async () => {
-    const userData:ForgotPasswordModel = {
-        uniId: uniId,
-        studentCode: studentCode
+    const userData:ChangePasswordModel = {
+        uniId: uniId
     }
 
     if(await RequestPasswordResetCode(userData)) {

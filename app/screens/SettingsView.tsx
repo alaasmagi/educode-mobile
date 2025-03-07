@@ -15,15 +15,15 @@ import Greeting from '../components/Greeting';
 
 function SettingsView({navigation, route}: NavigationProps) {
     const { t } = useTranslation();
-    const {userData} = route.params;
+    const {localData} = route.params;
     const [isOfflineOnly, setIsOfflineOnly] = useState(false);
     
     
     useEffect(() => {
-            if (userData.uniId == null) {
+            if (localData.uniId == null) {
                 setIsOfflineOnly(true);
             }
-        }, [userData.uniId]);
+        }, [localData.uniId]);
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -49,7 +49,7 @@ function SettingsView({navigation, route}: NavigationProps) {
                     <SeparatorLine text={t("DeleteAccount")}/>
                     {!isOfflineOnly && <TextBox iconName='person-icon' placeHolder={t("password")}/>}
                     <TextBox iconName='person-icon' placeHolder={t("Type 'DELETE'")}/>
-                    <NormalButton text={t("DeleteAccount")} onPress={() => console.log(userData.studentCode)}/>
+                    <NormalButton text={t("DeleteAccount")} onPress={() => console.log(localData.studentCode)}/>
                 </View>
             </View>
             <View style={styles.lowButtonContainer}>

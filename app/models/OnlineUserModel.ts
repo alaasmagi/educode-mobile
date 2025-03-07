@@ -1,4 +1,4 @@
-interface User {
+interface OnlineUserModel {
     id: number;
     userType: {
         userType: string;
@@ -8,4 +8,4 @@ interface User {
     fullName: string;
 }
 
-export default User;
+export default OnlineUserModel;

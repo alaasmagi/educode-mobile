@@ -1,7 +1,7 @@
-interface AttendanceCheckData {
+interface CreateAttendanceCheckModel {
     studentCode: string;
     courseAttendanceId: number;
     workplaceId?: number;
 }
 
-export default AttendanceCheckData;
+export default CreateAttendanceCheckModel;

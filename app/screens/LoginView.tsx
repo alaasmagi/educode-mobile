@@ -9,11 +9,12 @@ import NormalButton from '../components/NormalButton';
 import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
-import Storage from '../data/LocalDataAccess';
-import { GetUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
+import { FetchAndSaveUserDataByUniId, UserLogin } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage'
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
+import LocalUserData from '../models/LocalUserDataModel';
+import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -34,12 +35,14 @@ function LoginView({ navigation, route }: NavigationProps) {
     };
     
     if (await UserLogin(uniId, password)) {
-      const userData = await GetUserDataByUniId(uniId);
-      if (userData) {
-        Storage.saveData(process.env.EXPO_PUBLIC_LOCAL_DATA, userData);
-        userData.userType.userType === "Teacher" ? 
-        navigation.navigate('TeacherMainView', { userData }) :
-        navigation.navigate('StudentMainView', { userData });
+      const loginStatus = await FetchAndSaveUserDataByUniId(uniId);
+      if (loginStatus) {
+        const localData = await GetOfflineUserData();
+        if (localData) {
+          localData.userType === "Teacher" ? 
+          navigation.navigate('TeacherMainView', { localData }) :
+          navigation.navigate('StudentMainView', { localData });
+        }
       } else {
       setErrorMessage(t("login-error"));
       setTimeout(() => {

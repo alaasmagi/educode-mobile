@@ -1,9 +1,11 @@
-import User from '../models/UserData';
+import OnlineUserModel from '../models/OnlineUserModel';
 import Storage from '../data/LocalDataAccess';
 import { LocalKeys } from '../helpers/HardcodedLocalDataKeys';
 import CreateUserModel from '../models/CreateUserModel';
-import ForgotPasswordModel from '../models/ForgotPasswordModel';
-
+import VerifyOTPModel from '../models/VerifyOTPModel';
+import ChangePasswordModel from '../models/ChangePasswordModel';
+import LocalUserData from '../models/LocalUserDataModel';
+import { SaveOfflineUserData } from './UserDataOffline';
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
 {
@@ -55,7 +57,7 @@ export async function CreateUserAccount(model:CreateUserModel) : Promise<Boolean
     }
 }
 
-export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
+export async function FetchAndSaveUserDataByUniId(uniId: string):Promise<boolean> {
     const token = await Storage.getData(LocalKeys.localToken);
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
@@ -67,29 +69,101 @@ export async function GetUserDataByUniId(uniId: string): Promise<User | null> {
         if (!response.ok) {
             throw new Error("Failed to fetch user data");
         }
-        const data: User = await response.json();
-        return data;
+        const data: OnlineUserModel = await response.json();
+        const localData:LocalUserData = {
+            userType: data.userType.userType,
+            uniId: data.uniId,
+            studentCode: data.studentCode,
+            offlineOnly: false,
+            fullName: data.fullName,
+        }
+        SaveOfflineUserData(localData);
+        return true;
     } catch (error) {
-        return null;
+        return false;
     }
 }
 
 
-export async function RequestPasswordResetCode(model: ForgotPasswordModel): Promise<boolean> {
+export async function RequestOTP(uniId:string): Promise<boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Reset/Request`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestOTP`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                uniId: uniId
+            })
+          });
+        if (!response.ok) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
+    try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestOTP`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 uniId: model.uniId,
-                studentCode: model.studentCode
+                otp: model.otp
             })
           });
         if (!response.ok) {
             return false;
         }
+        const data = await response.json();
+        Storage.saveData(LocalKeys.localToken, data.token);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function ChangeUserPassword(model: ChangePasswordModel): Promise<boolean> {
+    const token = await Storage.getData(LocalKeys.localToken);
+    try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/ChangePassword`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify ({
+                uniId: model.uniId,
+                newPassword: model.newPassword
+            })
+        });
+        if (!response.ok) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function DeleteUser(uniId: string): Promise<boolean> {
+    const token = await Storage.getData(LocalKeys.localToken);
+    try {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/${uniId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+        if (!response.ok) {
+            return false;
+        }
+        Storage.removeData(LocalKeys.userProfile);
         return true;
     } catch (error) {
         return false;

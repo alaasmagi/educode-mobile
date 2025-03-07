@@ -3,16 +3,16 @@ import { Image, StyleSheet, View} from 'react-native';
 import LanguageSwitch from '../components/LanguageSwitch';
 import Storage from '../data/LocalDataAccess';
 import SettingsButton from '../components/SettingsButton';
-import User from '../models/UserData';
+import User from '../models/OnlineUserModel';
 
 function NormalHeader({ navigation, route }: NavigationProps) {
-    const {userData} = route.params
+    const {localData} = route.params
     return (
         <View style={styles.structure}>
             <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/splash-logo.png')}/>
             <View style={styles.buttonContainer}>
                 <LanguageSwitch/>
-                <SettingsButton onPress={() => navigation.navigate('SettingsView', {userData})}/>
+                <SettingsButton onPress={() => navigation.navigate('SettingsView', {localData})}/>
             </View>
         </View>
     );

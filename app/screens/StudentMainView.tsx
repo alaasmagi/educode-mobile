@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavigationProps from '../../types'
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
@@ -19,7 +19,7 @@ import ScreenCaptureHandler from '../../hooks/ScreenCaptureHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 
 function StudentMainView({ navigation , route }: NavigationProps) {
-    const {userData} = route.params;
+    const { localData } = route.params;
     const { t } = useTranslation();
 
     const [scanned, setScanned] = useState(false);
@@ -36,8 +36,6 @@ function StudentMainView({ navigation , route }: NavigationProps) {
     const [stepNr, setStepNr] = useState(initialStepNr);
 
     const [showError, setShowError] = useState(false);
-
-    const [isOfflineOnly, setIsOfflineOnly] = useState(false);
 
     const isKeyboardVisible = KeyboardVisibilityHandler();
     const clearSensitiveData = () => {
@@ -59,9 +57,9 @@ function StudentMainView({ navigation , route }: NavigationProps) {
                 setShowError(true);
             }
             setTimeout(() => setScanned(false), 3000);
-            setTimeout(() => setShowError(false), 3000)
+            setTimeout(() => setShowError(false), 3000);
         }
-    };    
+    };
 
     const handleNextStep = () => {
         if (scanForWorkplace == true) {
@@ -70,15 +68,9 @@ function StudentMainView({ navigation , route }: NavigationProps) {
             setScanForWorkplace(false);
         }
         else {
-            navigation.navigate("CompleteAttendanceView", { userData, attendanceId, stepNr, isOfflineOnly });
+            navigation.navigate("CompleteAttendanceView", { localData, attendanceId, stepNr });
         }
     };
-
-    useEffect(() => {
-        if (userData.uniId == null) {
-            setIsOfflineOnly(true);
-        }
-    }, [userData.uniId]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -145,7 +137,7 @@ function StudentMainView({ navigation , route }: NavigationProps) {
                         <View style={styles.lowNavButtonContainer}>
                             <NormalButton 
                                 text={t("continue")} 
-                                onPress={() => navigation.navigate("CompleteAttendanceView", {userData, attendanceId, workplaceId, stepNr, isOfflineOnly})}
+                                onPress={() => navigation.navigate("CompleteAttendanceView", {localData, attendanceId, workplaceId, stepNr })}
                                 disabled={!RegexFilters.defaultId.test(workplaceId)}
                             />                                    
                         </View>
