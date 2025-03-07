@@ -8,17 +8,17 @@ import NormalButton from '../components/NormalButton';
 import FormHeader from '../layout/FormHeader';
 import Greeting from '../components/Greeting';
 import NormalLink from '../components/NormalLink';
-import { RequestPasswordResetCode} from '../businesslogic/UserDataOnline';
+import { RequestOTP, VerifyOTP, ChangeUserPassword } from '../businesslogic/UserDataOnline';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import NormalMessage from '../components/NormalMessage';
 import UnderlineText from '../components/UnderlineText';
 import ChangePasswordModel from '../models/ChangePasswordModel';
+import VerifyOTPModel from '../models/VerifyOTPModel';
 
 function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const isNormalPassChange:boolean = route?.params?.isNormalPassChange ?? false;
   const [uniId, setUniId] = useState<string>('');
-  const [studentCode, setStudentCode] = useState<string>('');
   const [emailCode, setEmailCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordAgain, setPasswordAgain] = useState<string>('');
@@ -29,14 +29,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
 
-  const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
+  const isStudentIDFormValid = () => uniId !== '';
   useEffect(() => {
     if (!isStudentIDFormValid()) {
       setNormalMessage(t('all-fields-required-message'));
     } else {
       setNormalMessage('');
     }
-  }, [uniId, studentCode]);
+  }, [uniId]);
 
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
   useEffect(() => {
@@ -49,13 +49,25 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     }
   }, [password, passwordAgain]);
 
-  const handleEmailRequest = async () => {
-    const userData:ChangePasswordModel = {
-        uniId: uniId
+  const handleOTPRequest = async () => {
+    Keyboard.dismiss();
+
+    if(await RequestOTP(uniId)) {
+      setStepNr(2);
+    } else {
+      setErrorMessage(t('account-create-error'));
+    }
+  };
+
+  const handleOTPVerification = async () => {
+    Keyboard.dismiss();
+    const otpData:VerifyOTPModel = {
+      uniId: uniId,
+      otp: emailCode
     }
 
-    if(await RequestPasswordResetCode(userData)) {
-      setStepNr(2);
+    if(await VerifyOTP(otpData)) {
+      setStepNr(3);
     } else {
       setErrorMessage(t('account-create-error'));
     }
@@ -92,12 +104,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
             onChangeText={setUniId}
             value={uniId}
             autoCapitalize='none'/>
-          <TextBox 
-            iconName="person-icon" 
-            placeHolder={t('student-code') + ' *'} 
-            onChangeText={setStudentCode}
-            value={studentCode}
-            autoCapitalize='characters'/>
         </View>
         {!isKeyboardVisible && normalMessage && (
           <View style={styles.errorContainer}>
@@ -108,8 +114,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         <View style={styles.buttonContainer}>
             <NormalButton 
               text={t('continue')} 
-              onPress={() => {setStepNr(2)}}
-              disabled={uniId == '' || studentCode == '' }/>
+              onPress={handleOTPRequest}
+              disabled={uniId == ''}/>
              <NormalLink 
               text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
               onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
@@ -139,11 +145,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               onPress={() => {setStepNr(1)}} />
             <NormalButton 
               text={t('continue')} 
-              onPress={() => {setStepNr(3)}}
-              disabled={uniId == '' || studentCode == '' }/>
-            <NormalLink 
-              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
-              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
+              onPress={handleOTPVerification}
+              disabled={uniId == ''}/>
         </View>
         </>
       )}
@@ -179,9 +182,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               text={t('continue')} 
               onPress={() => {setStepNr(4)}}
               disabled={!isPasswordFormValid()}/>
-            <NormalLink 
-              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
-              onPress={() => isNormalPassChange ? navigation.navigate("SettingsView") : navigation.navigate("LoginView")} />
         </View>
         </>
       )}

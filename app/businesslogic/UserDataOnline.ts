@@ -107,7 +107,7 @@ export async function RequestOTP(uniId:string): Promise<boolean> {
 
 export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestOTP`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/VerifyOTP`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

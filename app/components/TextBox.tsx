@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, Image, Touchable, TouchableOpacity } from 'react-native';
 import { Icons } from './Icons';
 
 
@@ -46,6 +46,7 @@ const styles= StyleSheet.create({
 });
 
 const TextBox: React.FC<TextBoxProperties> = ({ iconName, placeHolder, value, onChangeText, isPassword, autoCapitalize = "sentences", editable = true}) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     return (
         <View style={styles.textBoxContainer}>
             <View style={styles.inputContainer}>
@@ -56,11 +57,19 @@ const TextBox: React.FC<TextBoxProperties> = ({ iconName, placeHolder, value, on
                     style={editable == false ? styles.inputDisabled : styles.input} 
                     scrollEnabled={true} 
                     numberOfLines={1} 
-                    secureTextEntry={isPassword} 
+                    secureTextEntry={isPassword && !isPasswordVisible} 
                     value={value} 
                     onChangeText={onChangeText} 
                     autoCapitalize={autoCapitalize} 
                     editable={editable}/>
+               {isPassword && (
+                <TouchableOpacity onPress={() => setIsPasswordVisible((prev) => !prev)}>
+                    <Image
+                    style={styles.icon}
+                    source={isPasswordVisible ? Icons["visibility-on"] : Icons["visibility-off"]}
+                    />
+                </TouchableOpacity>
+                )}
             </View>
             <View style={styles.underline} />
         </View>
