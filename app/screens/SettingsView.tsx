@@ -11,19 +11,41 @@ import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
 import NormalHeader from '../layout/NormalHeader'
 import Greeting from '../components/Greeting';
+import { DeleteOfflineUserData } from '../businesslogic/UserDataOffline';
+import { DeleteUser } from '../businesslogic/UserDataOnline';
 
 
 function SettingsView({navigation, route}: NavigationProps) {
     const { t } = useTranslation();
     const {localData} = route.params;
     const [isOfflineOnly, setIsOfflineOnly] = useState(false);
-    
+    const [confirmationText, setConfirmationText] = useState<string|null>(null);
+    const [newStudentCode, setNewStudentCode] = useState<string|null>(null);
+    const [errorMessage, setErrorMessage] = useState<string|null>(null);
     
     useEffect(() => {
             if (localData.uniId == null) {
                 setIsOfflineOnly(true);
             }
         }, [localData.uniId]);
+
+
+    const handleDelete = async () => {
+        if(await DeleteUser(localData.uniId)) {
+            await DeleteOfflineUserData();
+            navigation.navigate("InitialSelectionView");
+        } else {
+            setErrorMessage(t("account-deletion-error"));
+            setTimeout(() => setErrorMessage(null), 3000);
+        }
+    }
+    
+    const handleLogout = async () => {
+        await DeleteOfflineUserData();
+        navigation.navigate("InitialSelectionView");
+    }
+
+
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -33,28 +55,26 @@ function SettingsView({navigation, route}: NavigationProps) {
             <View style={styles.mainContainer}>
                 {!isOfflineOnly && (
                     <View style={styles.changePassword}>
-                        <NormalButton text={t('ChangePassword')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
+                        <NormalButton text={t('change-password')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
                     </View>
                 )}
 
                 {isOfflineOnly && (
                     <View style={styles.changeStudentCode}>
-                        <SeparatorLine text={t("OfflineModeSettings")}/>
-                        <TextBox iconName='person-icon' placeHolder={t("StudentCode")}/>
-                        <NormalButton text={t("SaveChanges")} onPress={() => console.log("Button pressed")}/>
+                        <SeparatorLine text={t("offline-mode-settings")}/>
+                        <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
+                        <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
                     </View>
                 )}
 
                 <View style={styles.deleteAccount}>
-                    <SeparatorLine text={t("DeleteAccount")}/>
-                    {!isOfflineOnly && <TextBox iconName='person-icon' placeHolder={t("password")}/>}
-                    <TextBox iconName='person-icon' placeHolder={t("Type 'DELETE'")}/>
-                    <NormalButton text={t("DeleteAccount")} onPress={() => console.log(localData.studentCode)}/>
+                    <SeparatorLine text={t("delete-account")}/>
+                    <TextBox iconName='person-icon' placeHolder={t("type-delete")}/>
+                    <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
                 </View>
             </View>
             <View style={styles.lowButtonContainer}>
-            <NormalButton text={t("log-out")} onPress={() => {Storage.removeData(process.env.EXPO_PUBLIC_LOCAL_DATA), navigation.navigate("InitialSelectionView")}}/>
-
+            <NormalButton text={t("log-out")} onPress={handleLogout}/>
             </View>      
         </SafeAreaView>
     );

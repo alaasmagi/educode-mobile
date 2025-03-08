@@ -91,13 +91,13 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       <View style={styles.headerContainer}>
         <FormHeader />
         {!isKeyboardVisible && (
-          <Greeting text={isNormalPassChange ? t('ChangePassword') : t('Forgot your password?')} />
+          <Greeting text={isNormalPassChange ? t('change-password') : t('forgot-password')} />
         )}
       </View>
       {stepNr === 1 && (
         <>
         <View style={styles.textBoxContainer}>
-        <UnderlineText text={'Confirm your details:'}/>
+        <UnderlineText text={t("verify-account")}/>
         <View style={styles.textBoxes}>
           <TextBox 
             iconName="person-icon" 
@@ -118,7 +118,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               onPress={handleOTPRequest}
               disabled={uniId == ''}/>
              <NormalLink 
-              text={isNormalPassChange ? t('Dont want to change password? Go back!') : t('Remember your password? Log in!')} 
+              text={isNormalPassChange ? t("dont-change-password") : t('')} 
               onPress={() => isNormalPassChange ? navigation.navigate("SettingsView", { localData }) : navigation.navigate("LoginView")} />
         </View>
         </>
@@ -126,11 +126,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       {stepNr === 2 && (
         <>
         <View style={styles.textBoxContainer}>
-        <UnderlineText text={`One-time key was sent to ${uniId}@taltech.ee`}/>
+        <UnderlineText text={t("one-time-key-prompt") + ` ${uniId}@taltech.ee`}/>
         <View style={styles.textBoxes}>
           <TextBox 
             iconName="pincode-icon" 
-            placeHolder={t("One-time key *")} 
+            placeHolder={t("one-time-key") + "*"} 
             onChangeText={setEmailCode}
             value={emailCode}/>
         </View>
@@ -154,7 +154,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       {stepNr === 3 && (
         <>
         <View style={styles.textBoxContainer}>
-        <UnderlineText text={t('Set new password:')}></UnderlineText>
+        <UnderlineText text={t('set-new-password')}></UnderlineText>
         <View style={styles.textBoxes}>
           <TextBox 
             iconName="lock-icon" 

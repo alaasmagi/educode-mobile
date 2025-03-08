@@ -5,7 +5,7 @@ import CreateUserModel from '../models/CreateUserModel';
 import VerifyOTPModel from '../models/VerifyOTPModel';
 import ChangePasswordModel from '../models/ChangePasswordModel';
 import LocalUserData from '../models/LocalUserDataModel';
-import { SaveOfflineUserData } from './UserDataOffline';
+import { SaveOfflineUserData, SaveUserToken } from './UserDataOffline';
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
 {
@@ -121,7 +121,7 @@ export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
             return false;
         }
         const data = await response.json();
-        Storage.saveData(LocalKeys.localToken, data.token);
+        SaveUserToken(data.token);
         return true;
     } catch (error) {
         return false;
@@ -163,7 +163,6 @@ export async function DeleteUser(uniId: string): Promise<boolean> {
         if (!response.ok) {
             return false;
         }
-        Storage.removeData(LocalKeys.userProfile);
         return true;
     } catch (error) {
         return false;

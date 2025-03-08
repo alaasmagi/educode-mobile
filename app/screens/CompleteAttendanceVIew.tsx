@@ -73,7 +73,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                     <View style={styles.stepDividerContainer}>
                         <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
                     </View>
-                    <UnderlineText text="Verify your details:"/>
+                    <UnderlineText text={t("verify-details")}/>
                     <View style={styles.dataContainer}>
                         <DataText iconName='person-icon' text={localData.fullName}/>
                         <DataText iconName='key-icon' text={attendanceId}/>
