@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, Text} from 'react-native';
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import { useTranslation } from 'react-i18next';
 import NormalHeader from '../layout/NormalHeader';
@@ -35,7 +35,6 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
         setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
     };
 
-
     const handleAttendanceCheckAdd = async () => {
         const attendanceCheck:AttendanceCheckData = {
             studentCode: localData.studentCode,
@@ -46,7 +45,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
         if (status) {
             setSuccessMessage(t("attendance-add-success"));
             setTimeout(() => {setSuccessMessage(null); 
-                            navigation.navigate("StudentMainView", localData)}, 3000);
+                            navigation.navigate("StudentMainView", {localData})}, 3000);
         } else {
             setErrorMessage(t("attendance-add-error"));
             setTimeout(() => setErrorMessage(null), 3000);
@@ -57,7 +56,9 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
                 <View style={styles.headerContainer}>
-                    <NormalHeader navigation={navigation} route={route}/>
+                    <NormalHeader 
+                        navigation={navigation} 
+                        route={route}/>
                 </View>
                 <View style={styles.onlineToggleContainer}>
                     <ModeToggle 
@@ -71,13 +72,21 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                 {isOnline ? (
                     <> 
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
+                        <StepDivider 
+                            label={t("step-end-attendance")} 
+                            stepNumber={stepNr} />
                     </View>
                     <UnderlineText text={t("verify-details")}/>
                     <View style={styles.dataContainer}>
-                        <DataText iconName='person-icon' text={localData.fullName}/>
-                        <DataText iconName='key-icon' text={attendanceId}/>
-                        <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                        <DataText 
+                            iconName='person-icon' 
+                            text={localData.fullName}/>
+                        <DataText 
+                            iconName='key-icon' 
+                            text={attendanceId}/>
+                        <DataText 
+                            iconName="work-icon" 
+                            text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
                     <View style={styles.messageContainer}>
                         {successMessage && (
@@ -99,15 +108,23 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                 ) : (
                     <>
                     <View style={styles.stepDividerContainer}>
-                        <StepDivider label={t("step-show-qr")} stepNumber={stepNr} />
+                        <StepDivider 
+                            label={t("step-show-qr")} 
+                            stepNumber={stepNr} />
                     </View>
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
                         <QrGenerator value={qrValue}/>
                     </View>}
                     <View style={styles.dataContainer}>
-                        <DataText iconName='person-icon' text={localData.studentCode}/>
-                        <DataText iconName='key-icon' text={attendanceId}/>
-                        <DataText iconName="work-icon" text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                        <DataText 
+                            iconName='person-icon' 
+                            text={localData.studentCode}/>
+                        <DataText 
+                            iconName='key-icon' 
+                            text={attendanceId}/>
+                        <DataText 
+                            iconName="work-icon" 
+                            text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
                     <View style={styles.linkContainer}>
                         <NormalLink 
@@ -115,7 +132,9 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                             onPress={() => {navigation.navigate("StudentMainView", {localData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
                     </View>
                     <View style={styles.lowNavButtonContainer}>
-                        <NormalButton text={t("refresh-qr")} onPress={refreshQrCode}></NormalButton>
+                        <NormalButton 
+                            text={t("refresh-qr")} 
+                            onPress={refreshQrCode}/>
                     </View>
                     </>
                 )}

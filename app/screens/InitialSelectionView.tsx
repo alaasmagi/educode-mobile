@@ -1,9 +1,10 @@
 import React, {useEffect, useCallback, useState} from 'react';
 import NavigationProps from '../../types'
 import { useFocusEffect } from "@react-navigation/native";
-import { SafeAreaView, StyleSheet, View, BackHandler, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, View, BackHandler, Alert, Keyboard } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
-import NormalButton from '../components/NormalButton'
+import NormalButton from '../components/NormalButton';
+import { useCameraPermissions } from 'expo-camera';
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     const { t } = useTranslation();
     const [studentCode, setStudentCode] = useState('');
     const [normalMessage, setNormalMessage] = useState<string|null>(null);
+    const [permission, requestPermission] = useCameraPermissions();
 
     BackButtonHandler(navigation);
     useFocusEffect(
@@ -63,7 +65,15 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         fetchUserData();
         }, []);
 
-      const handleOfflineLogin = async () => {
+    const handleOfflineLogin = async () => {
+        Keyboard.dismiss();
+        if (!permission?.granted) {
+            const response = await requestPermission();
+            if (!response.granted) {
+                Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
+                return;
+            };
+        };
         const localData:LocalUserData = {
             userType: "Student",
             studentCode: studentCode,
@@ -80,16 +90,27 @@ function InitialSelectionView({ navigation }: NavigationProps) {
             </View>
             <View style={styles.mainContainer}>
                 <View style={styles.mainLoginContainer}>
-                    <NormalButton text={t("log-in")} onPress={() => navigation.navigate('LoginView')}/>
-                    <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate('CreateAccountView')}/>
+                    <NormalButton 
+                        text={t("log-in")} 
+                        onPress={() => navigation.navigate('LoginView')}/>
+                    <NormalButton 
+                        text={t("register-as-student")} 
+                        onPress={() => navigation.navigate('CreateAccountView')}/>
                     {normalMessage && (
                         <NormalMessage text={normalMessage}/>
                     )}
                 </View>
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
-                    <TextBox iconName='person-icon' placeHolder={t("student-code")} onChangeText={setStudentCode} value={studentCode} autoCapitalize='characters'/>
-                    <NormalButton text={t("continue")} onPress={handleOfflineLogin}/>
+                    <TextBox 
+                        iconName='person-icon' 
+                        placeHolder={t("student-code")} 
+                        onChangeText={setStudentCode} 
+                        value={studentCode} 
+                        autoCapitalize='characters'/>
+                    <NormalButton 
+                        text={t("continue")} 
+                        onPress={handleOfflineLogin}/>
                 </View>
             </View>
         </SafeAreaView>

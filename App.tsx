@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import LoginView from './app/screens/LoginView';
 import SettingsView from './app/screens/SettingsView'
 import {NavigationContainer}  from '@react-navigation/native';
 import  {createStackNavigator}  from '@react-navigation/stack';
-import * as ScreenCapture from 'expo-screen-capture';
 import CreateAccountView from './app/screens/CreateAccountView';
 import InitialSelectionView from './app/screens/InitialSelectionView';
 import StudentMainView from './app/screens/StudentMainView';
@@ -16,19 +15,6 @@ import ForgotPasswordView from './app/screens/ForgotPasswordView';
 const Stack = createStackNavigator();
 
 export default function App() {
-
-  useEffect(() => {
-    const preventCapture = async () => {
-        await ScreenCapture.preventScreenCaptureAsync();
-    };
-
-    preventCapture();
-
-    return () => {
-        ScreenCapture.allowScreenCaptureAsync();
-    };
-}, []);
-
   return (
     <>
     <StatusBar style="light"/>

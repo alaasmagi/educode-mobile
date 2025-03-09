@@ -75,8 +75,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   };
 
   const handlePasswordChange = async () => {
-    if(1) {
-      const successMessage = t('create-account-success');
+    const model:ChangePasswordModel = {
+      uniId: uniId,
+      newPassword: password
+    };
+    const status:boolean = await ChangeUserPassword(model)
+    if(status) {
+      const successMessage = t('password-change-success');
+      isNormalPassChange ? navigation.navigate('SettingsView', {localData, successMessage}) :
       navigation.navigate('LoginView', {successMessage});
     } else {
       setErrorMessage(t('account-create-error'));
@@ -178,7 +184,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         <View style={styles.buttonContainer}>
             <NormalButton 
               text={t('continue')} 
-              onPress={() => {setStepNr(4)}}
+              onPress={handlePasswordChange}
               disabled={!isPasswordFormValid()}/>
               <NormalLink 
               text={t('something-wrong-back')} 

@@ -61,6 +61,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
   }, [password, passwordAgain]);
 
   const handleRegister = async () => {
+    Keyboard.dismiss()
     let userData:CreateUserModel = {
       uniId: uniId,
       studentCode: studentCode,
@@ -214,7 +215,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
               onPress={() => {setStepNr(2)}} />
             <NormalButton 
               text={t('create-account')}
-              onPress={() => {handleRegister(); Keyboard.dismiss()}} />
+              onPress={handleRegister} />
             <NormalLink 
               text={t('already-registered')} 
               onPress={() => navigation.navigate("LoginView")} />

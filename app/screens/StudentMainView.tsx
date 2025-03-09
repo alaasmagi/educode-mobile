@@ -15,8 +15,9 @@ import NormalLink from '../components/NormalLink';
 import { RegexFilters } from '../helpers/RegexFilters';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
-import ScreenCaptureHandler from '../../hooks/ScreenCaptureHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
+import * as ScreenCapture from 'expo-screen-capture';
+
 
 function StudentMainView({ navigation , route }: NavigationProps) {
     const { localData } = route.params;
@@ -38,12 +39,12 @@ function StudentMainView({ navigation , route }: NavigationProps) {
     const [showError, setShowError] = useState(false);
 
     const isKeyboardVisible = KeyboardVisibilityHandler();
+
     const clearSensitiveData = () => {
         setStepNr(1);
         setAttendanceId('');
         setWorkplaceId('');
     };
-    ScreenCaptureHandler(clearSensitiveData);
     BackButtonHandler(navigation);
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {

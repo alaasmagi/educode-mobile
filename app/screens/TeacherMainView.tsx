@@ -14,6 +14,8 @@ import NormalLink from '../components/NormalLink';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
+import StudentDataCell from '../components/StudentDataCell';
+import StudentsDataTableHeader from '../components/StudentsDataTableHeader';
 
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
@@ -32,6 +34,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             if (RegexFilters.attendanceData.test(data)) {
                setAttendanceData(data);
+               console.log(attendanceData);
             }
             else {
                 setErrorMessage(t('TEST'));
@@ -49,17 +52,20 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                 </View>
                 <View style={styles.onlineToggleContainer}>
                     <ModeToggle 
-                    textLeft={t("add-student")} 
-                    textRight={t("view-students")} 
-                    onPressLeft={() => setQrScanView(true)} 
-                    onPressRight={() => setQrScanView(false)}
-                    />
+                        textLeft={t("add-student")} 
+                        textRight={t("view-students")} 
+                        onPressLeft={() => setQrScanView(true)} 
+                        onPressRight={() => setQrScanView(false)} />
                 </View>
                 <View style={styles.dataContainer}>
-                    <UnderlineText text={"Current attendance:"}/>
+                    <UnderlineText text={t("current-attendance")}/>
                     <View style={styles.data}>
-                        <DataText iconName='school-icon' text={"userData.fullName"}/>
-                        <DataText iconName='key-icon' text={"attendanceId"}/>
+                        <DataText 
+                            iconName='school-icon' 
+                            text={"userData.fullName"}/>
+                        <DataText 
+                            iconName='key-icon' 
+                            text={"attendanceId"}/>
                     </View>
                         </View>
                 {qrScanView ? (
@@ -68,29 +74,30 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                             <QrScanner onQrScanned={handleBarcodeScanned}/>
                         </View>}
                         <View style={styles.dataContainer}>
-                            <UnderlineText text="Last added student:"/>
+                            <UnderlineText text={t("last-student")}/>
                             <View style={styles.data}>
-                                <DataText iconName='person-icon' text={"213453IACB"}/>
-                                <DataText iconName="work-icon" text={"123456"} />
+                                <DataText 
+                                    iconName='person-icon' 
+                                    text={"213453IACB"}/>
+                                <DataText 
+                                    iconName="work-icon" 
+                                    text={"123456"} />
                             </View>
                         </View>
                     </>
                 ) : (
                     <>
-                        <View style={styles.stepDividerContainer}>
-                            <StepDivider label={t("step-show-qr")} stepNumber={1} />
-                        </View>
+                        <UnderlineText text={t("students-in-current-attendance")}/>
                         <View style={styles.dataContainer}>
-                            <DataText iconName='person-icon' text={"userData.studentCode"}/>
-                            <DataText iconName='key-icon' text={"attendanceId"}/>
-                            <DataText iconName="work-icon" text={t("no-workplace")} />
+                            <StudentsDataTableHeader/>
+                            <StudentDataCell studentCode={"213453IACB"} workplaceId={"123456"} onPressButton={() => console.log("AHAHAH")}/>
                         </View>
                         <View style={styles.linkContainer}>
                             <NormalLink text={t("something-wrong-back")} 
-                            onPress={() => {navigation.navigate("StudentMainView", {})}}/>
+                            onPress={() => {navigation.navigate("StudentMainView")}}/>
                         </View>
                         <View style={styles.lowNavButtonContainer}>
-                            <NormalButton text={t("refresh-qr")} onPress={console.log}></NormalButton>
+                            <NormalButton text={t("refresh-qr")} onPress={console.log}/>
                         </View>
                     </>
                 )}

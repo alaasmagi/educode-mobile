@@ -14,7 +14,6 @@ const styles= StyleSheet.create({
         textDecorationLine: "underline",
         textAlign: "center",
         alignSelf: "center",
-        maxWidth: "80%",
         margin: 5
     }
 });

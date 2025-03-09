@@ -13,8 +13,7 @@ import { FetchAndSaveUserDataByUniId, UserLogin } from '../businesslogic/UserDat
 import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage'
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
-import LocalUserData from '../models/LocalUserDataModel';
-import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
+import { GetOfflineUserData } from '../businesslogic/UserDataOffline';
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -28,11 +27,14 @@ function LoginView({ navigation, route }: NavigationProps) {
   const isFormValid = () => uniId !== '' && password !== '';
 
   const handleLogin = async () => {
+    Keyboard.dismiss();
+    if (!permission?.granted) {
     const response = await requestPermission();
     if (!response.granted) {
-      Alert.alert('Permission Denied', 'You need to allow camera access to continue.');
+      Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
       return;
     };
+  };
     
     if (await UserLogin(uniId, password)) {
       const loginStatus = await FetchAndSaveUserDataByUniId(uniId);
@@ -87,7 +89,7 @@ function LoginView({ navigation, route }: NavigationProps) {
       <View style={styles.buttonContainer}>
         <NormalButton 
           text={t('log-in')} 
-          onPress={() => {handleLogin(); Keyboard.dismiss()}} 
+          onPress={handleLogin} 
           disabled={!isFormValid()}/>
         <NormalLink 
           text={t('register-now')} 
