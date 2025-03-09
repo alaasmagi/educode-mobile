@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useCameraPermissions } from 'expo-camera';
@@ -14,6 +14,8 @@ import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage'
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import { GetOfflineUserData } from '../businesslogic/UserDataOffline';
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from 'expo-screen-capture';
+
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -25,6 +27,14 @@ function LoginView({ navigation, route }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   const isFormValid = () => uniId !== '' && password !== '';
+
+  useEffect(() => {
+    preventScreenCaptureAsync();
+
+    return () => {
+      allowScreenCaptureAsync();
+    };
+  }, []);
 
   const handleLogin = async () => {
     Keyboard.dismiss();

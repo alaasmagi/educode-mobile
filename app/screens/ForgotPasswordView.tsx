@@ -15,6 +15,8 @@ import NormalMessage from '../components/NormalMessage';
 import UnderlineText from '../components/UnderlineText';
 import ChangePasswordModel from '../models/ChangePasswordModel';
 import VerifyOTPModel from '../models/VerifyOTPModel';
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from 'expo-screen-capture';
+
 
 function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const isNormalPassChange:boolean = route?.params?.isNormalPassChange ?? false;
@@ -29,6 +31,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);
+
+  useEffect(() => {
+    preventScreenCaptureAsync();
+
+    return () => {
+      allowScreenCaptureAsync();
+    };
+  }, []);
 
   const isStudentIDFormValid = () => uniId !== '';
   useEffect(() => {
