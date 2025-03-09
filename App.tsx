@@ -21,9 +21,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="InitialSelectionView" component={InitialSelectionView} />
-        <Stack.Screen name="LoginView" component={LoginView} />
+        <Stack.Screen name="LoginView" component={LoginView} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="StudentMainView" component={StudentMainView} options={{ gestureEnabled: false }}/>
-        <Stack.Screen name="SettingsView" component={SettingsView} />
+        <Stack.Screen name="SettingsView" component={SettingsView} options={{ gestureEnabled: false }}/>
         <Stack.Screen name="CompleteAttendanceView" component={CompleteAttendanceView} />
         <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
         <Stack.Screen name="TeacherMainView" component={TeacherMainView} />

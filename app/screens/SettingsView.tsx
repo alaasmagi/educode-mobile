@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, Text, } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Alert, BackHandler} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import NormalButton from '../components/NormalButton';
 import SuccessMessage from '../components/SuccessMessage';
-import ErrorMessage from '../components/ErrorMessage';
+import BackButtonHandler from '../../hooks/BackButtonHandler';
 import NormalHeader from '../layout/NormalHeader'
-import Greeting from '../components/Greeting';
 import { DeleteOfflineUserData } from '../businesslogic/UserDataOffline';
 import { DeleteUser } from '../businesslogic/UserDataOnline';
+import { useFocusEffect } from "@react-navigation/native";
 
 
 function SettingsView({navigation, route}: NavigationProps) {
@@ -29,6 +29,10 @@ function SettingsView({navigation, route}: NavigationProps) {
         }, [localData.uniId]);
 
 
+    const handleBackToHome = () => {
+        localData.
+    };
+
     const handleDelete = async () => {
         if(await DeleteUser(localData.uniId)) {
             await DeleteOfflineUserData();
@@ -44,7 +48,19 @@ function SettingsView({navigation, route}: NavigationProps) {
         navigation.navigate("InitialSelectionView");
     }
 
-
+    BackButtonHandler(navigation);
+    useFocusEffect(
+        useCallback(() => {
+          const backAction = () => {
+            Alert.alert(t("exit-app"), t("exit-app-prompt"), [
+              { text: t("cancel"), onPress: () => null, style: "cancel" },
+              { text: t("yes"), onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
+          };
+          const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+        },
+    []));
 
     return (
         <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -68,11 +84,12 @@ function SettingsView({navigation, route}: NavigationProps) {
 
                 <View style={styles.deleteAccount}>
                     <SeparatorLine text={t("delete-account")}/>
-                    <TextBox iconName='person-icon' placeHolder={t("type-delete")}/>
+                    <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete")}/>
                     <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
                 </View>
             </View>
             <View style={styles.lowButtonContainer}>
+            <NormalButton text={t("back-to-home")} onPress={handleBackToHome}/>
             <NormalButton text={t("log-out")} onPress={handleLogout}/>
             </View>      
         </SafeAreaView>

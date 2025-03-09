@@ -66,7 +66,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     if(await RequestOTP(uniId)) {
       setStepNr(2);
     } else {
-      setErrorMessage(t('account-create-error'));
+      setErrorMessage(t('no-account-found'));
+      setTimeout(() => setErrorMessage(null), 3000);
     }
   };
 
@@ -80,7 +81,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     if(await VerifyOTP(otpData)) {
       setStepNr(3);
     } else {
-      setErrorMessage(t('account-create-error'));
+      setErrorMessage(t('wrong-otp'));
+      setTimeout(() => setErrorMessage(null), 3000);
     }
   };
 
@@ -122,9 +124,9 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
             value={uniId}
             autoCapitalize='none'/>
         </View>
-        {!isKeyboardVisible && normalMessage && (
+        {!isKeyboardVisible && errorMessage && (
           <View style={styles.errorContainer}>
-            <NormalMessage text={normalMessage}/>
+            <ErrorMessage text={errorMessage}/>
           </View>
         )}
         </View>
@@ -150,9 +152,9 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
             onChangeText={setEmailCode}
             value={emailCode}/>
         </View>
-        {!isKeyboardVisible && normalMessage && (
+        {!isKeyboardVisible && errorMessage && (
           <View style={styles.errorContainer}>
-            <NormalMessage text={normalMessage}/>
+            <ErrorMessage text={errorMessage}/>
           </View>
         )}
         </View>

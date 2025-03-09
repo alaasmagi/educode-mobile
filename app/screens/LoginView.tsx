@@ -56,12 +56,18 @@ function LoginView({ navigation, route }: NavigationProps) {
           navigation.navigate('StudentMainView', { localData });
         }
       } else {
+        setErrorMessage(t("login-error"));
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+    };
+    }
+    else {
       setErrorMessage(t("login-error"));
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
     };
-  };
   };
 
   return (

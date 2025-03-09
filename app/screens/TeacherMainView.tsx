@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, BackHandler} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import { useTranslation } from 'react-i18next';
 import * as Haptics from 'expo-haptics';
@@ -22,24 +22,27 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
     const isKeyboardVisible = KeyboardVisibilityHandler();
     const [scanned, setScanned] = useState(false);
     const [attendanceData, setAttendanceData] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    
+    const [errorMessage, setErrorMessage] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const { t } = useTranslation();
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            if (RegexFilters.attendanceData.test(data)) {
-               setAttendanceData(data);
-               console.log(attendanceData);
+            setErrorMessage(t('TEST'));
+            if (RegexFilters.attendanceCheckData.test(data)) {
+               const attendanceCheckData = data.split("-");
+               const timestamp = Math.floor(Date.now() / 1000);
             }
             else {
-                setErrorMessage(t('TEST'));
+                console.log("sjkisf")
+                setErrorMessage("ERROR");
+                console.log(errorMessage)
             }
             setTimeout(() => setScanned(false), 2000);
-            setTimeout(() => setErrorMessage(''), 2000);
+            setTimeout(() => setErrorMessage(null), 3000);
+            setTimeout(() => setSuccessMessage(null), 3000);
         }
     };    
 
@@ -68,15 +71,25 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     </View>
                     </View>)}
                 {qrScanView ? (
+                    <>
                     <View style={styles.qrScannerContainer}>
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
                     </View>
-                ) : (
-                    <>
-                        {(successMessage && !isKeyboardVisible) ?? (
+                    <View style={styles.messageContainer}>
+                        {(successMessage && !isKeyboardVisible) && (
                             <SuccessMessage text={successMessage}/>
                         )}
-    	                {(errorMessage && !isKeyboardVisible) ?? (
+    	                {(errorMessage && !isKeyboardVisible) && (
+                            <ErrorMessage text={errorMessage}/>
+                        )}
+                    </View>
+                    </>
+                ) : (
+                    <>
+                        {(successMessage  && !isKeyboardVisible) && (
+                            <SuccessMessage text={successMessage}/>
+                        )}
+    	                {(errorMessage && !isKeyboardVisible) && (
                             <ErrorMessage text={errorMessage}/>
                         )}
                         <View style={styles.manualInputContainer}>
@@ -86,21 +99,20 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                             </View>
                             <NormalButton text={t("add-manually")} onPress={console.log}/>
                         </View>
+                        {!isKeyboardVisible && (
+                        <View style={styles.lastAddedStudentContainer}>
+                            <UnderlineText text={t("last-student")}/>
+                            <View style={styles.data}>
+                                <DataText 
+                                    iconName='person-icon' 
+                                    text={"213453IACB"}/>
+                                <DataText 
+                                    iconName="work-icon" 
+                                    text={"123456"} />
+                            </View>
+                         </View>)}
                     </>
-                )}
-                {!isKeyboardVisible && (
-                    <View style={styles.lastAddedStudentContainer}>
-                    <UnderlineText text={t("last-student")}/>
-                    <View style={styles.data}>
-                        <DataText 
-                            iconName='person-icon' 
-                            text={"213453IACB"}/>
-                        <DataText 
-                            iconName="work-icon" 
-                            text={"123456"} />
-                    </View>
-                </View>
-                )}
+                )}                
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -139,6 +151,10 @@ const styles = StyleSheet.create({
     lastAddedStudentContainer: {
         flex: 1.5,
         justifyContent: "flex-end"
+    },
+    messageContainer: {
+        flex: 1.5,
+        justifyContent: "center",
     },
     data: {
         alignSelf: "center",
