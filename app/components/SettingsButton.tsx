@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
-import NavigationProps from '../../types'
 import { Icons } from './Icons';
 
 interface SettingsButtonProperties {

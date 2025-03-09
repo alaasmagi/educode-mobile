@@ -6,15 +6,13 @@ import { Icons } from './Icons';
 interface StudentDataCellProperties {
     onPressButton: () => void;   
     studentCode: string;
-    workplaceId?: string;   
+    workplaceId?: number;   
 }
 
 const styles = StyleSheet.create({
     structure: {
         flexDirection: "row",
-        width: "100%",
         justifyContent: "space-between",
-        backgroundColor: "#1E1E1E",
         paddingHorizontal: 10,
         paddingVertical: 10,
         alignItems:"center",
@@ -34,7 +32,7 @@ const StudentDataCell: React.FC<StudentDataCellProperties> = ({ onPressButton, s
     return (
         <View style={styles.structure}>
             <Text style={styles.dataText}>{studentCode}</Text>
-            <Text style={styles.dataText}>{workplaceId ?? t("no-workplace2")}</Text>
+            <Text style={styles.dataText}>{workplaceId ?? t("not-available")}</Text>
             <TouchableOpacity onPress={onPressButton}>
                 <Image source={Icons["bin-icon"]} style={styles.icon} />
             </TouchableOpacity>

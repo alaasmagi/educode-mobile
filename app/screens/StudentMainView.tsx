@@ -16,7 +16,6 @@ import { RegexFilters } from '../helpers/RegexFilters';
 import ErrorMessage from '../components/ErrorMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
-import * as ScreenCapture from 'expo-screen-capture';
 
 
 function StudentMainView({ navigation , route }: NavigationProps) {

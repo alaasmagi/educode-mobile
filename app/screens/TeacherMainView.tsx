@@ -16,6 +16,8 @@ import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
 import StudentDataCell from '../components/StudentDataCell';
 import StudentsDataTableHeader from '../components/StudentsDataTableHeader';
+import StudentsTable from '../layout/StudentsTable';
+import StudentAttendanceModel from '../models/StudentAttendanceModel';
 
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
@@ -43,6 +45,11 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
             setTimeout(() => setErrorMessage(''), 2000);
         }
     };    
+
+    const studentsData: StudentAttendanceModel[] = Array.from({ length: 20 }, (_, index) => ({
+        attendaceCheckId: 1,
+        studentCode: `213453IACB`,
+    }));
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -89,15 +96,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     <>
                         <UnderlineText text={t("students-in-current-attendance")}/>
                         <View style={styles.dataContainer}>
-                            <StudentsDataTableHeader/>
-                            <StudentDataCell studentCode={"213453IACB"} workplaceId={"123456"} onPressButton={() => console.log("AHAHAH")}/>
-                        </View>
-                        <View style={styles.linkContainer}>
-                            <NormalLink text={t("something-wrong-back")} 
-                            onPress={() => {navigation.navigate("StudentMainView")}}/>
-                        </View>
-                        <View style={styles.lowNavButtonContainer}>
-                            <NormalButton text={t("refresh-qr")} onPress={console.log}/>
+                            <StudentsTable students={studentsData}/>                  
                         </View>
                     </>
                 )}
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
         alignSelf:"center"
     },
     lowNavButtonContainer: {
-        flex: 1.5,
+        flex: 1,
         alignItems: "center"
     }
 })

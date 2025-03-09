@@ -13,7 +13,8 @@ import BackButtonHandler from '../../hooks/BackButtonHandler';
 import LocalUserData from '../models/LocalUserDataModel';
 import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
 import { FetchAndSaveUserDataByUniId } from '../businesslogic/UserDataOnline';
-import NormalMessage from '../components/NormalMessage';
+import NormalMessage from '../components/NormalMessage'
+import { RegexFilters } from '../helpers/RegexFilters';
 
 
 function InitialSelectionView({ navigation }: NavigationProps) {
@@ -110,7 +111,8 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                         autoCapitalize='characters'/>
                     <NormalButton 
                         text={t("continue")} 
-                        onPress={handleOfflineLogin}/>
+                        onPress={handleOfflineLogin}
+                        disabled={!RegexFilters.studentCode.test(studentCode)}/>
                 </View>
             </View>
         </SafeAreaView>

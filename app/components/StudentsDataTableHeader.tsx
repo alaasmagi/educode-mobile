@@ -7,11 +7,14 @@ const styles = StyleSheet.create({
     structure: {
         flexDirection: "row",
         width: "100%",
-        justifyContent: "space-between",
+        borderColor: "#BCBCBD",
+        borderRadius: 10,
         backgroundColor: "#1E1E1E",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        borderWidth: 0.5,
+        paddingHorizontal: "13%",
+        paddingVertical: 5,
         alignItems:"center",
+        gap: "49%"
     },
     icon: {
         height: 30,
@@ -21,10 +24,9 @@ const styles = StyleSheet.create({
 
 const StudentsDataTableHeader = () => {
     return (
-        <View style={styles.structure}> 
+        <View style={styles.structure}>
             <Image source={Icons["person-icon"]} style={styles.icon} />
             <Image source={Icons["work-icon"]} style={styles.icon} />
-            <Image />
         </View>
     );
 };

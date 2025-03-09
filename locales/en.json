@@ -52,5 +52,9 @@
     "one-time-key": "One-time key",
     "one-time-key-prompt": "One-time key was sent to",
     "set-new-password": "Set new password:",
-    "verify-account": "Kinnita andmed:"
+    "current-attendance": "Current attendance:",
+    "students-in-current-attendance": "Students in current attendance:",
+    "verify-account": "Verify data:",
+    "not-available": "None",
+    "last-student": "Last added student:"
 }

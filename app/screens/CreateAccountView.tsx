@@ -15,6 +15,8 @@ import NormalMessage from '../components/NormalMessage';
 import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
 import CreateUserModel from '../models/CreateUserModel';
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from 'expo-screen-capture';
+
 
 function CreateAccountView({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>('');
@@ -39,6 +41,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
       setNormalMessage('');
     }
   }, [firstName, lastName]);
+
+    useEffect(() => {
+      preventScreenCaptureAsync();
+  
+      return () => {
+        allowScreenCaptureAsync();
+      };
+    }, []);
 
   const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
   useEffect(() => {

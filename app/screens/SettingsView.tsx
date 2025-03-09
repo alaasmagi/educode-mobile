@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, Image, TextInput, StyleSheet, View, Text, } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, } from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import NormalButton from '../components/NormalButton';
-import Storage from '../data/LocalDataAccess';
 import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
 import NormalHeader from '../layout/NormalHeader'

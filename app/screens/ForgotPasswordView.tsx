@@ -27,7 +27,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
 
-  const {localData} = route.params
+  const { localData } = route.params ?? {};
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [stepNr, setStepNr] = useState(1);

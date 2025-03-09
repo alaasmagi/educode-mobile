@@ -51,7 +51,11 @@
     "remember-password": "Salasõna tuli meelde? Mine tagasi!",
     "one-time-key": "Ühekordne kood",
     "one-time-key-prompt": "Ühekordne kood saadeti meilile",
+    "current-attendance": "Praegune ainetund:",
+    "students-in-current-attendance": "Praegu kohalolevad üliõpilased:",
     "set-new-password": "Määra uus salasõna:",
-    "verify-account": "Kinnita andmed:"
+    "verify-account": "Kinnita andmed:",
+    "not-available": "Puudub",
+    "last-student": "Viimati lisatud üliõpilane:"
   }
   
