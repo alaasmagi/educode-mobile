@@ -7,17 +7,14 @@ import * as Haptics from 'expo-haptics';
 import NormalHeader from '../layout/NormalHeader';
 import NormalButton from '../components/NormalButton';
 import ModeToggle from '../components/ModeToggle';
-import StepDivider from '../components/StepDivider';
 import QrScanner from '../components/QrScanner';
 import DataText from '../components/DataText';
-import NormalLink from '../components/NormalLink';
+import TextBox from '../components/TextBox';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
-import StudentDataCell from '../components/StudentDataCell';
-import StudentsDataTableHeader from '../components/StudentsDataTableHeader';
-import StudentsTable from '../layout/StudentsTable';
-import StudentAttendanceModel from '../models/StudentAttendanceModel';
+import SuccessMessage from '../components/SuccessMessage';
+import ErrorMessage from '../components/ErrorMessage';
 
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
@@ -46,11 +43,6 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
         }
     };    
 
-    const studentsData: StudentAttendanceModel[] = Array.from({ length: 20 }, (_, index) => ({
-        attendaceCheckId: 1,
-        studentCode: `213453IACB`,
-    }));
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -59,46 +51,55 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                 </View>
                 <View style={styles.onlineToggleContainer}>
                     <ModeToggle 
-                        textLeft={t("add-student")} 
-                        textRight={t("view-students")} 
+                        textLeft={t("scan-student")} 
+                        textRight={t("add-manually")} 
                         onPressLeft={() => setQrScanView(true)} 
                         onPressRight={() => setQrScanView(false)} />
                 </View>
-                <View style={styles.dataContainer}>
-                    <UnderlineText text={t("current-attendance")}/>
+                {!isKeyboardVisible && (
+                    <View style={styles.currentAttendanceContainer}>                    
                     <View style={styles.data}>
                         <DataText 
                             iconName='school-icon' 
-                            text={"userData.fullName"}/>
+                            text={"Tarkvaratehnika (IAX0110)"}/>
                         <DataText 
                             iconName='key-icon' 
-                            text={"attendanceId"}/>
+                            text={"123128"}/>
                     </View>
-                        </View>
+                    </View>)}
                 {qrScanView ? (
-                    <> 
-                        {!isKeyboardVisible && <View style={styles.qrContainer}>
-                            <QrScanner onQrScanned={handleBarcodeScanned}/>
-                        </View>}
-                        <View style={styles.dataContainer}>
-                            <UnderlineText text={t("last-student")}/>
-                            <View style={styles.data}>
-                                <DataText 
-                                    iconName='person-icon' 
-                                    text={"213453IACB"}/>
-                                <DataText 
-                                    iconName="work-icon" 
-                                    text={"123456"} />
-                            </View>
-                        </View>
-                    </>
+                    <View style={styles.qrScannerContainer}>
+                        <QrScanner onQrScanned={handleBarcodeScanned}/>
+                    </View>
                 ) : (
                     <>
-                        <UnderlineText text={t("students-in-current-attendance")}/>
-                        <View style={styles.dataContainer}>
-                            <StudentsTable students={studentsData}/>                  
+                        {(successMessage && !isKeyboardVisible) ?? (
+                            <SuccessMessage text={successMessage}/>
+                        )}
+    	                {(errorMessage && !isKeyboardVisible) ?? (
+                            <ErrorMessage text={errorMessage}/>
+                        )}
+                        <View style={styles.manualInputContainer}>
+                            <View style={styles.textBoxes}>
+                                <TextBox iconName={"person-icon"} placeHolder={t("student-code") + "*"}/>
+                                <TextBox iconName={"work-icon"} placeHolder={t("workplace-id")}/>
+                            </View>
+                            <NormalButton text={t("add-manually")} onPress={console.log}/>
                         </View>
                     </>
+                )}
+                {!isKeyboardVisible && (
+                    <View style={styles.lastAddedStudentContainer}>
+                    <UnderlineText text={t("last-student")}/>
+                    <View style={styles.data}>
+                        <DataText 
+                            iconName='person-icon' 
+                            text={"213453IACB"}/>
+                        <DataText 
+                            iconName="work-icon" 
+                            text={"123456"} />
+                    </View>
+                </View>
                 )}
             </SafeAreaView>
         </TouchableWithoutFeedback>
@@ -114,38 +115,39 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center"
     },
-    stepDividerContainer: {
+    currentAttendanceContainer: {
         flex: 1,
-        alignItems: "center",
         justifyContent: "center"
     },
-    qrContainer: {
+    qrScannerContainer: {
         flex: 3,
         justifyContent: "center",
         alignItems: "center"
     },
-    dataContainer: {
-        flex: 3,
-        gap: 5,
+    textBoxes: {
+        width: "100%",
+        justifyContent: "center",
         alignItems: "center",
-        justifyContent:"center"
+        gap:25
+    },
+    manualInputContainer: {
+        flex: 3,
+        gap:20,
+        justifyContent: "flex-end",
+        alignItems: "center"
+    },
+    lastAddedStudentContainer: {
+        flex: 1.5,
+        justifyContent: "flex-end"
     },
     data: {
         alignSelf: "center",
-        width: "80%",
+        width: "85%",
         borderWidth: 2,
         borderColor: "#BCBCBD",
         borderRadius: 20,
-        gap: 25,
+        gap: 10,
         padding: 10
-    },
-    linkContainer: {
-        paddingBottom: 4,
-        alignSelf:"center"
-    },
-    lowNavButtonContainer: {
-        flex: 1,
-        alignItems: "center"
     }
 })
 
