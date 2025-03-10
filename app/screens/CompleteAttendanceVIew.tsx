@@ -77,7 +77,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                             stepNumber={stepNr} />
                     </View>
                     <UnderlineText text={t("verify-details")}/>
-                    <View style={styles.dataContainer}>
+                    <View style={styles.data}>
                         <DataText 
                             iconName='person-icon' 
                             text={localData.fullName}/>
@@ -115,7 +115,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                     {!isKeyboardVisible && <View style={styles.qrContainer}>
                         <QrGenerator value={qrValue}/>
                     </View>}
-                    <View style={styles.dataContainer}>
+                    <View style={styles.data}>
                         <DataText 
                             iconName='person-icon' 
                             text={localData.studentCode}/>
@@ -126,12 +126,10 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                             iconName="work-icon" 
                             text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
                     </View>
-                    <View style={styles.linkContainer}>
+                    <View style={styles.lowNavButtonContainer}>
                         <NormalLink 
                             text={t("something-wrong-back")} 
                             onPress={() => {navigation.navigate("StudentMainView", {localData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
-                    </View>
-                    <View style={styles.lowNavButtonContainer}>
                         <NormalButton 
                             text={t("refresh-qr")} 
                             onPress={refreshQrCode}/>
@@ -158,8 +156,8 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     qrContainer: {
-        flex: 3,
-        justifyContent: "center",
+        flex: 4,
+        justifyContent: "flex-start",
         alignItems: "center"
     },
     dataContainer: {
@@ -174,11 +172,23 @@ const styles = StyleSheet.create({
     },
     linkContainer: {
         paddingBottom: 4,
-        alignSelf:"center"
+        alignSelf:"center",
+        justifyContent: "flex-end"
     },
     lowNavButtonContainer: {
         flex: 1.5,
+        gap: 4,
+        justifyContent: "flex-end",
         alignItems: "center"
+    },
+    data: {
+        alignSelf: "center",
+        width: "85%",
+        borderWidth: 2,
+        borderColor: "#BCBCBD",
+        borderRadius: 20,
+        gap: 10,
+        padding: 10
     }
 })
 

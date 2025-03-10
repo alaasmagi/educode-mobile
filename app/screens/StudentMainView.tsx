@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
         alignItems: "center",
         justifyContent: "flex-end",
-    },
+    }
 })
 
 export default StudentMainView;

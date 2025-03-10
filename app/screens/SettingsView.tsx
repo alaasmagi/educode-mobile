@@ -30,7 +30,8 @@ function SettingsView({navigation, route}: NavigationProps) {
 
 
     const handleBackToHome = () => {
-        localData.
+        localData.userType == "Student" ? navigation.navigate("StudentMainView", { localData }) :
+        navigation.navigate("TeacherMainView", {localData})
     };
 
     const handleDelete = async () => {
@@ -67,48 +68,38 @@ function SettingsView({navigation, route}: NavigationProps) {
             <View style={styles.headerContainer}>
                 <NormalHeader navigation={navigation} route={route}/>
             </View>
-            <View style={styles.mainContainer}>
-                {!isOfflineOnly && (
-                    <View style={styles.changePassword}>
-                        <NormalButton text={t('change-password')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
-                    </View>
-                )}
-
-                {isOfflineOnly && (
-                    <View style={styles.changeStudentCode}>
-                        <SeparatorLine text={t("offline-mode-settings")}/>
-                        <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                        <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
-                    </View>
-                )}
-
-                <View style={styles.deleteAccount}>
-                    <SeparatorLine text={t("delete-account")}/>
-                    <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete")}/>
-                    <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
+            {!isOfflineOnly && (
+                <View style={styles.changePassword}>
+                    <NormalButton text={t('change-password')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
                 </View>
+            )}
+            {isOfflineOnly && (
+                <View style={styles.changeStudentCode}>
+                    <SeparatorLine text={t("offline-mode-settings")}/>
+                    <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
+                    <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
+                </View>
+            )}
+            <View style={styles.deleteAccount}>
+                <SeparatorLine text={t("delete-account")}/>
+                <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete")}/>
+                <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
             </View>
             <View style={styles.lowButtonContainer}>
             <NormalButton text={t("back-to-home")} onPress={handleBackToHome}/>
             <NormalButton text={t("log-out")} onPress={handleLogout}/>
-            </View>      
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     headerContainer: {
-        flex: 2,
-        gap: 70,
-        justifyContent: 'flex-end',
+        flex: 1,
+        justifyContent: 'center',
       },
-    mainContainer: {
-        flex: 13,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 55
-    },
     changePassword: {
+        flex: 1,
         width: "100%",
         justifyContent: "center",
         alignItems: "center"
@@ -120,6 +111,7 @@ const styles = StyleSheet.create({
         gap: 15,
     },
     deleteAccount: {
+        flex: 2,
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
@@ -127,6 +119,7 @@ const styles = StyleSheet.create({
     },
     lowButtonContainer: {
         flex: 2,
+        gap: 10,
         justifyContent: "center",
         alignItems: "center",
     }

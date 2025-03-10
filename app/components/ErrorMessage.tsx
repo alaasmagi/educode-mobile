@@ -3,7 +3,7 @@ import { Text, StyleSheet, View } from 'react-native';
  
 
 interface ErrorMessageProperties {
-    text: string; 
+    text: string|null; 
 }
 
 const styles = StyleSheet.create({
