@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavigationProps from '../../types'
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard, BackHandler} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
@@ -15,15 +15,23 @@ import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
 import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
+import { GetCurrentAttendance } from '../businesslogic/CourseAttendanceData';
+import AttendanceModel from '../models/AttendanceModel';
 
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
+    const { localData } = route.params;
     const [qrScanView, setQrScanView] = useState(true);
     const isKeyboardVisible = KeyboardVisibilityHandler();
     const [scanned, setScanned] = useState(false);
-    const [attendanceData, setAttendanceData] = useState('');
+
+    const [currentAttendanceData, setCurrentAttendanceData] = useState<AttendanceModel|null>(null);
+
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [courseCode, setCourseCode] = useState<string|null>(null);
+    const [courseName, setCourseName] = useState<string|null>(null);
+    const [attendanceId, setAttendanceId] = useState<string|null>(null);
     const { t } = useTranslation();
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
@@ -44,7 +52,23 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
             setTimeout(() => setErrorMessage(null), 3000);
             setTimeout(() => setSuccessMessage(null), 3000);
         }
-    };    
+    }; 
+    
+    const fetchCurrentAttdencance = async () =>  {
+        const attendanceData: AttendanceModel | null | boolean = await GetCurrentAttendance(localData.uniId);
+
+
+        if (attendanceData == null) {
+            console.log("NULL");
+        } else {
+            setCurrentAttendanceData(attendanceData);
+        }
+
+    };
+
+      useEffect(() => {
+        fetchCurrentAttdencance();
+      }, []);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -64,10 +88,11 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     <View style={styles.data}>
                         <DataText 
                             iconName='school-icon' 
-                            text={"Tarkvaratehnika (IAX0110)"}/>
+                            text={currentAttendanceData ? `${currentAttendanceData?.courseName} (${currentAttendanceData?.courseCode})`:
+                                t("no-current-attendance-data")}/>
                         <DataText 
                             iconName='key-icon' 
-                            text={"123128"}/>
+                            text={currentAttendanceData ? `${currentAttendanceData?.attendanceId}` : t("no-current-attendance-data")}/>
                     </View>
                     </View>)}
                 {qrScanView ? (

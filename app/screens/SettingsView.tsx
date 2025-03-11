@@ -69,12 +69,12 @@ function SettingsView({navigation, route}: NavigationProps) {
                 <NormalHeader navigation={navigation} route={route}/>
             </View>
             {!isOfflineOnly && (
-                <View style={styles.changePassword}>
+                <View style={styles.firstOptionContainer}>
                     <NormalButton text={t('change-password')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
                 </View>
             )}
             {isOfflineOnly && (
-                <View style={styles.changeStudentCode}>
+                <View style={styles.firstOptionContainer}>
                     <SeparatorLine text={t("offline-mode-settings")}/>
                     <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
                     <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
@@ -82,7 +82,7 @@ function SettingsView({navigation, route}: NavigationProps) {
             )}
             <View style={styles.deleteAccount}>
                 <SeparatorLine text={t("delete-account")}/>
-                <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete")}/>
+                <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete") + " *"}/>
                 <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
             </View>
             <View style={styles.lowButtonContainer}>
@@ -98,28 +98,22 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
       },
-    changePassword: {
+    firstOptionContainer: {
         flex: 1,
         width: "100%",
         justifyContent: "center",
         alignItems: "center"
     },
-    changeStudentCode: {
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 15,
-    },
     deleteAccount: {
-        flex: 2,
+        flex: 1,
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
         gap: 15,
     },
     lowButtonContainer: {
-        flex: 2,
-        gap: 10,
+        flex: 1,
+        gap: 15,
         justifyContent: "center",
         alignItems: "center",
     }

@@ -40,8 +40,8 @@
     "all-fields-required-message": "All fields need to be filled",
     "account-create-error": "User account creation failed",
     "create-account-success": "Successfully created an account",
-    "add-student": "Add student",
-    "view-students": "View students",
+    "scan-student": "Scan student",
+    "add-manually": "Add manually",
     "delete-account": "Delete account",
     "change-password": "Change password",
     "type-delete": "Type 'DELETE'",
@@ -56,5 +56,6 @@
     "students-in-current-attendance": "Students in current attendance:",
     "verify-account": "Verify data:",
     "not-available": "None",
-    "last-student": "Last added student:"
+    "last-student": "Last added student:",
+    "back-to-home": "Back to main page"
 }

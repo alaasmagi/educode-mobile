@@ -40,8 +40,8 @@
     "all-fields-required-message": "Kõik väljad peavad olema täidetud",
     "account-create-error": "Viga kasutaja loomisel",
     "create-account-success": "Kasutaja loomine õnnestus",
-    "add-student": "Lisa üliõpilane",
-    "view-students": "Kuva üliõpilased",
+    "scan-student": "Skänneeri",
+    "add-manually": "Lisa käsitsi",
     "delete-account": "Kustuta konto",
     "change-password": "Muuda salasõna",
     "type-delete": "Kirjuta 'DELETE'",
@@ -56,6 +56,7 @@
     "set-new-password": "Määra uus salasõna:",
     "verify-account": "Kinnita andmed:",
     "not-available": "Puudub",
-    "last-student": "Viimati lisatud üliõpilane:"
+    "last-student": "Viimati lisatud üliõpilane:",
+    "back-to-home": "Tagasi avalehele"
   }
   

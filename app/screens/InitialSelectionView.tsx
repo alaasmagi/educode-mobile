@@ -7,6 +7,7 @@ import NormalButton from '../components/NormalButton';
 import { useCameraPermissions } from 'expo-camera';
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
+import * as SplashScreen from 'expo-splash-screen';
 import { useTranslation } from 'react-i18next';
 import FormHeader from '../layout/FormHeader';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
@@ -40,29 +41,37 @@ function InitialSelectionView({ navigation }: NavigationProps) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            let localData:LocalUserData|null = await GetOfflineUserData();
-            if (localData){
+            await SplashScreen.preventAutoHideAsync();
+            
+            let localData: LocalUserData | null = await GetOfflineUserData();
+            
+            if (localData) {
                 if (localData.offlineOnly) {
                     navigation.navigate("StudentMainView", { localData });
-                } else {
-                    const loginStatus = await FetchAndSaveUserDataByUniId(localData.uniId!);
-                    if (loginStatus) {
-                        localData = await GetOfflineUserData();
-                        if (localData){
-                            localData.userType === "Teacher" ? navigation.navigate("TeacherMainView", { localData }) :
-                            navigation.navigate("StudentMainView", { localData });
-                        }
-                    } else {
-                        setNormalMessage(t("login-again"));
-                        setTimeout(() => {
-                            setNormalMessage(null);
-                          }, 3000);
+                    await SplashScreen.hideAsync();
+                    return;
+                } 
+                
+                const loginStatus = await FetchAndSaveUserDataByUniId(localData.uniId!);
+                if (loginStatus) {
+                    localData = await GetOfflineUserData();
+                    if (localData) {
+                        localData.userType === "Teacher"
+                            ? navigation.navigate("TeacherMainView", { localData })
+                            : navigation.navigate("StudentMainView", { localData });
+                        await SplashScreen.hideAsync();
+                        return;
                     }
+                } else {
+                    setNormalMessage(t("login-again"));
+                    setTimeout(() => setNormalMessage(null), 3000);
                 }
             }
+            await SplashScreen.hideAsync();
         };
+    
         fetchUserData();
-        }, []);
+    }, []);
 
     const handleOfflineLogin = async () => {
         Keyboard.dismiss();
