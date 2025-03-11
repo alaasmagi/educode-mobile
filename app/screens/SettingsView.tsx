@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useCallback} from 'react';
 import NavigationProps from '../../types'
-import { SafeAreaView, StyleSheet, View, Alert, BackHandler} from 'react-native';
+import { SafeAreaView, StyleSheet, View, Alert, BackHandler, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
 import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import NormalButton from '../components/NormalButton';
 import SuccessMessage from '../components/SuccessMessage';
+import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 import NormalHeader from '../layout/NormalHeader'
 import { DeleteOfflineUserData } from '../businesslogic/UserDataOffline';
 import { DeleteUser } from '../businesslogic/UserDataOnline';
 import { useFocusEffect } from "@react-navigation/native";
+import ErrorMessage from '../components/ErrorMessage';
 
 
 function SettingsView({navigation, route}: NavigationProps) {
@@ -21,7 +23,8 @@ function SettingsView({navigation, route}: NavigationProps) {
     const [confirmationText, setConfirmationText] = useState<string|null>(null);
     const [newStudentCode, setNewStudentCode] = useState<string|null>(null);
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
-    
+    const isKeyboardVisible = KeyboardVisibilityHandler();
+
     useEffect(() => {
             if (localData.uniId == null) {
                 setIsOfflineOnly(true);
@@ -35,6 +38,7 @@ function SettingsView({navigation, route}: NavigationProps) {
     };
 
     const handleDelete = async () => {
+        Keyboard.dismiss();
         if(await DeleteUser(localData.uniId)) {
             await DeleteOfflineUserData();
             navigation.navigate("InitialSelectionView");
@@ -70,9 +74,14 @@ function SettingsView({navigation, route}: NavigationProps) {
             </View>
             {!isOfflineOnly && (
                 <View style={styles.firstOptionContainer}>
-                    <NormalButton text={t('change-password')} onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>
+                    {!isKeyboardVisible && (<NormalButton 
+                                            text={t('change-password')} 
+                                            onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}/>)}
                 </View>
             )}
+            <View style={styles.messageContainer}>
+            {errorMessage && <ErrorMessage text={errorMessage}/>}
+            </View>
             {isOfflineOnly && (
                 <View style={styles.firstOptionContainer}>
                     <SeparatorLine text={t("offline-mode-settings")}/>
@@ -80,14 +89,15 @@ function SettingsView({navigation, route}: NavigationProps) {
                     <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
                 </View>
             )}
-            <View style={styles.deleteAccount}>
+            {!isOfflineOnly && (<View style={styles.deleteAccount}>
                 <SeparatorLine text={t("delete-account")}/>
                 <TextBox iconName='person-icon' onChangeText={setConfirmationText} placeHolder={t("type-delete") + " *"}/>
                 <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete}/>
-            </View>
+            </View>)}
             <View style={styles.lowButtonContainer}>
-            <NormalButton text={t("back-to-home")} onPress={handleBackToHome}/>
-            <NormalButton text={t("log-out")} onPress={handleLogout}/>
+            {!isKeyboardVisible && (<NormalButton text={t("back-to-home")} onPress={handleBackToHome}/>)}
+            {!isKeyboardVisible && (<NormalButton text={!isOfflineOnly ? t("log-out") : t("delete-account")} 
+                                    onPress={handleLogout}/>)}
             </View>
         </SafeAreaView>
     );
@@ -99,20 +109,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
       },
     firstOptionContainer: {
-        flex: 1,
+        flex: 1.5,
         width: "100%",
+        gap: 15,
         justifyContent: "center",
         alignItems: "center"
     },
+    messageContainer: {
+        flex: 1
+    },
     deleteAccount: {
-        flex: 1,
+        flex: 1.5,
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
         gap: 15,
     },
     lowButtonContainer: {
-        flex: 1,
+        flex: 1.5,
         gap: 15,
         justifyContent: "center",
         alignItems: "center",

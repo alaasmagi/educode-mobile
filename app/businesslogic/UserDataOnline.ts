@@ -5,7 +5,7 @@ import CreateUserModel from '../models/CreateUserModel';
 import VerifyOTPModel from '../models/VerifyOTPModel';
 import ChangePasswordModel from '../models/ChangePasswordModel';
 import LocalUserData from '../models/LocalUserDataModel';
-import { SaveOfflineUserData, SaveUserToken } from './UserDataOffline';
+import { GetUserToken, SaveOfflineUserData, SaveUserToken } from './UserDataOffline';
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
 {
@@ -129,7 +129,7 @@ export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
 }
 
 export async function ChangeUserPassword(model: ChangePasswordModel): Promise<boolean> {
-    const token = await Storage.getData(LocalKeys.localToken);
+    const token = await GetUserToken();
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/ChangePassword`, {
             method: 'PATCH',
@@ -152,9 +152,9 @@ export async function ChangeUserPassword(model: ChangePasswordModel): Promise<bo
 }
 
 export async function DeleteUser(uniId: string): Promise<boolean> {
-    const token = await Storage.getData(LocalKeys.localToken);
+    const token = await GetUserToken();
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/${uniId}`, {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Delete/${uniId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,

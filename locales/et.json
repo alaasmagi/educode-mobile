@@ -61,6 +61,12 @@
     "no-current-attendance-data": "Hetkel pole ühtki ainetundi",
     "attendance-check-add-success": "Edukalt lisatud üliõpilane: ",
     "attendance-check-add-fail": "Kohaloleku kontroll ebaõnnestus",
-    "no-last-added-student": "Viimati lisatud üliõpilasi pole"
+    "no-last-added-student": "Viimati lisatud üliõpilasi pole",
+    "timestamp-error": "Skänneeritud QR kood on kehtetu",
+    "attendance-add-success": "Kohaloleku kontroll oli edukas",
+    "login-again": "Palun logi uuesti sisse",
+    "account-deletion-error": "Konto kustutamine ebaõnnestus",
+    "go-back": "Mine tagasi"
+
   }
   

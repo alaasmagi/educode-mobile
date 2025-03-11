@@ -38,12 +38,6 @@ function StudentMainView({ navigation , route }: NavigationProps) {
     const [showError, setShowError] = useState(false);
 
     const isKeyboardVisible = KeyboardVisibilityHandler();
-
-    const clearSensitiveData = () => {
-        setStepNr(1);
-        setAttendanceId('');
-        setWorkplaceId('');
-    };
     BackButtonHandler(navigation);
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {

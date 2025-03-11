@@ -61,5 +61,10 @@
     "no-current-attendance-data": "No current attendance",
     "attendance-check-add-success": "Check-in completed for: ",
     "attendance-check-add-fail": "Failed to complete the check-in",
-    "no-last-added-student": "No last added students"
+    "no-last-added-student": "No last added students",
+    "timestamp-error": "Scanned QR is expired",
+    "attendance-add-success": "Check-in completed successfully",
+    "login-again": "Please log in again",
+    "account-deletion-error": "Account deletion failed",
+    "go-back": "Go back"
 }

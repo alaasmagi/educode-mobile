@@ -14,7 +14,8 @@ import BackButtonHandler from '../../hooks/BackButtonHandler';
 import LocalUserData from '../models/LocalUserDataModel';
 import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
 import { FetchAndSaveUserDataByUniId } from '../businesslogic/UserDataOnline';
-import NormalMessage from '../components/NormalMessage'
+import NormalMessage from '../components/NormalMessage';
+import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import { RegexFilters } from '../helpers/RegexFilters';
 
 
@@ -23,6 +24,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     const [studentCode, setStudentCode] = useState('');
     const [normalMessage, setNormalMessage] = useState<string|null>(null);
     const [permission, requestPermission] = useCameraPermissions();
+    const isKeyboardVisible = KeyboardVisibilityHandler();
 
     BackButtonHandler(navigation);
     useFocusEffect(
@@ -97,6 +99,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                 <FormHeader/>
             </View>
             <View style={styles.mainContainer}>
+                {!isKeyboardVisible && (
                 <View style={styles.mainLoginContainer}>
                     <NormalButton 
                         text={t("log-in")} 
@@ -105,9 +108,8 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                         text={t("register-as-student")} 
                         onPress={() => navigation.navigate('CreateAccountView')}/>
                     {normalMessage && (
-                        <NormalMessage text={normalMessage}/>
-                    )}
-                </View>
+                        <NormalMessage text={normalMessage}/>)}
+                    </View>)}
                 <View style={styles.alternateLoginContainer}>
                     <SeparatorLine text={t("or-use-offline-only")}/>
                     <TextBox 

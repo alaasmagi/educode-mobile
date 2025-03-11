@@ -46,22 +46,22 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                const timestamp = Math.floor(Date.now() / 1000);
                if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
                 setErrorMessage(t("timestamp-error"));
-               }
-               
-                const model:CreateAttendanceCheckModel = {
-                    courseAttendanceId: parseInt(attendanceCheckData[1]),
-                    workplaceId: parseInt(attendanceCheckData[2]) ?? null,
-                    studentCode: attendanceCheckData[3]
-                }
-                const response = await AddAttendanceCheck(model);
-            
-                if (!response) {
-                    setErrorMessage(t("attendance-check-add-fail"));
-                } else {
-                    setSuccessMessage(t("attendance-check-add-success") + `${attendanceCheckData[3]}`);
-                    setLastAddedStudentCode(attendanceCheckData[3]);
-                    setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
-                    setTimeout(() => setSuccessMessage(null), 3000);
+               } else {               
+                    const model:CreateAttendanceCheckModel = {
+                        courseAttendanceId: parseInt(attendanceCheckData[1]),
+                        workplaceId: parseInt(attendanceCheckData[2]) ?? null,
+                        studentCode: attendanceCheckData[3]
+                    }
+                    const response = await AddAttendanceCheck(model);
+                
+                    if (!response) {
+                        setErrorMessage(t("attendance-check-add-fail"));
+                    } else {
+                        setSuccessMessage(t("attendance-check-add-success") + `${attendanceCheckData[3]}`);
+                        setLastAddedStudentCode(attendanceCheckData[3]);
+                        setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
+                        setTimeout(() => setSuccessMessage(null), 3000);
+                    }
                 }
             } else {
                 console.log(data)
@@ -80,6 +80,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
     };
 
     useEffect(() => {
+            fetchCurrentAttdencance();
             const interval = setInterval(() => {
                 fetchCurrentAttdencance();
             }, 120000);
@@ -140,8 +141,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     </View>
                     </View>)}
                 {qrScanView ? (
-                    <>
-                                            
+                    <>                
                     <View style={styles.qrScannerContainer}>
                     {currentAttendanceData && 
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
@@ -161,7 +161,6 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     </>
                 ) : (
                     <>
-
                         <View style={styles.messageContainer}>
                         {(successMessage && !isKeyboardVisible) && (
                             <SuccessMessage text={successMessage}/>
@@ -221,7 +220,8 @@ const styles = StyleSheet.create({
     },
     currentAttendanceContainer: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        marginBottom: 10,
     },
     qrScannerContainer: {
         flex: 3,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
         gap:25
     },
     manualInputContainer: {
-        flex: 2,
+        flex: 1.5,
         gap:20,
         justifyContent: "flex-end",
         alignItems: "center"
@@ -245,8 +245,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end"
     },
     messageContainer: {
-        flex: 1.5,
-        justifyContent: "center",
+        flex: 2,
+        justifyContent: "flex-start",
     },
     data: {
         alignSelf: "center",

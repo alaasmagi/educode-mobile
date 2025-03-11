@@ -16,11 +16,11 @@ import NormalLink from '../components/NormalLink';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import UnderlineText from '../components/UnderlineText';
 import { AddAttendanceCheck } from '../businesslogic/CourseAttendanceData';
-import AttendanceCheckData from '../models/AttendanceCheckData';
+import CreateAttendanceCheckModel from '../models/CreateAttendanceCheckModel';
 
 
 function CompleteAttendanceView({ navigation , route}: NavigationProps) {
-    const { localData, attendanceId, workplaceId = 0 } = route.params;
+    const { localData, attendanceId, workplaceId = null } = route.params;
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
     const [isOnline, setIsOnline] = useState(false);
@@ -45,10 +45,10 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
     }, [localData.studentCode, attendanceId, workplaceId]);
 
     const handleAttendanceCheckAdd = async () => {
-        const attendanceCheck:AttendanceCheckData = {
+        const attendanceCheck:CreateAttendanceCheckModel = {
             studentCode: localData.studentCode,
             courseAttendanceId: attendanceId,
-            workplaceId: workplaceId ?? null
+            workplaceId: parseInt(workplaceId) ?? null
         }
         const status = await AddAttendanceCheck(attendanceCheck);
         if (status) {
@@ -56,7 +56,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
             setTimeout(() => {setSuccessMessage(null); 
                             navigation.navigate("StudentMainView", {localData})}, 3000);
         } else {
-            setErrorMessage(t("attendance-add-error"));
+            setErrorMessage(t("attendance-check-add-fail"));
             setTimeout(() => setErrorMessage(null), 3000);
         }
     }
@@ -95,7 +95,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                             text={attendanceId}/>
                         <DataText 
                             iconName="work-icon" 
-                            text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                            text={workplaceId ? workplaceId: t("no-workplace")} />
                     </View>
                     <View style={styles.messageContainer}>
                         {successMessage && (
@@ -103,12 +103,10 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                         {errorMessage && (
                             <ErrorMessage text={errorMessage}/>)}
                     </View>
-                    <View style={styles.linkContainer}>
+                    <View style={styles.lowNavButtonContainer}>
                         <NormalLink 
                             text={t("something-wrong-back")} 
                             onPress={() => {navigation.navigate("StudentMainView", {localData, attendanceId, workplaceId, stepNr: stepNr - 1})}}/>
-                    </View>
-                    <View style={styles.lowNavButtonContainer}>
                         <NormalButton 
                             text={t("check-in")} 
                             onPress={handleAttendanceCheckAdd}/>
@@ -133,7 +131,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
                             text={attendanceId}/>
                         <DataText 
                             iconName="work-icon" 
-                            text={workplaceId == 0 ? t("no-workplace") : workplaceId} />
+                            text={workplaceId ? workplaceId: t("no-workplace")} />
                     </View>
                     <View style={styles.lowNavButtonContainer}>
                         <NormalLink 
@@ -176,8 +174,9 @@ const styles = StyleSheet.create({
         justifyContent:"center"
     },
     messageContainer: {
+        flex: 1,
         alignItems: "center",
-        justifyContent:"center"
+        justifyContent:"flex-end"
     },
     linkContainer: {
         paddingBottom: 4,

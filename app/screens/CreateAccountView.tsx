@@ -51,7 +51,8 @@ function CreateAccountView({ navigation }: NavigationProps) {
       };
     }, []);
 
-  const isStudentIDFormValid = () => RegexFilters.uniId.test(uniId) && RegexFilters.studentCode.test(studentCode);
+  const isStudentIDFormValid = () => (uniId !== '' || RegexFilters.uniId.test(uniId)) && 
+                                    (studentCode !== '' || RegexFilters.studentCode.test(studentCode));
   useEffect(() => {
     if (!isStudentIDFormValid()) {
       setNormalMessage(t('all-fields-required-message'));
@@ -121,6 +122,9 @@ function CreateAccountView({ navigation }: NavigationProps) {
         )}
         </View>
         <View style={styles.buttonContainer}>
+        <NormalLink 
+          text={t('go-back')} 
+            onPress={() => navigation.navigate("InitialSelectionView")} />
             <NormalButton 
               text={t('continue')} 
               onPress={() => {setStepNr(2)}} 
@@ -271,6 +275,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1.1,
+    gap: 3,
     justifyContent: 'center',
     alignItems: 'center',
   },
