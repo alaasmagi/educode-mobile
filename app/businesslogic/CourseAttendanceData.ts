@@ -5,7 +5,6 @@ import AttendanceModel from "../models/AttendanceModel";
 
 export async function AddAttendanceCheck(model:CreateAttendanceCheckModel) : Promise<Boolean> {
     const token = await Storage.getData(LocalKeys.localToken);
-    console.log(token);
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/Course/AttendanceCheck/Add`, {
             method: 'POST',

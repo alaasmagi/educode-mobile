@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavigationProps from '../../types'
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import globalStyles from '../styles/GlobalStyles';
@@ -35,6 +35,15 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
         setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
     };
 
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
+        }, 60000);
+
+        return () => clearInterval(intervalId);
+    }, [localData.studentCode, attendanceId, workplaceId]);
+
     const handleAttendanceCheckAdd = async () => {
         const attendanceCheck:AttendanceCheckData = {
             studentCode: localData.studentCode,
@@ -50,7 +59,7 @@ function CompleteAttendanceView({ navigation , route}: NavigationProps) {
             setErrorMessage(t("attendance-add-error"));
             setTimeout(() => setErrorMessage(null), 3000);
         }
-    } 
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

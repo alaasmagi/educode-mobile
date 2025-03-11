@@ -57,5 +57,9 @@
     "verify-account": "Verify data:",
     "not-available": "None",
     "last-student": "Last added student:",
-    "back-to-home": "Back to main page"
+    "back-to-home": "Back to main page",
+    "no-current-attendance-data": "No current attendance",
+    "attendance-check-add-success": "Check-in completed for: ",
+    "attendance-check-add-fail": "Failed to complete the check-in",
+    "no-last-added-student": "No last added students"
 }

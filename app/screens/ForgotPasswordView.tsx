@@ -16,6 +16,7 @@ import UnderlineText from '../components/UnderlineText';
 import ChangePasswordModel from '../models/ChangePasswordModel';
 import VerifyOTPModel from '../models/VerifyOTPModel';
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from 'expo-screen-capture';
+import { RegexFilters } from '../helpers/RegexFilters';
 
 
 function ForgotPasswordView({ navigation, route }: NavigationProps) {
@@ -40,7 +41,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     };
   }, []);
 
-  const isStudentIDFormValid = () => uniId !== '';
+  const isStudentIDFormValid = () => RegexFilters.uniId.test(uniId);
   useEffect(() => {
     if (!isStudentIDFormValid()) {
       setNormalMessage(t('all-fields-required-message'));

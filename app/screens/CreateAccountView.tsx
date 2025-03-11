@@ -16,6 +16,7 @@ import DataText from '../components/DataText';
 import UnderlineText from '../components/UnderlineText';
 import CreateUserModel from '../models/CreateUserModel';
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from 'expo-screen-capture';
+import { RegexFilters } from '../helpers/RegexFilters';
 
 
 function CreateAccountView({ navigation }: NavigationProps) {
@@ -50,7 +51,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
       };
     }, []);
 
-  const isStudentIDFormValid = () => uniId !== '' && studentCode !== '';
+  const isStudentIDFormValid = () => RegexFilters.uniId.test(uniId) && RegexFilters.studentCode.test(studentCode);
   useEffect(() => {
     if (!isStudentIDFormValid()) {
       setNormalMessage(t('all-fields-required-message'));

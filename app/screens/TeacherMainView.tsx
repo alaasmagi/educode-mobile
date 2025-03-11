@@ -15,8 +15,10 @@ import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
 import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
-import { GetCurrentAttendance } from '../businesslogic/CourseAttendanceData';
+import { AddAttendanceCheck, GetCurrentAttendance } from '../businesslogic/CourseAttendanceData';
 import AttendanceModel from '../models/AttendanceModel';
+import ToSixDigit from '../helpers/NumberConverter';
+import CreateAttendanceCheckModel from '../models/CreateAttendanceCheckModel';
 
 
 function TeacherMainView({ navigation , route}: NavigationProps) {
@@ -24,29 +26,44 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
     const [qrScanView, setQrScanView] = useState(true);
     const isKeyboardVisible = KeyboardVisibilityHandler();
     const [scanned, setScanned] = useState(false);
-
     const [currentAttendanceData, setCurrentAttendanceData] = useState<AttendanceModel|null>(null);
-
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
-    const [courseCode, setCourseCode] = useState<string|null>(null);
-    const [courseName, setCourseName] = useState<string|null>(null);
-    const [attendanceId, setAttendanceId] = useState<string|null>(null);
+    const [studentCode, setStudentCode] = useState('');
+    const [workplaceId, setWorkplaceId] = useState('');
+    const [lastAddedStudentCode, setLastAddedStudentCode] = useState('');
+    const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] = useState('');
     const { t } = useTranslation();
 
     const handleBarcodeScanned = async ({ data }: { data: string }) => {
         if (!scanned) {
             setScanned(true);
             await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            setErrorMessage(t('TEST'));
             if (RegexFilters.attendanceCheckData.test(data)) {
                const attendanceCheckData = data.split("-");
                const timestamp = Math.floor(Date.now() / 1000);
-            }
-            else {
-                console.log("sjkisf")
-                setErrorMessage("ERROR");
-                console.log(errorMessage)
+               if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
+                setErrorMessage(t("timestamp-error"));
+               }
+               
+                const model:CreateAttendanceCheckModel = {
+                    courseAttendanceId: parseInt(attendanceCheckData[1]),
+                    workplaceId: parseInt(attendanceCheckData[2]) ?? null,
+                    studentCode: attendanceCheckData[3]
+                }
+                const response = await AddAttendanceCheck(model);
+            
+                if (!response) {
+                    setErrorMessage(t("attendance-check-add-fail"));
+                } else {
+                    setSuccessMessage(t("attendance-check-add-success") + `${attendanceCheckData[3]}`);
+                    setLastAddedStudentCode(attendanceCheckData[3]);
+                    setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
+                    setTimeout(() => setSuccessMessage(null), 3000);
+                }
+            } else {
+                console.log(data)
+                setErrorMessage(t("attendance-check-add-fail"));
             }
             setTimeout(() => setScanned(false), 2000);
             setTimeout(() => setErrorMessage(null), 3000);
@@ -54,21 +71,54 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
         }
     }; 
     
+    const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
     const fetchCurrentAttdencance = async () =>  {
         const attendanceData: AttendanceModel | null | boolean = await GetCurrentAttendance(localData.uniId);
-
-
         if (attendanceData == null) {
             console.log("NULL");
         } else {
             setCurrentAttendanceData(attendanceData);
-        }
-
+        };
     };
 
-      useEffect(() => {
-        fetchCurrentAttdencance();
-      }, []);
+    useEffect(() => {
+            const intervalId = setInterval(() => {
+                fetchCurrentAttdencance();
+            }, 120000);
+    
+            return () => clearInterval(intervalId);
+        }, []);
+    
+
+    const handleAddStudentManually = async () => {
+        Keyboard.dismiss();
+        if (workplaceId !== '' && !RegexFilters.defaultId.test(workplaceId)) {
+            setErrorMessage(t('wrong-studentcode'));
+            setTimeout (() => setErrorMessage(null), 3000);
+        }
+        const model:CreateAttendanceCheckModel = {
+            studentCode: studentCode,
+            courseAttendanceId: currentAttendanceData!.attendanceId,
+            workplaceId: parseInt(workplaceId) ?? null
+        }
+        const response = await AddAttendanceCheck(model);
+       
+        if (!response) {
+            setErrorMessage(t("attendance-check-add-fail"));
+            setTimeout(() => setErrorMessage(null), 3000);
+        } else {
+            setSuccessMessage(t("attendance-check-add-success") + `${studentCode}`);
+            setLastAddedStudentCode(studentCode);
+            setLastAddedStudentWorkplaceId(workplaceId);
+            setTimeout(() => setSuccessMessage(null), 3000);
+        }
+        setStudentCode('');
+        setWorkplaceId('');
+    }
+
+    useEffect(() => {
+    fetchCurrentAttdencance();
+    }, []);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -92,7 +142,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                                 t("no-current-attendance-data")}/>
                         <DataText 
                             iconName='key-icon' 
-                            text={currentAttendanceData ? `${currentAttendanceData?.attendanceId}` : t("no-current-attendance-data")}/>
+                            text={currentAttendanceData ? `${ToSixDigit(currentAttendanceData?.attendanceId)}` : ''}/>
                     </View>
                     </View>)}
                 {qrScanView ? (
@@ -111,18 +161,33 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     </>
                 ) : (
                     <>
-                        {(successMessage  && !isKeyboardVisible) && (
+
+                        <View style={styles.messageContainer}>
+                        {(successMessage && !isKeyboardVisible) && (
                             <SuccessMessage text={successMessage}/>
                         )}
     	                {(errorMessage && !isKeyboardVisible) && (
                             <ErrorMessage text={errorMessage}/>
                         )}
+                        </View>
                         <View style={styles.manualInputContainer}>
                             <View style={styles.textBoxes}>
-                                <TextBox iconName={"person-icon"} placeHolder={t("student-code") + "*"}/>
-                                <TextBox iconName={"work-icon"} placeHolder={t("workplace-id")}/>
+                                <TextBox 
+                                    iconName={"person-icon"} 
+                                    placeHolder={t("student-code") + "*"}
+                                    value={studentCode}
+                                    onChangeText={setStudentCode}
+                                    autoCapitalize='characters'/>
+                                <TextBox 
+                                    iconName={"work-icon"} 
+                                    placeHolder={t("workplace-id")}
+                                    value={workplaceId}
+                                    onChangeText={setWorkplaceId}/>
                             </View>
-                            <NormalButton text={t("add-manually")} onPress={console.log}/>
+                            <NormalButton 
+                                text={t("add-manually")} 
+                                onPress={handleAddStudentManually} 
+                                disabled={!isStudentCodeValid()}/>
                         </View>
                         {!isKeyboardVisible && (
                         <View style={styles.lastAddedStudentContainer}>
@@ -130,10 +195,12 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                             <View style={styles.data}>
                                 <DataText 
                                     iconName='person-icon' 
-                                    text={"213453IACB"}/>
+                                    text={lastAddedStudentCode != '' ? 
+                                    lastAddedStudentCode : t("no-last-added-student")}/>
                                 <DataText 
                                     iconName="work-icon" 
-                                    text={"123456"} />
+                                    text={lastAddedStudentWorkplaceId != '' ? 
+                                        lastAddedStudentWorkplaceId : ''} />
                             </View>
                          </View>)}
                     </>
@@ -168,7 +235,7 @@ const styles = StyleSheet.create({
         gap:25
     },
     manualInputContainer: {
-        flex: 3,
+        flex: 2,
         gap:20,
         justifyContent: "flex-end",
         alignItems: "center"
