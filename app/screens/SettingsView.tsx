@@ -6,14 +6,15 @@ import SeparatorLine from '../components/SeparatorLine';
 import TextBox from '../components/TextBox';
 import { useTranslation } from 'react-i18next';
 import NormalButton from '../components/NormalButton';
-import SuccessMessage from '../components/SuccessMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 import NormalHeader from '../layout/NormalHeader'
-import { DeleteOfflineUserData } from '../businesslogic/UserDataOffline';
+import { DeleteOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
 import { DeleteUser } from '../businesslogic/UserDataOnline';
 import { useFocusEffect } from "@react-navigation/native";
 import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
+import { RegexFilters } from '../helpers/RegexFilters';
 
 
 function SettingsView({navigation, route}: NavigationProps) {
@@ -21,8 +22,9 @@ function SettingsView({navigation, route}: NavigationProps) {
     const {localData} = route.params;
     const [isOfflineOnly, setIsOfflineOnly] = useState(false);
     const [confirmationText, setConfirmationText] = useState<string|null>(null);
-    const [newStudentCode, setNewStudentCode] = useState<string|null>(null);
+    const [newStudentCode, setNewStudentCode] = useState('');
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
+    const [successMessage, setSuccessMessage] = useState<string|null>(null);
     const isKeyboardVisible = KeyboardVisibilityHandler();
 
     useEffect(() => {
@@ -36,6 +38,8 @@ function SettingsView({navigation, route}: NavigationProps) {
         localData.userType == "Student" ? navigation.navigate("StudentMainView", { localData }) :
         navigation.navigate("TeacherMainView", {localData})
     };
+
+    const isStudentCodeValid = () => newStudentCode !== '' || RegexFilters.studentCode.test(newStudentCode);
 
     const handleDelete = async () => {
         Keyboard.dismiss();
@@ -51,6 +55,17 @@ function SettingsView({navigation, route}: NavigationProps) {
     const handleLogout = async () => {
         await DeleteOfflineUserData();
         navigation.navigate("InitialSelectionView");
+    }
+
+
+    const handleStudentCodeChange = async () => {
+        Keyboard.dismiss();
+        await DeleteOfflineUserData();
+        localData.studentCode = newStudentCode;
+        await SaveOfflineUserData(localData);
+        setNewStudentCode('');
+        setSuccessMessage(t("studentcode-change-success"));
+        setTimeout(() => setSuccessMessage(null), 3000);
     }
 
     BackButtonHandler(navigation);
@@ -81,12 +96,13 @@ function SettingsView({navigation, route}: NavigationProps) {
             )}
             <View style={styles.messageContainer}>
             {errorMessage && <ErrorMessage text={errorMessage}/>}
+            {successMessage && <SuccessMessage text={successMessage}/>}
             </View>
             {isOfflineOnly && (
                 <View style={styles.firstOptionContainer}>
                     <SeparatorLine text={t("offline-mode-settings")}/>
-                    <TextBox iconName='person-icon' placeHolder={t("student-code")}/>
-                    <NormalButton text={t("save-account-changes")} onPress={() => console.log("Button pressed")}/>
+                    <TextBox iconName='person-icon' value={newStudentCode} onChangeText={setNewStudentCode} placeHolder={t("student-code")} autoCapitalize='characters'/>
+                    <NormalButton text={t("save-account-changes")} onPress={handleStudentCodeChange} disabled={!isStudentCodeValid()}/>
                 </View>
             )}
             {!isOfflineOnly && (<View style={styles.deleteAccount}>

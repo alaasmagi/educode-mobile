@@ -58,7 +58,7 @@ export async function CreateUserAccount(model:CreateUserModel) : Promise<Boolean
 }
 
 export async function FetchAndSaveUserDataByUniId(uniId: string):Promise<boolean> {
-    const token = await Storage.getData(LocalKeys.localToken);
+    const token = await GetUserToken();
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
         {

@@ -2,6 +2,7 @@ import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import Storage from "../data/LocalDataAccess";
 import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import AttendanceModel from "../models/AttendanceModel";
+import { GetUserToken } from "./UserDataOffline";
 
 export async function AddAttendanceCheck(model:CreateAttendanceCheckModel) : Promise<Boolean> {
     const token = await Storage.getData(LocalKeys.localToken);
@@ -29,7 +30,7 @@ export async function AddAttendanceCheck(model:CreateAttendanceCheckModel) : Pro
 }
 
 export async function GetCurrentAttendance(uniId:string) : Promise<AttendanceModel|null> {
-    const token = await Storage.getData(LocalKeys.localToken);
+    const token = await GetUserToken();
     try {
         const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/Course/GetCurrentAttendance`, {
             method: 'POST',
