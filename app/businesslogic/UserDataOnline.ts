@@ -6,11 +6,13 @@ import VerifyOTPModel from '../models/VerifyOTPModel';
 import ChangePasswordModel from '../models/ChangePasswordModel';
 import LocalUserData from '../models/LocalUserDataModel';
 import { GetUserToken, SaveOfflineUserData, SaveUserToken } from './UserDataOffline';
+import Constants from 'expo-constants';
+
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
 {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Login`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -34,7 +36,7 @@ export async function UserLogin (uniId:string, password:string) : Promise<boolea
 
 export async function CreateUserAccount(model:CreateUserModel) : Promise<Boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Register`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -60,7 +62,7 @@ export async function CreateUserAccount(model:CreateUserModel) : Promise<Boolean
 export async function FetchAndSaveUserDataByUniId(uniId: string):Promise<boolean> {
     const token = await GetUserToken();
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -87,7 +89,7 @@ export async function FetchAndSaveUserDataByUniId(uniId: string):Promise<boolean
 
 export async function RequestOTP(uniId:string): Promise<boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/RequestOTP`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/RequestOTP`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -107,7 +109,7 @@ export async function RequestOTP(uniId:string): Promise<boolean> {
 
 export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/VerifyOTP`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/VerifyOTP`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -131,7 +133,7 @@ export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
 export async function ChangeUserPassword(model: ChangePasswordModel): Promise<boolean> {
     const token = await GetUserToken();
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/ChangePassword`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/ChangePassword`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -154,7 +156,7 @@ export async function ChangeUserPassword(model: ChangePasswordModel): Promise<bo
 export async function DeleteUser(uniId: string): Promise<boolean> {
     const token = await GetUserToken();
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/User/Delete/${uniId}`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Delete/${uniId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,

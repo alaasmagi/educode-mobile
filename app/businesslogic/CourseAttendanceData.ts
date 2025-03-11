@@ -3,11 +3,13 @@ import Storage from "../data/LocalDataAccess";
 import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import AttendanceModel from "../models/AttendanceModel";
 import { GetUserToken } from "./UserDataOffline";
+import Constants from 'expo-constants';
+
 
 export async function AddAttendanceCheck(model:CreateAttendanceCheckModel) : Promise<Boolean> {
     const token = await Storage.getData(LocalKeys.localToken);
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/Course/AttendanceCheck/Add`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/AttendanceCheck/Add`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -32,7 +34,7 @@ export async function AddAttendanceCheck(model:CreateAttendanceCheckModel) : Pro
 export async function GetCurrentAttendance(uniId:string) : Promise<AttendanceModel|null> {
     const token = await GetUserToken();
     try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/Course/GetCurrentAttendance`, {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/GetCurrentAttendance`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
