@@ -15,6 +15,7 @@ import UnderlineText from '../components/UnderlineText';
 import { RegexFilters } from '../helpers/RegexFilters';
 import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
+import NormalMessage from '../components/NormalMessage';
 import { AddAttendanceCheck, GetCurrentAttendance } from '../businesslogic/CourseAttendanceData';
 import AttendanceModel from '../models/AttendanceModel';
 import ToSixDigit from '../helpers/NumberConverter';
@@ -29,6 +30,7 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
     const [currentAttendanceData, setCurrentAttendanceData] = useState<AttendanceModel|null>(null);
     const [errorMessage, setErrorMessage] = useState<string|null>(null);
     const [successMessage, setSuccessMessage] = useState<string|null>(null);
+    const [normalMessage, setNormalMessage] = useState<string|null>(null);
     const [studentCode, setStudentCode] = useState('');
     const [workplaceId, setWorkplaceId] = useState('');
     const [lastAddedStudentCode, setLastAddedStudentCode] = useState('');
@@ -74,19 +76,14 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
     const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
     const fetchCurrentAttdencance = async () =>  {
         const attendanceData: AttendanceModel | null | boolean = await GetCurrentAttendance(localData.uniId);
-        if (attendanceData == null) {
-            console.log("NULL");
-        } else {
-            setCurrentAttendanceData(attendanceData);
-        };
+        setCurrentAttendanceData(attendanceData);
     };
 
     useEffect(() => {
-            const intervalId = setInterval(() => {
+            const interval = setInterval(() => {
                 fetchCurrentAttdencance();
             }, 120000);
-    
-            return () => clearInterval(intervalId);
+            return () => clearInterval(interval);
         }, []);
     
 
@@ -116,10 +113,6 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
         setWorkplaceId('');
     }
 
-    useEffect(() => {
-    fetchCurrentAttdencance();
-    }, []);
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <SafeAreaView style = {globalStyles.anrdoidSafeArea}>
@@ -131,7 +124,8 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                         textLeft={t("scan-student")} 
                         textRight={t("add-manually")} 
                         onPressLeft={() => setQrScanView(true)} 
-                        onPressRight={() => setQrScanView(false)} />
+                        onPressRight={() => setQrScanView(false)} 
+                        isDisabled={!currentAttendanceData}/>
                 </View>
                 {!isKeyboardVisible && (
                     <View style={styles.currentAttendanceContainer}>                    
@@ -147,15 +141,21 @@ function TeacherMainView({ navigation , route}: NavigationProps) {
                     </View>)}
                 {qrScanView ? (
                     <>
+                                            
                     <View style={styles.qrScannerContainer}>
+                    {currentAttendanceData && 
                         <QrScanner onQrScanned={handleBarcodeScanned}/>
-                    </View>
+                    }
+                     </View>
                     <View style={styles.messageContainer}>
                         {(successMessage && !isKeyboardVisible) && (
                             <SuccessMessage text={successMessage}/>
                         )}
     	                {(errorMessage && !isKeyboardVisible) && (
                             <ErrorMessage text={errorMessage}/>
+                        )}
+                         {(normalMessage && !isKeyboardVisible) && (
+                            <NormalMessage text={normalMessage}/>
                         )}
                     </View>
                     </>

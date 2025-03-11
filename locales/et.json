@@ -58,6 +58,7 @@
     "not-available": "Puudub",
     "last-student": "Viimati lisatud üliõpilane:",
     "back-to-home": "Tagasi avalehele",
+    "no-current-attendance-data": "Hetkel pole ühtki ainetundi",
     "attendance-check-add-success": "Edukalt lisatud üliõpilane: ",
     "attendance-check-add-fail": "Kohaloleku kontroll ebaõnnestus",
     "no-last-added-student": "Viimati lisatud üliõpilasi pole"
