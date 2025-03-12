@@ -122,9 +122,6 @@ function CreateAccountView({ navigation }: NavigationProps) {
         )}
         </View>
         <View style={styles.buttonContainer}>
-        <NormalLink 
-          text={t('go-back')} 
-            onPress={() => navigation.navigate("InitialSelectionView")} />
             <NormalButton 
               text={t('continue')} 
               onPress={() => {setStepNr(2)}} 

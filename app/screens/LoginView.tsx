@@ -103,9 +103,6 @@ function LoginView({ navigation, route }: NavigationProps) {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-      <NormalLink 
-          text={t('go-back')} 
-            onPress={() => navigation.navigate("InitialSelectionView")} />
         <NormalButton 
           text={t('log-in')} 
           onPress={handleLogin} 
