@@ -3,9 +3,12 @@ export default {
       name: "EduCode",
       slug: "educode-mobile",
       splash: {
-      image: "./app/assets/logos/splash-logo.png",
-      resizeMode: "contain",
-      backgroundColor: "#2B2B2B"
+        image: "./app/assets/logos/splash-logo.png",
+        resizeMode: "contain",
+        backgroundColor: "#2B2B2B"
+      },
+    android: {
+        package: "com.educode.mobile"
     },
     extra: {
         eas: {
