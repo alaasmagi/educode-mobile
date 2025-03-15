@@ -26,7 +26,7 @@
     "no-workplace": "Töökohta ei lisatud",
     "login-error": "Viga kasutajanimes või paroolis",
     "exit-app": "Rakendusest väljumine",
-    "exit-app-prompt": "Kas soovite rakendusest väljuda?",
+    "exit-app-prompt": "Kas soovid rakendusest väljuda?",
     "yes": "Jah",
     "cancel": "Tühista",
     "log-out": "Logi välja",
@@ -67,7 +67,9 @@
     "login-again": "Palun logi uuesti sisse",
     "account-deletion-error": "Konto kustutamine ebaõnnestus",
     "go-back": "Mine tagasi",
-    "studentcode-change-success": "Üliõpilaskoodi vahetus oli edukas"
-
+    "studentcode-change-success": "Üliõpilaskoodi vahetus oli edukas",
+    "connection-error": "Viga ühenduses",
+    "connection-error-prompt": "Kas soovid uuesti proovida?",
+    "reload": "Proovi uuesti"
   }
   

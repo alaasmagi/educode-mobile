@@ -8,6 +8,18 @@ import LocalUserData from '../models/LocalUserDataModel';
 import { GetUserToken, SaveOfflineUserData, SaveUserToken } from './UserDataOffline';
 import Constants from 'expo-constants';
 
+export async function TestConnection() : Promise<boolean>
+{
+    try {
+        const response = await fetch(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/TestConnection`);
+        if (!response.ok) {
+            return false;
+        }
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
 
 export async function UserLogin (uniId:string, password:string) : Promise<boolean>
 {

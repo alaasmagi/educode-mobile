@@ -67,5 +67,8 @@
     "login-again": "Please log in again",
     "account-deletion-error": "Account deletion failed",
     "go-back": "Go back",
-    "studentcode-change-success": "Student code changed successfully"
+    "studentcode-change-success": "Student code changed successfully",
+    "connection-error": "Connection error",
+    "connection-error-prompt": "Do you want to try again?",
+    "reload": "Try again"
 }

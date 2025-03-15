@@ -13,7 +13,7 @@ import FormHeader from '../layout/FormHeader';
 import BackButtonHandler from '../../hooks/BackButtonHandler';
 import LocalUserData from '../models/LocalUserDataModel';
 import { GetOfflineUserData, SaveOfflineUserData } from '../businesslogic/UserDataOffline';
-import { FetchAndSaveUserDataByUniId } from '../businesslogic/UserDataOnline';
+import { FetchAndSaveUserDataByUniId, TestConnection } from '../businesslogic/UserDataOnline';
 import NormalMessage from '../components/NormalMessage';
 import KeyboardVisibilityHandler from '../../hooks/KeyboardVisibilityHandler';
 import { RegexFilters } from '../helpers/RegexFilters';
@@ -44,7 +44,15 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     useEffect(() => {
         const fetchUserData = async () => {
             await SplashScreen.preventAutoHideAsync();
-            
+            const connectionStatus = await TestConnection();
+
+            if (!connectionStatus) {
+                Alert.alert(t("connection-error"), t("connection-error-prompt"), [
+                    { text: t("exit-app"), onPress: () => BackHandler.exitApp(), style: "cancel" },
+                    { text: t("reload"), onPress: () => fetchUserData() }
+                  ]);
+            } 
+
             let localData: LocalUserData | null = await GetOfflineUserData();
             
             if (localData) {
