@@ -17,6 +17,7 @@ interface TextBoxProperties {
 const styles= StyleSheet.create({
     textBoxContainer:{
         width: '80%',
+        gap: 5
     },
     inputContainer: {
         flexDirection: 'row',
