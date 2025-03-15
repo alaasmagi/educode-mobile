@@ -10,6 +10,7 @@ export default {
     android: {
         package: "com.educode.mobile"
     },
+      plugins: ["expo-router"],
     extra: {
         eas: {
             projectId: "6a2ef7e1-936b-4005-a953-e2d4393bf9dd"
