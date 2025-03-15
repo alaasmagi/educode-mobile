@@ -68,8 +68,8 @@
     "account-deletion-error": "Account deletion failed",
     "go-back": "Go back",
     "studentcode-change-success": "Student code changed successfully",
-    "connection-error": "Connection error",
-    "connection-error-prompt": "Do you want to try again?",
+    "connection-error": "Internet connection error",
+    "connection-error-prompt": "Connection with server failed. Do you want to try again?",
     "reload": "Try again",
     "invalid-qr": "Invalid QR code"
 }

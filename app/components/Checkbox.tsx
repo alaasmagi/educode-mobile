@@ -7,7 +7,11 @@ interface CheckboxProps {
   onChange?: (checked: boolean) => void;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange }) => {
+const Checkbox: React.FC<CheckboxProps> = ({
+  label,
+  checked = false,
+  onChange,
+}) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   const toggleCheckbox = () => {

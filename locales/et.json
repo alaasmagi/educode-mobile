@@ -68,8 +68,8 @@
     "account-deletion-error": "Konto kustutamine ebaõnnestus",
     "go-back": "Mine tagasi",
     "studentcode-change-success": "Üliõpilaskoodi vahetus oli edukas",
-    "connection-error": "Viga ühenduses",
-    "connection-error-prompt": "Kas soovid uuesti proovida?",
+    "connection-error": "Viga internetiühenduses",
+    "connection-error-prompt": "Ühendus serveriga puudub. Kas soovid uuesti proovida?",
     "reload": "Proovi uuesti",
     "invalid-qr": "Kehtetu QR kood"
   }
