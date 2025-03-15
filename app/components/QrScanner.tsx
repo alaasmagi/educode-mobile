@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     }
 });
 const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned }) => {
-    const [zoom, setZoom] = useState<number>(0.5);
+    const [zoom, setZoom] = useState<number>(0.25);
     return (
         <View style={styles.container}>
             <CameraView zoom={zoom} style={styles.camera} onBarcodeScanned={onQrScanned}/>
@@ -49,10 +49,10 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned }) => {
             <Image style={styles.image} source={Icons['zoom-icon']}/>
 
                 <View style={styles.buttonsContainer}>
-                    <TouchableOpacity onPress={() => setZoom(0.5)}>
+                    <TouchableOpacity onPress={() => setZoom(0.25)}>
                         <Text style={styles.text}>1x</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setZoom(1)}>
+                    <TouchableOpacity onPress={() => setZoom(0.5)}>
                         <Text style={styles.text}>2x</Text>
                     </TouchableOpacity>
                 </View>

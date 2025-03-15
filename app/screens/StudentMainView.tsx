@@ -35,7 +35,7 @@ function StudentMainView({ navigation , route }: NavigationProps) {
     const { stepNr: initialStepNr = 1 } = route.params || {};  
     const [stepNr, setStepNr] = useState(initialStepNr);
 
-    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
     const isKeyboardVisible = KeyboardVisibilityHandler();
     BackButtonHandler(navigation);
@@ -48,10 +48,10 @@ function StudentMainView({ navigation , route }: NavigationProps) {
                 stepNr == 1 ? setAttendanceId(data) : setWorkplaceId(data);
             }
             else {
-                setShowError(true);
+                setErrorMessage(t("invalid-qr"));
             }
             setTimeout(() => setScanned(false), 3000);
-            setTimeout(() => setShowError(false), 3000);
+            setTimeout(() => setErrorMessage(null), 3000);
         }
     };
 
@@ -91,14 +91,13 @@ function StudentMainView({ navigation , route }: NavigationProps) {
                             onChangeText={setAttendanceId}
                         />
                     </View>
-                    {showError && (
-                        <ErrorMessage text={"ERROR"}/>
-                    )}
                     <View style={styles.checkboxContainer}>
-                        <Checkbox 
+                        {errorMessage ? (
+                            <ErrorMessage text={errorMessage}/>
+                        ): (<Checkbox 
                             label={t("add-workplace")} 
                             onChange={() => setScanForWorkplace(prev => !prev)}
-                        />
+                            />)}
                     </View>
                     <View style={styles.lowNavButtonContainer}>
                         <NormalButton 
@@ -119,15 +118,18 @@ function StudentMainView({ navigation , route }: NavigationProps) {
                                 onChangeText={setWorkplaceId}
                             />
                         </View>
+                        <View style={styles.checkboxContainer}>
+                        {errorMessage && (
+                            <ErrorMessage text={errorMessage}/>
+                        )}
+                    </View>
                         <View style={styles.linkContainer}>
                             <NormalLink 
                                 text={t("something-wrong-back")} 
                                 onPress={() => {setStepNr(1)}}
                             />
                         </View>
-                        {showError && (
-                            <ErrorMessage text={"ERROR"}/>
-                        )}
+                       
                         <View style={styles.lowNavButtonContainer}>
                             <NormalButton 
                                 text={t("continue")} 
@@ -166,14 +168,15 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     attendanceHandlerContainer: {
-        flex: 4
+        flex: 5
     },
     workplaceHandlerContainer: {
-        flex: 4,
+        flex: 5,
     },
     checkboxContainer:{
-        flex: 1,
-        alignItems: "center"
+        flex: 1.5,
+        alignItems: "center",
+        justifyContent:"center"
     },
     lowNavButtonContainer: {
         flex: 2,

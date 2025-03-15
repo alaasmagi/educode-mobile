@@ -9,7 +9,7 @@ function NormalHeader({ navigation, route }: NavigationProps) {
     const {localData} = route.params
     return (
         <View style={styles.structure}>
-            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/splash-logo.png')}/>
+            <Image style={styles.logo} resizeMode='contain' source={require('../assets/logos/normal-logo.png')}/>
             <View style={styles.buttonContainer}>
                 <LanguageSwitch/>
                 <SettingsButton onPress={() => navigation.navigate('SettingsView', {localData})}/>

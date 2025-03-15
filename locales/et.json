@@ -70,6 +70,7 @@
     "studentcode-change-success": "Üliõpilaskoodi vahetus oli edukas",
     "connection-error": "Viga ühenduses",
     "connection-error-prompt": "Kas soovid uuesti proovida?",
-    "reload": "Proovi uuesti"
+    "reload": "Proovi uuesti",
+    "invalid-qr": "Kehtetu QR kood"
   }
   
