@@ -15,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage';
 import { RegexFilters } from '../helpers/RegexFilters';
+import NormalLink from '../components/NormalLink';
 
 
 function SettingsView({navigation, route}: NavigationProps) {
@@ -112,7 +113,7 @@ function SettingsView({navigation, route}: NavigationProps) {
             </View>)}
             <View style={styles.lowButtonContainer}>
             {!isKeyboardVisible && (<NormalButton text={t("back-to-home")} onPress={handleBackToHome}/>)}
-            {!isKeyboardVisible && (<NormalButton text={!isOfflineOnly ? t("log-out") : t("delete-account")} 
+            {!isKeyboardVisible && (<NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-account")} 
                                     onPress={handleLogout}/>)}
             </View>
         </SafeAreaView>

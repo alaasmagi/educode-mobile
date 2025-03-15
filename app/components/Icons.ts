@@ -12,5 +12,6 @@ export const Icons = {
     'est-flag': require('../assets/icons/est-flag.png'),
     'eng-flag': require('../assets/icons/eng-flag.png'),
     'visibility-on': require('../assets/icons/visibility-on.png'),
-    'visibility-off': require('../assets/icons/visibility-off.png')
+    'visibility-off': require('../assets/icons/visibility-off.png'),
+    'zoom-icon': require('../assets/icons/zoom-icon.png')
 };
