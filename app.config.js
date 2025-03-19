@@ -13,7 +13,8 @@ export default {
     },
     ios: {
       supportsTablet: true,
-      icon: "./app/assets/logos/app-icon.png"
+      icon: "./app/assets/logos/app-icon.png",
+      bundleIdentifier: "com.educode.mobile"
     },
     android: {
       package: "com.educode.mobile",
