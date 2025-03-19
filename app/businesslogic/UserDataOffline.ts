@@ -29,3 +29,16 @@ export async function SaveUserToken(token: string) {
 export async function DeleteUserToken() {
   await Storage.removeData(LocalKeys.localToken);
 }
+
+export async function GetCurrentLanguage(): Promise<string | null> {
+  const token: string | null = await Storage.getData(LocalKeys.currentLanguage);
+  return token;
+}
+
+export async function SaveCurrentLanguage(currentLanguage: string) {
+  await Storage.saveData(LocalKeys.currentLanguage, currentLanguage);
+}
+
+export async function DeleteCurrentLanguage() {
+  await Storage.removeData(LocalKeys.currentLanguage);
+}

@@ -1,5 +1,5 @@
 export const LocalKeys = {
-  userProfile: "user_profile",
+  userProfile: "userProfile",
   localToken: "loginToken",
-  otpKey: "otpKey",
+  currentLanguage: "currentLanguage",
 };

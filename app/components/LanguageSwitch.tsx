@@ -2,13 +2,15 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Icons } from "./Icons";
 import i18next from "../../services/i18next";
+import { SaveCurrentLanguage } from "../businesslogic/UserDataOffline";
 
 const LanguageSwitch = () => {
   const currentLang = i18next.language;
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const newLang = currentLang === "et" ? "en" : "et";
     i18next.changeLanguage(newLang);
+    await SaveCurrentLanguage(newLang);
   };
 
   return (

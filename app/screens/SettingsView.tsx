@@ -17,6 +17,7 @@ import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import BackButtonHandler from "../../hooks/BackButtonHandler";
 import NormalHeader from "../layout/NormalHeader";
 import {
+  DeleteCurrentLanguage,
   DeleteOfflineUserData,
   SaveOfflineUserData,
 } from "../businesslogic/UserDataOffline";
@@ -53,6 +54,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
     newStudentCode !== "" || RegexFilters.studentCode.test(newStudentCode);
 
   const handleDelete = async () => {
+    await DeleteCurrentLanguage();
     Keyboard.dismiss();
     if (await DeleteUser(localData.uniId)) {
       await DeleteOfflineUserData();

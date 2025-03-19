@@ -20,6 +20,7 @@ import FormHeader from "../layout/FormHeader";
 import BackButtonHandler from "../../hooks/BackButtonHandler";
 import LocalUserData from "../models/LocalUserDataModel";
 import {
+  GetCurrentLanguage,
   GetOfflineUserData,
   SaveOfflineUserData,
 } from "../businesslogic/UserDataOffline";
@@ -30,6 +31,8 @@ import {
 import NormalMessage from "../components/NormalMessage";
 import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../helpers/RegexFilters";
+import i18next from "../../services/i18next";
+
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -56,6 +59,13 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   );
 
   useEffect(() => {
+    const setCurrentLanguage = async () => {
+      let currentLanguage = await GetCurrentLanguage();
+      if (currentLanguage != null) {
+        i18next.changeLanguage(currentLanguage);
+      }
+    }
+    
     const fetchUserData = async () => {
       await SplashScreen.preventAutoHideAsync();
       const connectionStatus = await TestConnection();
@@ -99,6 +109,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     };
 
     fetchUserData();
+    setCurrentLanguage();
   }, []);
 
   const handleOfflineLogin = async () => {
