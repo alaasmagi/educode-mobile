@@ -71,5 +71,9 @@
     "connection-error": "Internet connection error",
     "connection-error-prompt": "Connection with server failed. Do you want to try again?",
     "reload": "Try again",
-    "invalid-qr": "Invalid QR code"
+    "invalid-qr": "Invalid QR code",
+    "wrong-otp": "Wrong key",
+    "password-change-error": "Password change failed",
+    "no-account-found": "User account not found",
+    "password-change-success": "Password changed successfully"
 }

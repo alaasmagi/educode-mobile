@@ -4,31 +4,28 @@ import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import AttendanceModel from "../models/AttendanceModel";
 import { GetUserToken } from "./UserDataOffline";
 import Constants from "expo-constants";
+import axios from "axios";
 
 export async function AddAttendanceCheck(
   model: CreateAttendanceCheckModel
-): Promise<Boolean> {
+): Promise<boolean> {
   const token = await Storage.getData(LocalKeys.localToken);
   try {
-    const response = await fetch(
+    await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/AttendanceCheck/Add`,
       {
-        method: "POST",
+        studentCode: model.studentCode,
+        courseAttendanceId: model.courseAttendanceId,
+        workplaceId: model.workplaceId,
+        creator: "educode-mobile",
+      },
+      {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          studentCode: model.studentCode,
-          courseAttendanceId: model.courseAttendanceId,
-          workplaceId: model.workplaceId,
-          creator: "educode-mobile",
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
     return true;
   } catch (error) {
     return false;
@@ -40,34 +37,26 @@ export async function GetCurrentAttendance(
 ): Promise<AttendanceModel | null> {
   const token = await GetUserToken();
   try {
-    const response = await fetch(
+    const response = await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/GetCurrentAttendance`,
+      { uniId: uniId },
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          uniId: uniId,
-        }),
       }
     );
-    if (!response.ok) {
-      console.log(response);
-      return null;
-    }
-    const data = await response.json();
+
+    const data = response.data;
     if (data.courseName) {
-      const output: AttendanceModel = {
+      return {
         attendanceId: data.attendanceId,
         courseName: data.courseName,
         courseCode: data.courseCode,
-      };
-      return output;
-    } else {
-      return null;
+      } as AttendanceModel;
     }
+    return null;
   } catch (error) {
     return null;
   }

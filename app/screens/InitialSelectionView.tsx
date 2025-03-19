@@ -33,7 +33,6 @@ import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../helpers/RegexFilters";
 import i18next from "../../services/i18next";
 
-
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
   const [studentCode, setStudentCode] = useState("");
@@ -64,8 +63,8 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       if (currentLanguage != null) {
         i18next.changeLanguage(currentLanguage);
       }
-    }
-    
+    };
+
     const fetchUserData = async () => {
       await SplashScreen.preventAutoHideAsync();
       const connectionStatus = await TestConnection();

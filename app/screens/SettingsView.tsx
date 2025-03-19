@@ -31,6 +31,7 @@ import NormalLink from "../components/NormalLink";
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
   const { localData } = route.params;
+  const message = route?.params?.successMessage ?? null;
   const [isOfflineOnly, setIsOfflineOnly] = useState(false);
   const [confirmationText, setConfirmationText] = useState<string | null>(null);
   const [newStudentCode, setNewStudentCode] = useState("");
@@ -42,6 +43,8 @@ function SettingsView({ navigation, route }: NavigationProps) {
     if (localData.uniId == null) {
       setIsOfflineOnly(true);
     }
+    message && setSuccessMessage(message);
+      setTimeout(() => setSuccessMessage(null), 3000)
   }, [localData.uniId]);
 
   const handleBackToHome = () => {

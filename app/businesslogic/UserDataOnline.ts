@@ -5,6 +5,8 @@ import CreateUserModel from "../models/CreateUserModel";
 import VerifyOTPModel from "../models/VerifyOTPModel";
 import ChangePasswordModel from "../models/ChangePasswordModel";
 import LocalUserData from "../models/LocalUserDataModel";
+import axios from 'axios';
+
 import {
   GetUserToken,
   SaveOfflineUserData,
@@ -14,42 +16,31 @@ import Constants from "expo-constants";
 
 export async function TestConnection(): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await axios.get(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/TestConnection`
     );
-    if (!response.ok) {
-      return false;
-    }
-    return true;
+    return response.status === 200;
   } catch (error) {
     return false;
   }
 }
 
-export async function UserLogin(
-  uniId: string,
-  password: string
-): Promise<boolean> {
+export async function UserLogin(uniId: string, password: string): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Login`,
       {
-        method: "POST",
+        uniId: uniId,
+        password: password,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          uniId: uniId,
-          password: password,
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
 
-    const data = await response.json();
-    Storage.saveData(LocalKeys.localToken, data.token);
+    Storage.saveData(LocalKeys.localToken, response.data.token);
     return true;
   } catch (error) {
     return false;
@@ -58,40 +49,34 @@ export async function UserLogin(
 
 export async function CreateUserAccount(
   model: CreateUserModel
-): Promise<Boolean> {
+): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Register`,
       {
-        method: "POST",
+        fullName: model.fullName,
+        uniId: model.uniId,
+        studentCode: model.studentCode,
+        password: model.password,
+        userRole: "Student",
+        creator: "educode-mobile",
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          fullName: model.fullName,
-          uniId: model.uniId,
-          studentCode: model.studentCode,
-          password: model.password,
-          userRole: "Student",
-          creator: "educode-mobile",
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
-    return true;
+    return response.status === 200;
   } catch (error) {
     return false;
   }
 }
 
-export async function FetchAndSaveUserDataByUniId(
-  uniId: string
-): Promise<boolean> {
+export async function FetchAndSaveUserDataByUniId(uniId: string): Promise<boolean> {
   const token = await GetUserToken();
   try {
-    const response = await fetch(
+    const response = await axios.get(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
       {
         headers: {
@@ -99,10 +84,8 @@ export async function FetchAndSaveUserDataByUniId(
         },
       }
     );
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-    const data: OnlineUserModel = await response.json();
+
+    const data: OnlineUserModel = response.data;
     const localData: LocalUserData = {
       userType: data.userType.userType,
       uniId: data.uniId,
@@ -110,6 +93,7 @@ export async function FetchAndSaveUserDataByUniId(
       offlineOnly: false,
       fullName: data.fullName,
     };
+
     SaveOfflineUserData(localData);
     return true;
   } catch (error) {
@@ -119,22 +103,18 @@ export async function FetchAndSaveUserDataByUniId(
 
 export async function RequestOTP(uniId: string): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/RequestOTP`,
       {
-        method: "POST",
+        uniId: uniId,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          uniId: uniId,
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
-    return true;
+    return response.status === 200;
   } catch (error) {
     return false;
   }
@@ -142,24 +122,20 @@ export async function RequestOTP(uniId: string): Promise<boolean> {
 
 export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
   try {
-    const response = await fetch(
+    const response = await axios.post(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/VerifyOTP`,
       {
-        method: "POST",
+        uniId: model.uniId,
+        otp: model.otp,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          uniId: model.uniId,
-          otp: model.otp,
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
-    const data = await response.json();
-    SaveUserToken(data.token);
+
+    SaveUserToken(response.data.token);
     return true;
   } catch (error) {
     return false;
@@ -171,24 +147,20 @@ export async function ChangeUserPassword(
 ): Promise<boolean> {
   const token = await GetUserToken();
   try {
-    const response = await fetch(
+    const response = await axios.patch(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/ChangePassword`,
       {
-        method: "PATCH",
+        uniId: model.uniId,
+        newPassword: model.newPassword,
+      },
+      {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          uniId: model.uniId,
-          newPassword: model.newPassword,
-        }),
       }
     );
-    if (!response.ok) {
-      return false;
-    }
-    return true;
+    return response.status === 200;
   } catch (error) {
     return false;
   }
@@ -197,18 +169,14 @@ export async function ChangeUserPassword(
 export async function DeleteUser(uniId: string): Promise<boolean> {
   const token = await GetUserToken();
   try {
-    const response = await fetch(
+    await axios.delete(
       `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Delete/${uniId}`,
       {
-        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    if (!response.ok) {
-      return false;
-    }
     return true;
   } catch (error) {
     return false;

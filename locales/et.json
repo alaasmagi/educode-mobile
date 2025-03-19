@@ -71,6 +71,10 @@
     "connection-error": "Viga internetiühenduses",
     "connection-error-prompt": "Ühendus serveriga puudub. Kas soovid uuesti proovida?",
     "reload": "Proovi uuesti",
-    "invalid-qr": "Kehtetu QR kood"
+    "invalid-qr": "Kehtetu QR kood",
+    "wrong-otp": "Vale kood",
+    "password-change-error": "Salasõna vahetus ebaõnnestus",
+    "no-account-found": "Kasutajat ei leitud",
+    "password-change-success": "Salasõna vahetus õnnestus"
   }
   

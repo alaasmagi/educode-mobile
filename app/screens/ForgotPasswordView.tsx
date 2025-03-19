@@ -106,6 +106,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   };
 
   const handlePasswordChange = async () => {
+    Keyboard.dismiss();
     const model: ChangePasswordModel = {
       uniId: uniId,
       newPassword: password,
@@ -117,7 +118,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         ? navigation.navigate("SettingsView", { localData, successMessage })
         : navigation.navigate("LoginView", { successMessage });
     } else {
-      setErrorMessage(t("account-create-error"));
+      setErrorMessage(t("password-change-error"));
+      setTimeout(() => setErrorMessage(null), 3000);
     }
   };
 
@@ -141,7 +143,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder="Uni-ID *"
+                  placeHolder="Uni-ID*"
                   onChangeText={setUniId}
                   value={uniId}
                   autoCapitalize="none"
@@ -194,14 +196,16 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               <NormalButton
                 text={t("continue")}
                 onPress={handleOTPVerification}
-                disabled={uniId == ""}
+                disabled={!RegexFilters.defaultId.test(emailCode)}
               />
-              <NormalLink
-                text={t("something-wrong-back")}
-                onPress={() => {
-                  setStepNr(1);
-                }}
-              />
+              {!isKeyboardVisible && (
+                <NormalLink
+                  text={t("something-wrong-back")}
+                  onPress={() => {
+                    setStepNr(1);
+                  }}
+                />
+              )}
             </View>
           </>
         )}
@@ -230,6 +234,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                   <NormalMessage text={normalMessage} />
                 </View>
               )}
+              {!isKeyboardVisible && errorMessage && (
+                <View style={styles.errorContainer}>
+                  <NormalMessage text={errorMessage} />
+                </View>
+              )}
             </View>
             <View style={styles.buttonContainer}>
               <NormalButton
@@ -237,12 +246,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                 onPress={handlePasswordChange}
                 disabled={!isPasswordFormValid()}
               />
-              <NormalLink
-                text={t("something-wrong-back")}
-                onPress={() => {
-                  setStepNr(2);
-                }}
-              />
+              {!isKeyboardVisible && (
+                <NormalLink
+                  text={t("something-wrong-back")}
+                  onPress={() => {
+                    setStepNr(2);
+                  }}
+                />
+              )}
             </View>
           </>
         )}
