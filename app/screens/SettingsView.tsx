@@ -44,7 +44,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
       setIsOfflineOnly(true);
     }
     message && setSuccessMessage(message);
-      setTimeout(() => setSuccessMessage(null), 3000)
+    setTimeout(() => setSuccessMessage(null), 3000);
   }, [localData.uniId]);
 
   const handleBackToHome = () => {
@@ -130,7 +130,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
           <TextBox
             iconName="person-icon"
             value={newStudentCode}
-            onChangeText={setNewStudentCode}
+            onChangeText={(text) => setNewStudentCode(text.trim())}
             placeHolder={t("student-code")}
             autoCapitalize="characters"
           />
@@ -146,7 +146,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
           <SeparatorLine text={t("delete-account")} />
           <TextBox
             iconName="person-icon"
-            onChangeText={setConfirmationText}
+            onChangeText={(text) => setConfirmationText(text.trim())}
             placeHolder={t("type-delete") + " *"}
           />
           <NormalButton

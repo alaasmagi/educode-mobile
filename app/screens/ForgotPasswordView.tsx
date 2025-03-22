@@ -54,7 +54,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     };
   }, []);
 
-  const isStudentIDFormValid = () => RegexFilters.uniId.test(uniId);
+  const isStudentIDFormValid = () => uniId !== "";
   useEffect(() => {
     if (!isStudentIDFormValid()) {
       setNormalMessage(t("all-fields-required-message"));
@@ -143,8 +143,8 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder="Uni-ID*"
-                  onChangeText={setUniId}
+                  placeHolder="Uni-ID"
+                  onChangeText={(text) => setUniId(text.trim())}
                   value={uniId}
                   autoCapitalize="none"
                 />
@@ -155,19 +155,24 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                 </View>
               )}
             </View>
+
             <View style={styles.buttonContainer}>
-              <NormalButton
-                text={t("continue")}
-                onPress={handleOTPRequest}
-                disabled={uniId == ""}
-              />
               <NormalLink
-                text={isNormalPassChange ? t("dont-change-password") : t("")}
+                text={
+                  isNormalPassChange
+                    ? t("dont-change-password")
+                    : t("still-remember-password")
+                }
                 onPress={() =>
                   isNormalPassChange
                     ? navigation.navigate("SettingsView", { localData })
                     : navigation.navigate("LoginView")
                 }
+              />
+              <NormalButton
+                text={t("continue")}
+                onPress={handleOTPRequest}
+                disabled={uniId == ""}
               />
             </View>
           </>
@@ -182,7 +187,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                 <TextBox
                   iconName="pincode-icon"
                   placeHolder={t("one-time-key") + "*"}
-                  onChangeText={setEmailCode}
+                  onChangeText={(text) => setEmailCode(text.trim())}
                   value={emailCode}
                 />
               </View>
@@ -218,14 +223,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                   iconName="lock-icon"
                   placeHolder={t("password")}
                   isPassword
-                  onChangeText={setPassword}
+                  onChangeText={(text) => setPassword(text.trim())}
                   value={password}
                 />
                 <TextBox
                   iconName="lock-icon"
                   placeHolder={t("repeat-password")}
                   isPassword
-                  onChangeText={setPasswordAgain}
+                  onChangeText={(text) => setPasswordAgain(text.trim())}
                   value={passwordAgain}
                 />
               </View>

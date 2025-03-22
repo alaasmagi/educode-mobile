@@ -200,14 +200,14 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                   iconName={"person-icon"}
                   placeHolder={t("student-code") + "*"}
                   value={studentCode}
-                  onChangeText={setStudentCode}
+                  onChangeText={(text) => setStudentCode(text.trim())}
                   autoCapitalize="characters"
                 />
                 <TextBox
                   iconName={"work-icon"}
                   placeHolder={t("workplace-id")}
                   value={workplaceId}
-                  onChangeText={setWorkplaceId}
+                  onChangeText={(text) => setWorkplaceId(text.trim())}
                 />
               </View>
               <NormalButton

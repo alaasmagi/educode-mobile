@@ -1,15 +1,16 @@
 import OnlineUserModel from "../models/OnlineUserModel";
-import Storage from "../data/LocalDataAccess";
-import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import CreateUserModel from "../models/CreateUserModel";
 import VerifyOTPModel from "../models/VerifyOTPModel";
 import ChangePasswordModel from "../models/ChangePasswordModel";
 import LocalUserData from "../models/LocalUserDataModel";
-import axios from 'axios';
+import axios from "axios";
 
 import {
+  DeleteTempToken,
+  GetTempToken,
   GetUserToken,
   SaveOfflineUserData,
+  SaveTempToken,
   SaveUserToken,
 } from "./UserDataOffline";
 import Constants from "expo-constants";
@@ -25,10 +26,13 @@ export async function TestConnection(): Promise<boolean> {
   }
 }
 
-export async function UserLogin(uniId: string, password: string): Promise<boolean> {
+export async function UserLogin(
+  uniId: string,
+  password: string
+): Promise<boolean> {
   try {
     const response = await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Login`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/Login`,
       {
         uniId: uniId,
         password: password,
@@ -40,7 +44,7 @@ export async function UserLogin(uniId: string, password: string): Promise<boolea
       }
     );
 
-    Storage.saveData(LocalKeys.localToken, response.data.token);
+    SaveUserToken(response.data.token);
     return true;
   } catch (error) {
     return false;
@@ -52,7 +56,7 @@ export async function CreateUserAccount(
 ): Promise<boolean> {
   try {
     const response = await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Register`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/Register`,
       {
         fullName: model.fullName,
         uniId: model.uniId,
@@ -73,7 +77,9 @@ export async function CreateUserAccount(
   }
 }
 
-export async function FetchAndSaveUserDataByUniId(uniId: string): Promise<boolean> {
+export async function FetchAndSaveUserDataByUniId(
+  uniId: string
+): Promise<boolean> {
   const token = await GetUserToken();
   try {
     const response = await axios.get(
@@ -101,12 +107,16 @@ export async function FetchAndSaveUserDataByUniId(uniId: string): Promise<boolea
   }
 }
 
-export async function RequestOTP(uniId: string): Promise<boolean> {
+export async function RequestOTP(
+  uniId: string,
+  fullName?: string
+): Promise<boolean> {
   try {
     const response = await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/RequestOTP`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/RequestOTP`,
       {
         uniId: uniId,
+        fullName: fullName ?? null,
       },
       {
         headers: {
@@ -123,7 +133,7 @@ export async function RequestOTP(uniId: string): Promise<boolean> {
 export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
   try {
     const response = await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/VerifyOTP`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/VerifyOTP`,
       {
         uniId: model.uniId,
         otp: model.otp,
@@ -135,7 +145,7 @@ export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
       }
     );
 
-    SaveUserToken(response.data.token);
+    response.data.token && SaveTempToken(response.data.token);
     return true;
   } catch (error) {
     return false;
@@ -145,10 +155,10 @@ export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean> {
 export async function ChangeUserPassword(
   model: ChangePasswordModel
 ): Promise<boolean> {
-  const token = await GetUserToken();
+  const token = await GetTempToken();
   try {
     const response = await axios.patch(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/ChangePassword`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/ChangePassword`,
       {
         uniId: model.uniId,
         newPassword: model.newPassword,
@@ -160,6 +170,7 @@ export async function ChangeUserPassword(
         },
       }
     );
+    DeleteTempToken();
     return response.status === 200;
   } catch (error) {
     return false;
@@ -170,7 +181,7 @@ export async function DeleteUser(uniId: string): Promise<boolean> {
   const token = await GetUserToken();
   try {
     await axios.delete(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Delete/${uniId}`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/Delete/UniId/${uniId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

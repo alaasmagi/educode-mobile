@@ -30,6 +30,19 @@ export async function DeleteUserToken() {
   await Storage.removeData(LocalKeys.localToken);
 }
 
+export async function GetTempToken(): Promise<string | null> {
+  const token: string | null = await Storage.getData(LocalKeys.tempToken);
+  return token;
+}
+
+export async function SaveTempToken(token: string) {
+  await Storage.saveData(LocalKeys.tempToken, token);
+}
+
+export async function DeleteTempToken() {
+  await Storage.removeData(LocalKeys.tempToken);
+}
+
 export async function GetCurrentLanguage(): Promise<string | null> {
   const token: string | null = await Storage.getData(LocalKeys.currentLanguage);
   return token;

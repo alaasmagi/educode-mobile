@@ -101,7 +101,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   iconName="key-icon"
                   placeHolder={t("attendance-id")}
                   value={attendanceId}
-                  onChangeText={setAttendanceId}
+                  onChangeText={(text) => setAttendanceId(text.trim())}
                 />
               </View>
               <View style={styles.checkboxContainer}>
@@ -130,7 +130,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   iconName="work-icon"
                   placeHolder={t("workplace-id")}
                   value={workplaceId}
-                  onChangeText={setWorkplaceId}
+                  onChangeText={(text) => setWorkplaceId(text.trim())}
                 />
               </View>
               <View style={styles.checkboxContainer}>

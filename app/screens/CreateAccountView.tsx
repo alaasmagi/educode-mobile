@@ -14,7 +14,11 @@ import NormalButton from "../components/NormalButton";
 import FormHeader from "../layout/FormHeader";
 import Greeting from "../components/Greeting";
 import NormalLink from "../components/NormalLink";
-import { CreateUserAccount } from "../businesslogic/UserDataOnline";
+import {
+  CreateUserAccount,
+  RequestOTP,
+  VerifyOTP,
+} from "../businesslogic/UserDataOnline";
 import ErrorMessage from "../components/ErrorMessage";
 import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import NormalMessage from "../components/NormalMessage";
@@ -26,9 +30,11 @@ import {
   allowScreenCaptureAsync,
 } from "expo-screen-capture";
 import { RegexFilters } from "../helpers/RegexFilters";
+import VerifyOTPModel from "../models/VerifyOTPModel";
 
 function CreateAccountView({ navigation }: NavigationProps) {
   const [uniId, setUniId] = useState<string>("");
+  const [emailCode, setEmailCode] = useState<string>("");
   const [studentCode, setStudentCode] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordAgain, setPasswordAgain] = useState<string>("");
@@ -59,7 +65,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
   }, []);
 
   const isStudentIDFormValid = () =>
-    (uniId !== "" || RegexFilters.uniId.test(uniId)) &&
+    (uniId !== "" || RegexFilters.studentUniId.test(uniId)) &&
     (studentCode !== "" || RegexFilters.studentCode.test(studentCode));
   useEffect(() => {
     if (!isStudentIDFormValid()) {
@@ -68,6 +74,32 @@ function CreateAccountView({ navigation }: NavigationProps) {
       setNormalMessage("");
     }
   }, [uniId, studentCode]);
+
+  const handleOTPRequest = async () => {
+    Keyboard.dismiss();
+
+    if (await RequestOTP(uniId, firstName + lastName)) {
+      setStepNr(3);
+    } else {
+      setErrorMessage(t("no-account-found"));
+      setTimeout(() => setErrorMessage(null), 3000);
+    }
+  };
+
+  const handleOTPVerification = async () => {
+    Keyboard.dismiss();
+    const otpData: VerifyOTPModel = {
+      uniId: uniId,
+      otp: emailCode,
+    };
+
+    if (await VerifyOTP(otpData)) {
+      setStepNr(4);
+    } else {
+      setErrorMessage(t("wrong-otp"));
+      setTimeout(() => setErrorMessage(null), 3000);
+    }
+  };
 
   const isPasswordFormValid = () =>
     password.length >= 8 && password === passwordAgain;
@@ -115,14 +147,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("first-name") + " *"}
-                  onChangeText={setFirstName}
+                  placeHolder={t("first-name")}
+                  onChangeText={(text) => setFirstName(text.trim())}
                   value={firstName}
                 />
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("last-name") + " *"}
-                  onChangeText={setLastName}
+                  placeHolder={t("last-name")}
+                  onChangeText={(text) => setLastName(text.trim())}
                   value={lastName}
                 />
               </View>
@@ -153,15 +185,15 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder="Uni-ID *"
-                  onChangeText={setUniId}
+                  placeHolder="Uni-ID"
+                  onChangeText={(text) => setUniId(text.trim())}
                   value={uniId}
                   autoCapitalize="none"
                 />
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("student-code") + " *"}
-                  onChangeText={setStudentCode}
+                  placeHolder={t("student-code")}
+                  onChangeText={(text) => setStudentCode(text.trim())}
                   value={studentCode}
                   autoCapitalize="characters"
                 />
@@ -182,9 +214,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <NormalButton
                 text={t("continue")}
                 onPress={() => {
+                  handleOTPRequest();
                   setStepNr(3);
                 }}
-                disabled={uniId == "" || studentCode == ""}
+                disabled={
+                  !RegexFilters.studentUniId.test(uniId) ||
+                  !RegexFilters.studentCode.test(studentCode)
+                }
               />
               <NormalLink
                 text={t("already-registered")}
@@ -196,19 +232,56 @@ function CreateAccountView({ navigation }: NavigationProps) {
         {stepNr === 3 && (
           <>
             <View style={styles.textBoxContainer}>
+              <UnderlineText
+                text={t("one-time-key-prompt") + ` ${uniId}@taltech.ee`}
+              />
+              <View style={styles.textBoxes}>
+                <TextBox
+                  iconName="pincode-icon"
+                  placeHolder={t("one-time-key")}
+                  onChangeText={(text) => setEmailCode(text.trim())}
+                  value={emailCode}
+                />
+              </View>
+              {!isKeyboardVisible && errorMessage && (
+                <View style={styles.errorContainer}>
+                  <ErrorMessage text={errorMessage} />
+                </View>
+              )}
+            </View>
+            <View style={styles.buttonContainer}>
+              <NormalButton
+                text={t("continue")}
+                onPress={handleOTPVerification}
+                disabled={!RegexFilters.defaultId.test(emailCode)}
+              />
+              {!isKeyboardVisible && (
+                <NormalLink
+                  text={t("something-wrong-back")}
+                  onPress={() => {
+                    setStepNr(2);
+                  }}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {stepNr === 4 && (
+          <>
+            <View style={styles.textBoxContainer}>
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="lock-icon"
                   placeHolder={t("password")}
                   isPassword
-                  onChangeText={setPassword}
+                  onChangeText={(text) => setPassword(text.trim())}
                   value={password}
                 />
                 <TextBox
                   iconName="lock-icon"
                   placeHolder={t("repeat-password")}
                   isPassword
-                  onChangeText={setPasswordAgain}
+                  onChangeText={(text) => setPasswordAgain(text.trim())}
                   value={passwordAgain}
                 />
               </View>
@@ -222,13 +295,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <NormalLink
                 text={t("something-wrong-back")}
                 onPress={() => {
-                  setStepNr(2);
+                  setStepNr(3);
                 }}
               />
               <NormalButton
                 text={t("continue")}
                 onPress={() => {
-                  setStepNr(4);
+                  setStepNr(5);
                 }}
                 disabled={!isPasswordFormValid()}
               />
@@ -239,7 +312,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
             </View>
           </>
         )}
-        {stepNr === 4 && (
+        {stepNr === 5 && (
           <>
             <View style={styles.textBoxContainer}>
               <UnderlineText text="Verify your details:" />
@@ -261,7 +334,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <NormalLink
                 text={t("something-wrong-back")}
                 onPress={() => {
-                  setStepNr(2);
+                  setStepNr(4);
                 }}
               />
               <NormalButton

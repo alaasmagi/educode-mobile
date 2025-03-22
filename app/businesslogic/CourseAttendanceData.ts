@@ -1,6 +1,4 @@
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
-import Storage from "../data/LocalDataAccess";
-import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import AttendanceModel from "../models/AttendanceModel";
 import { GetUserToken } from "./UserDataOffline";
 import Constants from "expo-constants";
@@ -9,10 +7,10 @@ import axios from "axios";
 export async function AddAttendanceCheck(
   model: CreateAttendanceCheckModel
 ): Promise<boolean> {
-  const token = await Storage.getData(LocalKeys.localToken);
+  const token = await GetUserToken();
   try {
     await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/AttendanceCheck/Add`,
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/AttendanceCheck/Add`,
       {
         studentCode: model.studentCode,
         courseAttendanceId: model.courseAttendanceId,
@@ -37,9 +35,8 @@ export async function GetCurrentAttendance(
 ): Promise<AttendanceModel | null> {
   const token = await GetUserToken();
   try {
-    const response = await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Course/GetCurrentAttendance`,
-      { uniId: uniId },
+    const response = await axios.get(
+      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/GetCurrentAttendance/UniId/${uniId}`,
       {
         headers: {
           "Content-Type": "application/json",

@@ -96,7 +96,7 @@ function LoginView({ navigation, route }: NavigationProps) {
             <TextBox
               iconName="person-icon"
               placeHolder="Uni-ID"
-              onChangeText={setUniId}
+              onChangeText={(text) => setUniId(text.trim())}
               value={uniId}
               autoCapitalize="none"
             />
@@ -104,7 +104,7 @@ function LoginView({ navigation, route }: NavigationProps) {
               iconName="lock-icon"
               placeHolder={t("password")}
               isPassword
-              onChangeText={setPassword}
+              onChangeText={(text) => setPassword(text.trim())}
               value={password}
             />
           </View>

@@ -156,7 +156,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
           <TextBox
             iconName="person-icon"
             placeHolder={t("student-code")}
-            onChangeText={setStudentCode}
+            onChangeText={(text) => setStudentCode(text.trim())}
             value={studentCode}
             autoCapitalize="characters"
           />

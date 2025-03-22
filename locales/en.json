@@ -75,5 +75,6 @@
     "wrong-otp": "Wrong key",
     "password-change-error": "Password change failed",
     "no-account-found": "User account not found",
-    "password-change-success": "Password changed successfully"
+    "password-change-success": "Password changed successfully",
+    "still-remember-password": "Remember password? Go back!"
 }
