@@ -31,7 +31,9 @@ import {
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
-  const successMessage = route?.params?.successMessage || null;
+  const [successMessage, setSuccessMessage] = useState<string | null>(
+    route?.params?.successMessage || null
+  );
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -42,7 +44,7 @@ function LoginView({ navigation, route }: NavigationProps) {
 
   useEffect(() => {
     preventScreenCaptureAsync();
-
+    setTimeout(() => setSuccessMessage(null), 3000);
     return () => {
       allowScreenCaptureAsync();
     };
