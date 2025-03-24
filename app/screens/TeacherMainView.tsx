@@ -38,6 +38,8 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
   const [scanned, setScanned] = useState(false);
   const [currentAttendanceData, setCurrentAttendanceData] =
     useState<AttendanceModel | null>(null);
+  const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] =
+    useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
@@ -89,9 +91,12 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
 
   const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
   const fetchCurrentAttdencance = async () => {
-    const attendanceData: AttendanceModel | null | boolean =
-      await GetCurrentAttendance(localData.uniId);
-    setCurrentAttendanceData(attendanceData);
+    const status = await GetCurrentAttendance(localData.uniId);
+    if (typeof status === "string") {
+      setCurrentAttendancePlaceHolder(status);
+    } else {
+      setCurrentAttendanceData(status);
+    }
   };
 
   useEffect(() => {
@@ -151,7 +156,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 text={
                   currentAttendanceData
                     ? `${currentAttendanceData?.courseName} (${currentAttendanceData?.courseCode})`
-                    : t("no-current-attendance-data")
+                    : t(String(currentAttendancePlaceHolder))
                 }
               />
               <DataText
@@ -287,7 +292,7 @@ const styles = StyleSheet.create({
   },
   data: {
     alignSelf: "center",
-    width: "85%",
+    width: "90%",
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,

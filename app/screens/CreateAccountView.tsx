@@ -78,10 +78,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
   const handleOTPRequest = async () => {
     Keyboard.dismiss();
 
-    if (await RequestOTP(uniId, firstName + lastName)) {
+    const status = await RequestOTP(uniId, firstName + lastName);
+    if (status === true) {
       setStepNr(3);
     } else {
-      setErrorMessage(t("no-account-found"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };
@@ -93,10 +94,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
       otp: emailCode,
     };
 
-    if (await VerifyOTP(otpData)) {
+    const status = await VerifyOTP(otpData);
+    if (status === true) {
       setStepNr(4);
     } else {
-      setErrorMessage(t("wrong-otp"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };
@@ -126,11 +128,12 @@ function CreateAccountView({ navigation }: NavigationProps) {
       password: password,
     };
 
-    if (await CreateUserAccount(userData)) {
+    const status = await CreateUserAccount(userData);
+    if (status === true) {
       const successMessage = t("create-account-success");
       navigation.navigate("LoginView", { successMessage });
     } else {
-      setErrorMessage(t("account-create-error"));
+      setErrorMessage(t(String(status)));
     }
   };
 
@@ -361,6 +364,7 @@ const styles = StyleSheet.create({
   },
   textBoxContainer: {
     flex: 2,
+    gap: 2,
     justifyContent: "center",
   },
   data: {

@@ -82,10 +82,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const handleOTPRequest = async () => {
     Keyboard.dismiss();
 
-    if (await RequestOTP(uniId)) {
+    const status = await RequestOTP(uniId);
+    if (status === true) {
       setStepNr(2);
     } else {
-      setErrorMessage(t("no-account-found"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };
@@ -97,10 +98,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       otp: emailCode,
     };
 
-    if (await VerifyOTP(otpData)) {
+    const status = await VerifyOTP(otpData);
+    if (status === true) {
       setStepNr(3);
     } else {
-      setErrorMessage(t("wrong-otp"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };
@@ -111,14 +113,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       uniId: uniId,
       newPassword: password,
     };
-    const status: boolean = await ChangeUserPassword(model);
-    if (status) {
-      const successMessage = t("password-change-success");
+    const status = await ChangeUserPassword(model);
+    if (status === true) {
+      const successMessage = t("password-changed");
       isNormalPassChange
         ? navigation.navigate("SettingsView", { localData, successMessage })
         : navigation.navigate("LoginView", { successMessage });
     } else {
-      setErrorMessage(t("password-change-error"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };

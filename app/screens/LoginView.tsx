@@ -61,9 +61,10 @@ function LoginView({ navigation, route }: NavigationProps) {
       }
     }
 
-    if (await UserLogin(uniId, password)) {
-      const loginStatus = await FetchAndSaveUserDataByUniId(uniId);
-      if (loginStatus) {
+    const status = await UserLogin(uniId, password);
+    if (status === true) {
+      const fetchDataStatus = await FetchAndSaveUserDataByUniId(uniId);
+      if (fetchDataStatus === true) {
         const localData = await GetOfflineUserData();
         if (localData) {
           localData.userType === "Teacher"
@@ -71,13 +72,13 @@ function LoginView({ navigation, route }: NavigationProps) {
             : navigation.navigate("StudentMainView", { localData });
         }
       } else {
-        setErrorMessage(t("login-error"));
+        setErrorMessage(t(String(fetchDataStatus)));
         setTimeout(() => {
           setErrorMessage(null);
         }, 3000);
       }
     } else {
-      setErrorMessage(t("login-error"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);

@@ -59,11 +59,12 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const handleDelete = async () => {
     await DeleteCurrentLanguage();
     Keyboard.dismiss();
-    if (await DeleteUser(localData.uniId)) {
+    const status = await DeleteUser(localData.uniId);
+    if (status === true) {
       await DeleteOfflineUserData();
       navigation.navigate("InitialSelectionView");
     } else {
-      setErrorMessage(t("account-deletion-error"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };

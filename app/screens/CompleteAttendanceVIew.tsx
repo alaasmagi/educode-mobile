@@ -61,14 +61,14 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
       workplaceId: parseInt(workplaceId) ?? null,
     };
     const status = await AddAttendanceCheck(attendanceCheck);
-    if (status) {
-      setSuccessMessage(t("attendance-add-success"));
+    if (status == true) {
+      setSuccessMessage(t("attendance-check-added"));
       setTimeout(() => {
         setSuccessMessage(null);
         navigation.navigate("StudentMainView", { localData });
       }, 3000);
     } else {
-      setErrorMessage(t("attendance-check-add-fail"));
+      setErrorMessage(t(String(status)));
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };

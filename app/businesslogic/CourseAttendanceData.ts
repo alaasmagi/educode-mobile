@@ -6,55 +6,57 @@ import axios from "axios";
 
 export async function AddAttendanceCheck(
   model: CreateAttendanceCheckModel
-): Promise<boolean> {
+): Promise<boolean | string> {
   const token = await GetUserToken();
-  try {
-    await axios.post(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/AttendanceCheck/Add`,
-      {
-        studentCode: model.studentCode,
-        courseAttendanceId: model.courseAttendanceId,
-        workplaceId: model.workplaceId,
-        creator: "educode-mobile",
+  const response = await axios.post(
+    `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/AttendanceCheck/Add`,
+    {
+      studentCode: model.studentCode,
+      courseAttendanceId: model.courseAttendanceId,
+      workplaceId: model.workplaceId,
+      creator: "educode-mobile",
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      validateStatus: (status) => status < 500,
+    }
+  );
+
+  if (response.status == 200) {
     return true;
-  } catch (error) {
-    return false;
   }
+
+  return response.data.error ?? "internet-connection-error";
 }
 
 export async function GetCurrentAttendance(
   uniId: string
-): Promise<AttendanceModel | null> {
+): Promise<AttendanceModel | string> {
   const token = await GetUserToken();
-  try {
-    const response = await axios.get(
-      `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/GetCurrentAttendance/UniId/${uniId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = response.data;
-    if (data.courseName) {
-      return {
-        attendanceId: data.attendanceId,
-        courseName: data.courseName,
-        courseCode: data.courseCode,
-      } as AttendanceModel;
+  const response = await axios.get(
+    `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/CurrentAttendance/UniId/${uniId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      validateStatus: (status) => status < 500,
     }
-    return null;
-  } catch (error) {
-    return null;
+  );
+
+  if (response.status == 200) {
+    const data = response.data;
+    return {
+      attendanceId: data.attendanceId,
+      courseName: data.courseName,
+      courseCode: data.courseCode,
+    } as AttendanceModel;
   }
+
+  console.log(response.status);
+  console.log(response.data.error);
+  return response.data.error ?? "internet-connection-error";
 }
