@@ -163,7 +163,10 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 iconName="key-icon"
                 text={
                   currentAttendanceData
-                    ? `${ToSixDigit(currentAttendanceData?.attendanceId)}`
+                    ? `${
+                        currentAttendanceData?.attendanceId &&
+                        ToSixDigit(currentAttendanceData?.attendanceId)
+                      }`
                     : ""
                 }
               />
