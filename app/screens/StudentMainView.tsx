@@ -23,6 +23,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import BackButtonHandler from "../../hooks/BackButtonHandler";
 import ToSixDigit from "../helpers/NumberConverter";
+import GetSixDigitTimeStamp from "../helpers/TimeStamp";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
@@ -32,6 +33,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
   const { attendanceId: routeAttendanceId } = route.params || {};
   const [attendanceId, setAttendanceId] = useState(routeAttendanceId || "");
+  const [scannedAttendanceData, setScannedAttendanceData] = useState("");
 
   const { workplaceId: routeWorkplaceId } = route.params || {};
   const [workplaceId, setWorkplaceId] = useState(routeWorkplaceId || "");
@@ -51,10 +53,10 @@ function StudentMainView({ navigation, route }: NavigationProps) {
       setScanned(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       if (stepNr == 1 && RegexFilters.attendanceScanId.test(data)) {
+        setScannedAttendanceData(data);
         const scannedData = data.split("-");
-        const currentTimestamp = Math.floor(Date.now() / 1000);
-        console.log(currentTimestamp)
-        if (currentTimestamp - parseInt(scannedData[1]) > 120) {
+        const currentTimestamp = GetSixDigitTimeStamp();
+        if (currentTimestamp - parseInt(scannedData[1]) > 20) {
           setErrorMessage(t("timestamp-error"));
           setTimeout(() => setErrorMessage(null), 3000);
           return;
@@ -71,6 +73,13 @@ function StudentMainView({ navigation, route }: NavigationProps) {
   };
 
   const handleNextStep = () => {
+    const scannedData = scannedAttendanceData.split("-");
+    const currentTimestamp = GetSixDigitTimeStamp();
+    if (currentTimestamp - parseInt(scannedData[1]) > 20) {
+      setErrorMessage(t("timestamp-error"));
+      setTimeout(() => setErrorMessage(null), 3000);
+      return;
+    }
     if (scanForWorkplace == true) {
       setStepNr(2);
       Keyboard.dismiss;
@@ -111,8 +120,8 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                 <TextBox
                   iconName="key-icon"
                   placeHolder={t("attendance-id")}
-                  value={attendanceId}
-                  onChangeText={(text) => setAttendanceId(text.trim())}
+                  value={scannedAttendanceData}
+                  onChangeText={(text) => setScannedAttendanceData(text.trim())}
                 />
               </View>
               <View style={styles.checkboxContainer}>
@@ -129,7 +138,9 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                 <NormalButton
                   text={t("continue")}
                   onPress={handleNextStep}
-                  disabled={!RegexFilters.attendanceScanId.test(attendanceId)}
+                  disabled={
+                    !RegexFilters.attendanceScanId.test(scannedAttendanceData)
+                  }
                 />
               </View>
             </View>
