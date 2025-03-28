@@ -22,6 +22,7 @@ import { RegexFilters } from "../helpers/RegexFilters";
 import ErrorMessage from "../components/ErrorMessage";
 import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
 import BackButtonHandler from "../../hooks/BackButtonHandler";
+import ToSixDigit from "../helpers/NumberConverter";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
@@ -49,8 +50,18 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     if (!scanned) {
       setScanned(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      if (RegexFilters.defaultId.test(data)) {
-        stepNr == 1 ? setAttendanceId(data) : setWorkplaceId(data);
+      if (stepNr == 1 && RegexFilters.attendanceScanId.test(data)) {
+        const scannedData = data.split("-");
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        console.log(currentTimestamp)
+        if (currentTimestamp - parseInt(scannedData[1]) > 120) {
+          setErrorMessage(t("timestamp-error"));
+          setTimeout(() => setErrorMessage(null), 3000);
+          return;
+        }
+        setAttendanceId(ToSixDigit(Number(scannedData[0])));
+      } else if (stepNr == 2 && RegexFilters.defaultId.test(data)) {
+        setWorkplaceId(ToSixDigit(Number(data)));
       } else {
         setErrorMessage(t("invalid-qr"));
       }
@@ -118,7 +129,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                 <NormalButton
                   text={t("continue")}
                   onPress={handleNextStep}
-                  disabled={!RegexFilters.defaultId.test(attendanceId)}
+                  disabled={!RegexFilters.attendanceScanId.test(attendanceId)}
                 />
               </View>
             </View>
