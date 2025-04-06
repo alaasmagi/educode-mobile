@@ -1,12 +1,10 @@
-import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
-import AttendanceModel from "../models/AttendanceModel";
+import CreateAttendanceCheckModel from "../../models/CreateAttendanceCheckModel";
+import AttendanceModel from "../../models/AttendanceModel";
 import { GetUserToken } from "./UserDataOffline";
 import Constants from "expo-constants";
 import axios from "axios";
 
-export async function AddAttendanceCheck(
-  model: CreateAttendanceCheckModel
-): Promise<boolean | string> {
+export async function AddAttendanceCheck(model: CreateAttendanceCheckModel): Promise<boolean | string> {
   const token = await GetUserToken();
   const response = await axios.post(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/AttendanceCheck/Add`,
@@ -32,9 +30,7 @@ export async function AddAttendanceCheck(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function GetCurrentAttendance(
-  uniId: string
-): Promise<AttendanceModel | string> {
+export async function GetCurrentAttendance(uniId: string): Promise<AttendanceModel | string> {
   const token = await GetUserToken();
   const response = await axios.get(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/CurrentAttendance/UniId/${uniId}`,

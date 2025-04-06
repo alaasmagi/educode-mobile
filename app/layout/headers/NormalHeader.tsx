@@ -1,24 +1,18 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import LanguageSwitch from "../components/LanguageSwitch";
-import Storage from "../data/LocalDataAccess";
+import Storage from "../../businesslogic/data/LocalDataAccess";
 import SettingsButton from "../components/SettingsButton";
-import User from "../models/OnlineUserModel";
+import User from "../../models/OnlineUserModel";
 
 function NormalHeader({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
   return (
     <View style={styles.structure}>
-      <Image
-        style={styles.logo}
-        resizeMode="contain"
-        source={require("../assets/logos/normal-logo.png")}
-      />
+      <Image style={styles.logo} resizeMode="contain" source={require("../../assets/logos/normal-logo.png")} />
       <View style={styles.buttonContainer}>
         <LanguageSwitch />
-        <SettingsButton
-          onPress={() => navigation.navigate("SettingsView", { localData })}
-        />
+        <SettingsButton onPress={() => navigation.navigate("SettingsView", { localData })} />
       </View>
     </View>
   );

@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from "react";
 import NavigationProps from "../../types";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import globalStyles from "../styles/GlobalStyles";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import GlobalStyles from "../layout/styles/GlobalStyles";
 import { useTranslation } from "react-i18next";
-import NormalHeader from "../layout/NormalHeader";
-import NormalButton from "../components/NormalButton";
-import ModeToggle from "../components/ModeToggle";
-import StepDivider from "../components/StepDivider";
-import QrGenerator from "../components/QrGenerator";
-import DataText from "../components/DataText";
-import SuccessMessage from "../components/SuccessMessage";
-import ErrorMessage from "../components/ErrorMessage";
-import { GenerateQrString } from "../businesslogic/QrGenLogic";
-import NormalLink from "../components/NormalLink";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import UnderlineText from "../components/UnderlineText";
-import { AddAttendanceCheck } from "../businesslogic/CourseAttendanceData";
+import NormalHeader from "../layout/headers/NormalHeader";
+import NormalButton from "../layout/components/NormalButton";
+import ModeToggle from "../layout/components/ModeToggle";
+import StepDivider from "../layout/components/StepDivider";
+import QrGenerator from "../layout/components/QrGenerator";
+import DataText from "../layout/components/DataText";
+import SuccessMessage from "../layout/components/SuccessMessage";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import { GenerateQrString } from "../businesslogic/services/QrGenLogic";
+import NormalLink from "../layout/components/NormalLink";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import UnderlineText from "../layout/components/UnderlineText";
+import { AddAttendanceCheck } from "../businesslogic/services/CourseAttendanceData";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
@@ -34,21 +28,15 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   stepNr++;
   const { t } = useTranslation();
 
-  const [qrValue, setQrValue] = useState(
-    GenerateQrString(localData.studentCode, attendanceId, workplaceId)
-  );
+  const [qrValue, setQrValue] = useState(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
 
   const refreshQrCode = () => {
-    setQrValue(
-      GenerateQrString(localData.studentCode, attendanceId, workplaceId)
-    );
+    setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
   };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(
-        GenerateQrString(localData.studentCode, attendanceId, workplaceId)
-      );
+      setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
     }, 60000);
 
     return () => clearInterval(intervalId);
@@ -75,7 +63,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
@@ -91,19 +79,13 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
         {isOnline ? (
           <>
             <View style={styles.stepDividerContainer}>
-              <StepDivider
-                label={t("step-end-attendance")}
-                stepNumber={stepNr}
-              />
+              <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
             </View>
             <UnderlineText text={t("verify-details")} />
             <View style={styles.data}>
               <DataText iconName="person-icon" text={localData.fullName} />
               <DataText iconName="key-icon" text={attendanceId} />
-              <DataText
-                iconName="work-icon"
-                text={workplaceId ? workplaceId : t("no-workplace")}
-              />
+              <DataText iconName="work-icon" text={workplaceId ? workplaceId : t("no-workplace")} />
             </View>
             <View style={styles.messageContainer}>
               {successMessage && <SuccessMessage text={successMessage} />}
@@ -121,10 +103,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
                   });
                 }}
               />
-              <NormalButton
-                text={t("check-in")}
-                onPress={handleAttendanceCheckAdd}
-              />
+              <NormalButton text={t("check-in")} onPress={handleAttendanceCheckAdd} />
             </View>
           </>
         ) : (
@@ -140,10 +119,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             <View style={styles.data}>
               <DataText iconName="person-icon" text={localData.studentCode} />
               <DataText iconName="key-icon" text={attendanceId} />
-              <DataText
-                iconName="work-icon"
-                text={workplaceId ? workplaceId : t("no-workplace")}
-              />
+              <DataText iconName="work-icon" text={workplaceId ? workplaceId : t("no-workplace")} />
             </View>
             <View style={styles.lowNavButtonContainer}>
               <NormalLink

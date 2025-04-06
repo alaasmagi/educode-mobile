@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Icons } from "./Icons";
-import i18next from "../../services/i18next";
-import { SaveCurrentLanguage } from "../businesslogic/UserDataOffline";
+import i18next from "../../businesslogic/services/i18next";
+import { SaveCurrentLanguage } from "../../businesslogic/services/UserDataOffline";
 
 const LanguageSwitch = () => {
   const currentLang = i18next.language;
@@ -15,10 +15,7 @@ const LanguageSwitch = () => {
 
   return (
     <TouchableOpacity style={styles.structure} onPress={toggleLanguage}>
-      <Image
-        source={currentLang === "en" ? Icons["eng-flag"] : Icons["est-flag"]}
-        style={styles.image}
-      />
+      <Image source={currentLang === "en" ? Icons["eng-flag"] : Icons["est-flag"]} style={styles.image} />
     </TouchableOpacity>
   );
 };

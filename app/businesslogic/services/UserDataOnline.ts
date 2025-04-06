@@ -1,8 +1,8 @@
-import OnlineUserModel from "../models/OnlineUserModel";
-import CreateUserModel from "../models/CreateUserModel";
-import VerifyOTPModel from "../models/VerifyOTPModel";
-import ChangePasswordModel from "../models/ChangePasswordModel";
-import LocalUserData from "../models/LocalUserDataModel";
+import OnlineUserModel from "../../models/OnlineUserModel";
+import CreateUserModel from "../../models/CreateUserModel";
+import VerifyOTPModel from "../../models/VerifyOTPModel";
+import ChangePasswordModel from "../../models/ChangePasswordModel";
+import LocalUserData from "../../models/LocalUserDataModel";
 import axios from "axios";
 
 import {
@@ -16,16 +16,11 @@ import {
 import Constants from "expo-constants";
 
 export async function TestConnection(): Promise<boolean> {
-  const response = await axios.get(
-    `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/TestConnection`
-  );
+  const response = await axios.get(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/TestConnection`);
   return response.status === 200;
 }
 
-export async function UserLogin(
-  uniId: string,
-  password: string
-): Promise<boolean | string> {
+export async function UserLogin(uniId: string, password: string): Promise<boolean | string> {
   const response = await axios.post(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/Login`,
     {
@@ -47,9 +42,7 @@ export async function UserLogin(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function CreateUserAccount(
-  model: CreateUserModel
-): Promise<boolean | string> {
+export async function CreateUserAccount(model: CreateUserModel): Promise<boolean | string> {
   const response = await axios.post(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/Register`,
     {
@@ -74,19 +67,14 @@ export async function CreateUserAccount(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function FetchAndSaveUserDataByUniId(
-  uniId: string
-): Promise<boolean | string> {
+export async function FetchAndSaveUserDataByUniId(uniId: string): Promise<boolean | string> {
   const token = await GetUserToken();
-  const response = await axios.get(
-    `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      validateStatus: (status) => status < 500,
-    }
-  );
+  const response = await axios.get(`${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/User/UniId/${uniId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    validateStatus: (status) => status < 500,
+  });
 
   if (response.status === 200) {
     const data: OnlineUserModel = response.data;
@@ -105,10 +93,7 @@ export async function FetchAndSaveUserDataByUniId(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function RequestOTP(
-  uniId: string,
-  fullName?: string
-): Promise<boolean | string> {
+export async function RequestOTP(uniId: string, fullName?: string): Promise<boolean | string> {
   const response = await axios.post(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/RequestOTP`,
     {
@@ -130,9 +115,7 @@ export async function RequestOTP(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function VerifyOTP(
-  model: VerifyOTPModel
-): Promise<boolean | string> {
+export async function VerifyOTP(model: VerifyOTPModel): Promise<boolean | string> {
   const response = await axios.post(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/VerifyOTP`,
     {
@@ -155,9 +138,7 @@ export async function VerifyOTP(
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function ChangeUserPassword(
-  model: ChangePasswordModel
-): Promise<boolean | string> {
+export async function ChangeUserPassword(model: ChangePasswordModel): Promise<boolean | string> {
   const token = await GetTempToken();
   const response = await axios.patch(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Auth/ChangePassword`,

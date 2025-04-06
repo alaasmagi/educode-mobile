@@ -1,53 +1,41 @@
 import React, { useEffect, useState } from "react";
 import NavigationProps from "../../types";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import globalStyles from "../styles/GlobalStyles";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import GlobalStyles from "../layout/styles/GlobalStyles";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
-import NormalHeader from "../layout/NormalHeader";
-import NormalButton from "../components/NormalButton";
-import ModeToggle from "../components/ModeToggle";
-import QrScanner from "../components/QrScanner";
-import DataText from "../components/DataText";
-import TextBox from "../components/TextBox";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import UnderlineText from "../components/UnderlineText";
-import { RegexFilters } from "../helpers/RegexFilters";
-import SuccessMessage from "../components/SuccessMessage";
-import ErrorMessage from "../components/ErrorMessage";
-import NormalMessage from "../components/NormalMessage";
-import {
-  AddAttendanceCheck,
-  GetCurrentAttendance,
-} from "../businesslogic/CourseAttendanceData";
+import NormalHeader from "../layout/headers/NormalHeader";
+import NormalButton from "../layout/components/NormalButton";
+import ModeToggle from "../layout/components/ModeToggle";
+import QrScanner from "../layout/components/QrScanner";
+import DataText from "../layout/components/DataText";
+import TextBox from "../layout/components/TextBox";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import UnderlineText from "../layout/components/UnderlineText";
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import SuccessMessage from "../layout/components/SuccessMessage";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import NormalMessage from "../layout/components/NormalMessage";
+import { AddAttendanceCheck, GetCurrentAttendance } from "../businesslogic/services/CourseAttendanceData";
 import AttendanceModel from "../models/AttendanceModel";
-import ToSixDigit from "../helpers/NumberConverter";
+import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
-import BackButtonHandler from "../../hooks/BackButtonHandler";
+import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 
 function TeacherMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
   const [qrScanView, setQrScanView] = useState(true);
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [scanned, setScanned] = useState(false);
-  const [currentAttendanceData, setCurrentAttendanceData] =
-    useState<AttendanceModel | null>(null);
-  const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] =
-    useState<string | null>(null);
+  const [currentAttendanceData, setCurrentAttendanceData] = useState<AttendanceModel | null>(null);
+  const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
   const [workplaceId, setWorkplaceId] = useState("");
   const [lastAddedStudentCode, setLastAddedStudentCode] = useState("");
-  const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] =
-    useState("");
+  const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] = useState("");
   const { t } = useTranslation();
   BackButtonHandler(navigation);
 
@@ -71,9 +59,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
           if (!response) {
             setErrorMessage(t("attendance-check-add-fail"));
           } else {
-            setSuccessMessage(
-              t("attendance-check-add-success") + `${attendanceCheckData[3]}`
-            );
+            setSuccessMessage(t("attendance-check-add-success") + `${attendanceCheckData[3]}`);
             setLastAddedStudentCode(attendanceCheckData[3]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 3000);
@@ -135,7 +121,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
@@ -163,10 +149,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 iconName="key-icon"
                 text={
                   currentAttendanceData
-                    ? `${
-                        currentAttendanceData?.attendanceId &&
-                        ToSixDigit(currentAttendanceData?.attendanceId)
-                      }`
+                    ? `${currentAttendanceData?.attendanceId && ToSixDigit(currentAttendanceData?.attendanceId)}`
                     : ""
                 }
               />
@@ -176,31 +159,19 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
         {qrScanView ? (
           <>
             <View style={styles.qrScannerContainer}>
-              {currentAttendanceData && (
-                <QrScanner onQrScanned={handleBarcodeScanned} />
-              )}
+              {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} />}
             </View>
             <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && (
-                <SuccessMessage text={successMessage} />
-              )}
-              {errorMessage && !isKeyboardVisible && (
-                <ErrorMessage text={errorMessage} />
-              )}
-              {normalMessage && !isKeyboardVisible && (
-                <NormalMessage text={normalMessage} />
-              )}
+              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
+              {normalMessage && !isKeyboardVisible && <NormalMessage text={normalMessage} />}
             </View>
           </>
         ) : (
           <>
             <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && (
-                <SuccessMessage text={successMessage} />
-              )}
-              {errorMessage && !isKeyboardVisible && (
-                <ErrorMessage text={errorMessage} />
-              )}
+              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
             </View>
             <View style={styles.manualInputContainer}>
               <View style={styles.textBoxes}>
@@ -230,19 +201,11 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 <View style={styles.data}>
                   <DataText
                     iconName="person-icon"
-                    text={
-                      lastAddedStudentCode != ""
-                        ? lastAddedStudentCode
-                        : t("no-last-added-student")
-                    }
+                    text={lastAddedStudentCode != "" ? lastAddedStudentCode : t("no-last-added-student")}
                   />
                   <DataText
                     iconName="work-icon"
-                    text={
-                      lastAddedStudentWorkplaceId != ""
-                        ? lastAddedStudentWorkplaceId
-                        : ""
-                    }
+                    text={lastAddedStudentWorkplaceId != "" ? lastAddedStudentWorkplaceId : ""}
                   />
                 </View>
               </View>

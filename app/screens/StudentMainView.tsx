@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import NavigationProps from "../../types";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import globalStyles from "../styles/GlobalStyles";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import GlobalStyles from "../layout/styles/GlobalStyles";
 import * as Haptics from "expo-haptics";
-import SeparatorLine from "../components/SeparatorLine";
-import TextBox from "../components/TextBox";
-import QrScanner from "../components/QrScanner";
+import SeparatorLine from "../layout/components/SeparatorLine";
+import TextBox from "../layout/components/TextBox";
+import QrScanner from "../layout/components/QrScanner";
 import { useTranslation } from "react-i18next";
-import NormalHeader from "../layout/NormalHeader";
-import NormalButton from "../components/NormalButton";
-import StepDivider from "../components/StepDivider";
-import Checkbox from "../components/Checkbox";
-import NormalLink from "../components/NormalLink";
-import { RegexFilters } from "../helpers/RegexFilters";
-import ErrorMessage from "../components/ErrorMessage";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import BackButtonHandler from "../../hooks/BackButtonHandler";
-import ToSixDigit from "../helpers/NumberConverter";
-import GetSixDigitTimeStamp from "../helpers/TimeStamp";
+import NormalHeader from "../layout/headers/NormalHeader";
+import NormalButton from "../layout/components/NormalButton";
+import StepDivider from "../layout/components/StepDivider";
+import Checkbox from "../layout/components/Checkbox";
+import NormalLink from "../layout/components/NormalLink";
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
+import ToSixDigit from "../businesslogic/helpers/NumberConverter";
+import GetSixDigitTimeStamp from "../businesslogic/helpers/TimeStamp";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
@@ -95,18 +89,13 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
         <View style={styles.mainContainer}>
           <View style={styles.stepDividerContainer}>
-            <StepDivider
-              stepNumber={stepNr}
-              label={
-                stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")
-              }
-            />
+            <StepDivider stepNumber={stepNr} label={stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")} />
           </View>
           {!isKeyboardVisible && (
             <View style={styles.qrContainer}>
@@ -128,19 +117,14 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                 {errorMessage ? (
                   <ErrorMessage text={errorMessage} />
                 ) : (
-                  <Checkbox
-                    label={t("add-workplace")}
-                    onChange={() => setScanForWorkplace((prev) => !prev)}
-                  />
+                  <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace((prev) => !prev)} />
                 )}
               </View>
               <View style={styles.lowNavButtonContainer}>
                 <NormalButton
                   text={t("continue")}
                   onPress={handleNextStep}
-                  disabled={
-                    !RegexFilters.attendanceScanId.test(scannedAttendanceData)
-                  }
+                  disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
                 />
               </View>
             </View>
@@ -155,9 +139,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   onChangeText={(text) => setWorkplaceId(text.trim())}
                 />
               </View>
-              <View style={styles.checkboxContainer}>
-                {errorMessage && <ErrorMessage text={errorMessage} />}
-              </View>
+              <View style={styles.checkboxContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
               <View style={styles.linkContainer}>
                 <NormalLink
                   text={t("something-wrong-back")}

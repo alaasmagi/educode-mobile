@@ -1,32 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NavigationProps from "../../types";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Alert,
-  BackHandler,
-  Keyboard,
-} from "react-native";
-import globalStyles from "../styles/GlobalStyles";
-import SeparatorLine from "../components/SeparatorLine";
-import TextBox from "../components/TextBox";
+import { SafeAreaView, StyleSheet, View, Alert, BackHandler, Keyboard } from "react-native";
+import GlobalStyles from "../layout/styles/GlobalStyles";
+import SeparatorLine from "../layout/components/SeparatorLine";
+import TextBox from "../layout/components/TextBox";
 import { useTranslation } from "react-i18next";
-import NormalButton from "../components/NormalButton";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import BackButtonHandler from "../../hooks/BackButtonHandler";
-import NormalHeader from "../layout/NormalHeader";
+import NormalButton from "../layout/components/NormalButton";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
+import NormalHeader from "../layout/headers/NormalHeader";
 import {
   DeleteCurrentLanguage,
   DeleteOfflineUserData,
   SaveOfflineUserData,
-} from "../businesslogic/UserDataOffline";
-import { DeleteUser } from "../businesslogic/UserDataOnline";
+} from "../businesslogic/services/UserDataOffline";
+import { DeleteUser } from "../businesslogic/services/UserDataOnline";
 import { useFocusEffect } from "@react-navigation/native";
-import ErrorMessage from "../components/ErrorMessage";
-import SuccessMessage from "../components/SuccessMessage";
-import { RegexFilters } from "../helpers/RegexFilters";
-import NormalLink from "../components/NormalLink";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import SuccessMessage from "../layout/components/SuccessMessage";
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import NormalLink from "../layout/components/NormalLink";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -53,8 +46,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
       : navigation.navigate("TeacherMainView", { localData });
   };
 
-  const isStudentCodeValid = () =>
-    newStudentCode !== "" || RegexFilters.studentCode.test(newStudentCode);
+  const isStudentCodeValid = () => newStudentCode !== "" || RegexFilters.studentCode.test(newStudentCode);
 
   const handleDelete = async () => {
     await DeleteCurrentLanguage();
@@ -94,15 +86,12 @@ function SettingsView({ navigation, route }: NavigationProps) {
         ]);
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     }, [])
   );
 
   return (
-    <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+    <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <NormalHeader navigation={navigation} route={route} />
       </View>
@@ -150,22 +139,13 @@ function SettingsView({ navigation, route }: NavigationProps) {
             onChangeText={(text) => setConfirmationText(text.trim())}
             placeHolder={t("type-delete") + " *"}
           />
-          <NormalButton
-            text={t("delete-account")}
-            disabled={confirmationText !== "DELETE"}
-            onPress={handleDelete}
-          />
+          <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete} />
         </View>
       )}
       <View style={styles.lowButtonContainer}>
+        {!isKeyboardVisible && <NormalButton text={t("back-to-home")} onPress={handleBackToHome} />}
         {!isKeyboardVisible && (
-          <NormalButton text={t("back-to-home")} onPress={handleBackToHome} />
-        )}
-        {!isKeyboardVisible && (
-          <NormalLink
-            text={!isOfflineOnly ? t("log-out") : t("delete-account")}
-            onPress={handleLogout}
-          />
+          <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-account")} onPress={handleLogout} />
         )}
       </View>
     </SafeAreaView>

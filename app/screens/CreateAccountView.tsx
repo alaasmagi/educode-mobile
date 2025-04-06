@@ -1,35 +1,22 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useTranslation } from "react-i18next";
 import NavigationProps from "../../types";
-import globalStyles from "../styles/GlobalStyles";
-import TextBox from "../components/TextBox";
-import NormalButton from "../components/NormalButton";
-import FormHeader from "../layout/FormHeader";
-import Greeting from "../components/Greeting";
-import NormalLink from "../components/NormalLink";
-import {
-  CreateUserAccount,
-  RequestOTP,
-  VerifyOTP,
-} from "../businesslogic/UserDataOnline";
-import ErrorMessage from "../components/ErrorMessage";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import NormalMessage from "../components/NormalMessage";
-import DataText from "../components/DataText";
-import UnderlineText from "../components/UnderlineText";
+import GlobalStyles from "../layout/styles/GlobalStyles";
+import TextBox from "../layout/components/TextBox";
+import NormalButton from "../layout/components/NormalButton";
+import FormHeader from "../layout/headers/FormHeader";
+import Greeting from "../layout/components/Greeting";
+import NormalLink from "../layout/components/NormalLink";
+import { CreateUserAccount, RequestOTP, VerifyOTP } from "../businesslogic/services/UserDataOnline";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import NormalMessage from "../layout/components/NormalMessage";
+import DataText from "../layout/components/DataText";
+import UnderlineText from "../layout/components/UnderlineText";
 import CreateUserModel from "../models/CreateUserModel";
-import {
-  preventScreenCaptureAsync,
-  allowScreenCaptureAsync,
-} from "expo-screen-capture";
-import { RegexFilters } from "../helpers/RegexFilters";
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import VerifyOTPModel from "../models/VerifyOTPModel";
 
 function CreateAccountView({ navigation }: NavigationProps) {
@@ -103,16 +90,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
     }
   };
 
-  const isPasswordFormValid = () =>
-    password.length >= 8 && password === passwordAgain;
+  const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
   useEffect(() => {
     if (password.length < 8 && password !== "") {
       setNormalMessage(t("password-length-message"));
-    } else if (
-      !isPasswordFormValid() &&
-      password !== "" &&
-      passwordAgain !== ""
-    ) {
+    } else if (!isPasswordFormValid() && password !== "" && passwordAgain !== "") {
       setNormalMessage(t("password-match-message"));
     } else {
       setNormalMessage("");
@@ -139,7 +121,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <FormHeader />
           {!isKeyboardVisible && <Greeting text={t("welcome")} />}
@@ -175,10 +157,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                 }}
                 disabled={!isNameFormValid()}
               />
-              <NormalLink
-                text={t("already-registered")}
-                onPress={() => navigation.navigate("LoginView")}
-              />
+              <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
         )}
@@ -220,24 +199,16 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   handleOTPRequest();
                   setStepNr(3);
                 }}
-                disabled={
-                  !RegexFilters.studentUniId.test(uniId) ||
-                  !RegexFilters.studentCode.test(studentCode)
-                }
+                disabled={!RegexFilters.studentUniId.test(uniId) || !RegexFilters.studentCode.test(studentCode)}
               />
-              <NormalLink
-                text={t("already-registered")}
-                onPress={() => navigation.navigate("LoginView")}
-              />
+              <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
         )}
         {stepNr === 3 && (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText
-                text={t("one-time-key-prompt") + ` ${uniId}@taltech.ee`}
-              />
+              <UnderlineText text={t("one-time-key-prompt") + ` ${uniId}@taltech.ee`} />
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="pincode-icon"
@@ -308,10 +279,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                 }}
                 disabled={!isPasswordFormValid()}
               />
-              <NormalLink
-                text={t("already-registered")}
-                onPress={() => navigation.navigate("LoginView")}
-              />
+              <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
         )}
@@ -320,10 +288,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
             <View style={styles.textBoxContainer}>
               <UnderlineText text="Verify your details:" />
               <View style={styles.data}>
-                <DataText
-                  iconName="person-icon"
-                  text={firstName + " " + lastName}
-                />
+                <DataText iconName="person-icon" text={firstName + " " + lastName} />
                 <DataText iconName="person-icon" text={uniId} />
                 <DataText iconName="person-icon" text={studentCode} />
               </View>
@@ -340,14 +305,8 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   setStepNr(4);
                 }}
               />
-              <NormalButton
-                text={t("create-account")}
-                onPress={handleRegister}
-              />
-              <NormalLink
-                text={t("already-registered")}
-                onPress={() => navigation.navigate("LoginView")}
-              />
+              <NormalButton text={t("create-account")} onPress={handleRegister} />
+              <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
         )}

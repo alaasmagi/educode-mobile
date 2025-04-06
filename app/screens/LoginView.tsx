@@ -1,39 +1,24 @@
 import React, { useState, useEffect } from "react";
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Alert, SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useCameraPermissions } from "expo-camera";
 import NavigationProps from "../../types";
-import globalStyles from "../styles/GlobalStyles";
-import TextBox from "../components/TextBox";
-import NormalButton from "../components/NormalButton";
-import FormHeader from "../layout/FormHeader";
-import Greeting from "../components/Greeting";
-import NormalLink from "../components/NormalLink";
-import {
-  FetchAndSaveUserDataByUniId,
-  UserLogin,
-} from "../businesslogic/UserDataOnline";
-import ErrorMessage from "../components/ErrorMessage";
-import SuccessMessage from "../components/SuccessMessage";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import { GetOfflineUserData } from "../businesslogic/UserDataOffline";
-import {
-  preventScreenCaptureAsync,
-  allowScreenCaptureAsync,
-} from "expo-screen-capture";
+import GlobalStyles from "../layout/styles/GlobalStyles";
+import TextBox from "../layout/components/TextBox";
+import NormalButton from "../layout/components/NormalButton";
+import FormHeader from "../layout/headers/FormHeader";
+import Greeting from "../layout/components/Greeting";
+import NormalLink from "../layout/components/NormalLink";
+import { FetchAndSaveUserDataByUniId, UserLogin } from "../businesslogic/services/UserDataOnline";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import SuccessMessage from "../layout/components/SuccessMessage";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import { GetOfflineUserData } from "../businesslogic/services/UserDataOffline";
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
-  const [successMessage, setSuccessMessage] = useState<string | null>(
-    route?.params?.successMessage || null
-  );
+  const [successMessage, setSuccessMessage] = useState<string | null>(route?.params?.successMessage || null);
   const [permission, requestPermission] = useCameraPermissions();
   const [uniId, setUniId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -55,10 +40,7 @@ function LoginView({ navigation, route }: NavigationProps) {
     if (!permission?.granted) {
       const response = await requestPermission();
       if (!response.granted) {
-        Alert.alert(
-          t("camera-permission-denied"),
-          t("camera-permission-denied-message")
-        );
+        Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
         return;
       }
     }
@@ -89,7 +71,7 @@ function LoginView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <FormHeader />
           {!isKeyboardVisible && <Greeting text={t("oh-hello-again")} />}
@@ -112,30 +94,16 @@ function LoginView({ navigation, route }: NavigationProps) {
             />
           </View>
           <View style={styles.forgotPasswordContainer}>
-            <NormalLink
-              text={t("forgot-password")}
-              onPress={() => navigation.navigate("ForgotPasswordView")}
-            />
+            <NormalLink text={t("forgot-password")} onPress={() => navigation.navigate("ForgotPasswordView")} />
           </View>
           <View style={styles.errorContainer}>
-            {!isKeyboardVisible && errorMessage && (
-              <ErrorMessage text={errorMessage} />
-            )}
-            {!isKeyboardVisible && successMessage && (
-              <SuccessMessage text={successMessage} />
-            )}
+            {!isKeyboardVisible && errorMessage && <ErrorMessage text={errorMessage} />}
+            {!isKeyboardVisible && successMessage && <SuccessMessage text={successMessage} />}
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <NormalButton
-            text={t("log-in")}
-            onPress={handleLogin}
-            disabled={!isFormValid()}
-          />
-          <NormalLink
-            text={t("register-now")}
-            onPress={() => navigation.navigate("CreateAccountView")}
-          />
+          <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid()} />
+          <NormalLink text={t("register-now")} onPress={() => navigation.navigate("CreateAccountView")} />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

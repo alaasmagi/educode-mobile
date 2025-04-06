@@ -1,37 +1,23 @@
 import React, { useEffect, useCallback, useState } from "react";
 import NavigationProps from "../../types";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  BackHandler,
-  Alert,
-  Keyboard,
-} from "react-native";
-import globalStyles from "../styles/GlobalStyles";
-import NormalButton from "../components/NormalButton";
+import { SafeAreaView, StyleSheet, View, BackHandler, Alert, Keyboard } from "react-native";
+import GlobalStyles from "../layout/styles/GlobalStyles";
+import NormalButton from "../layout/components/NormalButton";
 import { useCameraPermissions } from "expo-camera";
-import SeparatorLine from "../components/SeparatorLine";
-import TextBox from "../components/TextBox";
+import SeparatorLine from "../layout/components/SeparatorLine";
+import TextBox from "../layout/components/TextBox";
 import * as SplashScreen from "expo-splash-screen";
 import { useTranslation } from "react-i18next";
-import FormHeader from "../layout/FormHeader";
-import BackButtonHandler from "../../hooks/BackButtonHandler";
+import FormHeader from "../layout/headers/FormHeader";
+import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import LocalUserData from "../models/LocalUserDataModel";
-import {
-  GetCurrentLanguage,
-  GetOfflineUserData,
-  SaveOfflineUserData,
-} from "../businesslogic/UserDataOffline";
-import {
-  FetchAndSaveUserDataByUniId,
-  TestConnection,
-} from "../businesslogic/UserDataOnline";
-import NormalMessage from "../components/NormalMessage";
-import KeyboardVisibilityHandler from "../../hooks/KeyboardVisibilityHandler";
-import { RegexFilters } from "../helpers/RegexFilters";
-import i18next from "../../services/i18next";
+import { GetCurrentLanguage, GetOfflineUserData, SaveOfflineUserData } from "../businesslogic/services/UserDataOffline";
+import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/services/UserDataOnline";
+import NormalMessage from "../layout/components/NormalMessage";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import i18next from "../businesslogic/services/i18next";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -50,10 +36,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         ]);
         return true;
       };
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     }, [])
   );
 
@@ -116,10 +99,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     if (!permission?.granted) {
       const response = await requestPermission();
       if (!response.granted) {
-        Alert.alert(
-          t("camera-permission-denied"),
-          t("camera-permission-denied-message")
-        );
+        Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
         return;
       }
     }
@@ -133,21 +113,15 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   };
 
   return (
-    <SafeAreaView style={globalStyles.anrdoidSafeArea}>
+    <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <FormHeader />
       </View>
       <View style={styles.mainContainer}>
         {!isKeyboardVisible && (
           <View style={styles.mainLoginContainer}>
-            <NormalButton
-              text={t("log-in")}
-              onPress={() => navigation.navigate("LoginView")}
-            />
-            <NormalButton
-              text={t("register-as-student")}
-              onPress={() => navigation.navigate("CreateAccountView")}
-            />
+            <NormalButton text={t("log-in")} onPress={() => navigation.navigate("LoginView")} />
+            <NormalButton text={t("register-as-student")} onPress={() => navigation.navigate("CreateAccountView")} />
             {normalMessage && <NormalMessage text={normalMessage} />}
           </View>
         )}
