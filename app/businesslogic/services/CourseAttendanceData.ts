@@ -1,5 +1,5 @@
 import CreateAttendanceCheckModel from "../../models/CreateAttendanceCheckModel";
-import AttendanceModel from "../../models/AttendanceModel";
+import { CourseAttendance } from "../../models/CourseAttendance";
 import { GetUserToken } from "./UserDataOffline";
 import Constants from "expo-constants";
 import axios from "axios";
@@ -30,7 +30,7 @@ export async function AddAttendanceCheck(model: CreateAttendanceCheckModel): Pro
   return response.data.error ?? "internet-connection-error";
 }
 
-export async function GetCurrentAttendance(uniId: string): Promise<AttendanceModel | string> {
+export async function GetCurrentAttendance(uniId: string): Promise<CourseAttendance | string> {
   const token = await GetUserToken();
   const response = await axios.get(
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/CurrentAttendance/UniId/${uniId}`,
@@ -46,13 +46,16 @@ export async function GetCurrentAttendance(uniId: string): Promise<AttendanceMod
   if (response.status == 200) {
     const data = response.data;
     return {
-      attendanceId: data.attendanceId,
-      courseName: data.courseName,
-      courseCode: data.courseCode,
-    } as AttendanceModel;
+      courseId: data.course.id,
+      courseCode: data.course.courseCode,
+      courseName: data.course.courseName,
+      attendanceId: data.id,
+      attendanceTypeId: data.attendanceTypeId,
+      attendanceType: data.attendanceType.attendanceType,
+      date: data.endTime,
+      startTime: data.startTime,
+      endTime: data.endTime,
+    } as CourseAttendance;
   }
-
-  console.log(response.status);
-  console.log(response.data.error);
   return response.data.error ?? "internet-connection-error";
 }

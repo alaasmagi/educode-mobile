@@ -1,25 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NavigationProps from "../../types";
 import { SafeAreaView, StyleSheet, View, Alert, BackHandler, Keyboard } from "react-native";
+import { useTranslation } from "react-i18next";
 import GlobalStyles from "../layout/styles/GlobalStyles";
+
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
-import { useTranslation } from "react-i18next";
 import NormalButton from "../layout/components/NormalButton";
-import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
-import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
-import NormalHeader from "../layout/headers/NormalHeader";
+import NormalLink from "../layout/components/NormalLink";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import SuccessMessage from "../layout/components/SuccessMessage";
+
 import {
   DeleteCurrentLanguage,
   DeleteOfflineUserData,
   SaveOfflineUserData,
 } from "../businesslogic/services/UserDataOffline";
 import { DeleteUser } from "../businesslogic/services/UserDataOnline";
-import { useFocusEffect } from "@react-navigation/native";
-import ErrorMessage from "../layout/components/ErrorMessage";
-import SuccessMessage from "../layout/components/SuccessMessage";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
+import NormalHeader from "../layout/headers/NormalHeader";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
-import NormalLink from "../layout/components/NormalLink";
+import { useFocusEffect } from "@react-navigation/native";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -33,26 +35,40 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   useEffect(() => {
-    if (localData.uniId == null) {
+    if (!localData.uniId) {
       setIsOfflineOnly(true);
     }
-    message && setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(null), 3000);
-  }, [localData.uniId]);
+    if (message) {
+      setSuccessMessage(message);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    }
+  }, [localData.uniId, message]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        Alert.alert(t("exit-app"), t("exit-app-prompt"), [
+          { text: t("cancel"), onPress: () => null, style: "cancel" },
+          { text: t("yes"), onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      return () => backHandler.remove();
+    }, [])
+  );
 
   const handleBackToHome = () => {
-    localData.userType == "Student"
-      ? navigation.navigate("StudentMainView", { localData })
-      : navigation.navigate("TeacherMainView", { localData });
+    navigation.navigate(localData.userType === "Student" ? "StudentMainView" : "TeacherMainView", { localData });
   };
 
-  const isStudentCodeValid = () => newStudentCode !== "" || RegexFilters.studentCode.test(newStudentCode);
+  const isStudentCodeValid = () => RegexFilters.studentCode.test(newStudentCode);
 
   const handleDelete = async () => {
-    await DeleteCurrentLanguage();
     Keyboard.dismiss();
     const status = await DeleteUser(localData.uniId);
     if (status === true) {
+      await DeleteCurrentLanguage();
       await DeleteOfflineUserData();
       navigation.navigate("InitialSelectionView");
     } else {
@@ -68,7 +84,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
 
   const handleStudentCodeChange = async () => {
     Keyboard.dismiss();
-    await DeleteOfflineUserData();
     localData.studentCode = newStudentCode;
     await SaveOfflineUserData(localData);
     setNewStudentCode("");
@@ -77,50 +92,36 @@ function SettingsView({ navigation, route }: NavigationProps) {
   };
 
   BackButtonHandler(navigation);
-  useFocusEffect(
-    useCallback(() => {
-      const backAction = () => {
-        Alert.alert(t("exit-app"), t("exit-app-prompt"), [
-          { text: t("cancel"), onPress: () => null, style: "cancel" },
-          { text: t("yes"), onPress: () => BackHandler.exitApp() },
-        ]);
-        return true;
-      };
-      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-    }, [])
-  );
 
   return (
     <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
       <View style={styles.headerContainer}>
         <NormalHeader navigation={navigation} route={route} />
       </View>
+
       {!isOfflineOnly && (
         <View style={styles.firstOptionContainer}>
           {!isKeyboardVisible && (
             <NormalButton
               text={t("change-password")}
-              onPress={() =>
-                navigation.navigate("ForgotPasswordView", {
-                  isNormalPassChange: true,
-                  localData,
-                })
-              }
+              onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
             />
           )}
         </View>
       )}
+
       <View style={styles.messageContainer}>
         {errorMessage && <ErrorMessage text={errorMessage} />}
         {successMessage && <SuccessMessage text={successMessage} />}
       </View>
-      {isOfflineOnly && (
+
+      {isOfflineOnly ? (
         <View style={styles.firstOptionContainer}>
           <SeparatorLine text={t("offline-mode-settings")} />
           <TextBox
             iconName="person-icon"
             value={newStudentCode}
-            onChangeText={(text) => setNewStudentCode(text.trim())}
+            onChangeText={setNewStudentCode}
             placeHolder={t("student-code")}
             autoCapitalize="characters"
           />
@@ -130,18 +131,19 @@ function SettingsView({ navigation, route }: NavigationProps) {
             disabled={!isStudentCodeValid()}
           />
         </View>
-      )}
-      {!isOfflineOnly && (
+      ) : (
         <View style={styles.deleteAccount}>
           <SeparatorLine text={t("delete-account")} />
           <TextBox
             iconName="person-icon"
-            onChangeText={(text) => setConfirmationText(text.trim())}
+            value={confirmationText ?? ""}
+            onChangeText={setConfirmationText}
             placeHolder={t("type-delete") + " *"}
           />
           <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete} />
         </View>
       )}
+
       <View style={styles.lowButtonContainer}>
         {!isKeyboardVisible && <NormalButton text={t("back-to-home")} onPress={handleBackToHome} />}
         {!isKeyboardVisible && (

@@ -1,23 +1,25 @@
 import React, { useEffect, useCallback, useState } from "react";
-import NavigationProps from "../../types";
-import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView, StyleSheet, View, BackHandler, Alert, Keyboard } from "react-native";
-import GlobalStyles from "../layout/styles/GlobalStyles";
-import NormalButton from "../layout/components/NormalButton";
+import { useFocusEffect } from "@react-navigation/native";
 import { useCameraPermissions } from "expo-camera";
-import SeparatorLine from "../layout/components/SeparatorLine";
-import TextBox from "../layout/components/TextBox";
 import * as SplashScreen from "expo-splash-screen";
 import { useTranslation } from "react-i18next";
+import i18next from "../businesslogic/services/i18next";
+
+import GlobalStyles from "../layout/styles/GlobalStyles";
+import NormalButton from "../layout/components/NormalButton";
+import SeparatorLine from "../layout/components/SeparatorLine";
+import TextBox from "../layout/components/TextBox";
+import NormalMessage from "../layout/components/NormalMessage";
+
+import NavigationProps from "../../types";
 import FormHeader from "../layout/headers/FormHeader";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import LocalUserData from "../models/LocalUserDataModel";
 import { GetCurrentLanguage, GetOfflineUserData, SaveOfflineUserData } from "../businesslogic/services/UserDataOffline";
 import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/services/UserDataOnline";
-import NormalMessage from "../layout/components/NormalMessage";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
-import i18next from "../businesslogic/services/i18next";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -27,87 +29,75 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   BackButtonHandler(navigation);
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
         Alert.alert(t("exit-app"), t("exit-app-prompt"), [
-          { text: t("cancel"), onPress: () => null, style: "cancel" },
+          { text: t("cancel"), style: "cancel" },
           { text: t("yes"), onPress: () => BackHandler.exitApp() },
         ]);
         return true;
       };
+
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      return () => backHandler.remove();
     }, [])
   );
 
   useEffect(() => {
-    const setCurrentLanguage = async () => {
-      let currentLanguage = await GetCurrentLanguage();
-      if (currentLanguage != null) {
-        i18next.changeLanguage(currentLanguage);
-      }
-    };
-
-    const fetchUserData = async () => {
+    const init = async () => {
       await SplashScreen.preventAutoHideAsync();
-      const connectionStatus = await TestConnection();
 
-      if (!connectionStatus) {
-        Alert.alert(t("connection-error"), t("connection-error-prompt"), [
-          {
-            text: t("exit-app"),
-            onPress: () => BackHandler.exitApp(),
-            style: "cancel",
-          },
-          { text: t("reload"), onPress: () => fetchUserData() },
+      const connection = await TestConnection();
+      if (!connection) {
+        return Alert.alert(t("connection-error"), t("connection-error-prompt"), [
+          { text: t("exit-app"), onPress: () => BackHandler.exitApp(), style: "cancel" },
+          { text: t("reload"), onPress: init },
         ]);
       }
 
-      let localData: LocalUserData | null = await GetOfflineUserData();
+      const lang = await GetCurrentLanguage();
+      if (lang) i18next.changeLanguage(lang);
 
-      if (localData) {
-        if (localData.offlineOnly) {
-          navigation.navigate("StudentMainView", { localData });
-          await SplashScreen.hideAsync();
-          return;
-        }
+      let localData = await GetOfflineUserData();
 
-        const loginStatus = await FetchAndSaveUserDataByUniId(localData.uniId!);
-        if (loginStatus) {
+      if (localData?.offlineOnly) {
+        navigation.navigate("StudentMainView", { localData });
+      } else if (localData?.uniId) {
+        const loginSuccess = await FetchAndSaveUserDataByUniId(localData.uniId);
+        if (loginSuccess) {
           localData = await GetOfflineUserData();
-          if (localData) {
-            localData.userType === "Teacher"
-              ? navigation.navigate("TeacherMainView", { localData })
-              : navigation.navigate("StudentMainView", { localData });
-            await SplashScreen.hideAsync();
-            return;
-          }
+          const target = localData?.userType === "Teacher" ? "TeacherMainView" : "StudentMainView";
+          navigation.navigate(target, { localData });
         } else {
           setNormalMessage(t("login-again"));
           setTimeout(() => setNormalMessage(null), 3000);
         }
       }
+
       await SplashScreen.hideAsync();
     };
 
-    fetchUserData();
-    setCurrentLanguage();
+    init();
   }, []);
 
   const handleOfflineLogin = async () => {
     Keyboard.dismiss();
+
     if (!permission?.granted) {
-      const response = await requestPermission();
-      if (!response.granted) {
-        Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
-        return;
+      const { granted } = await requestPermission();
+      if (!granted) {
+        return Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
       }
     }
+
     const localData: LocalUserData = {
       userType: "Student",
-      studentCode: studentCode,
+      studentCode,
       offlineOnly: true,
     };
+
     await SaveOfflineUserData(localData);
     navigation.navigate("StudentMainView", { localData });
   };

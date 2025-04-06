@@ -1,38 +1,36 @@
-import React, { useState, useEffect } from "react";
-import NavigationProps from "../../types";
+import React, { useState, useEffect, useCallback } from "react";
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import { useTranslation } from "react-i18next";
+
+import NavigationProps from "../../types";
+import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
+import NormalLink from "../layout/components/NormalLink";
 import ModeToggle from "../layout/components/ModeToggle";
 import StepDivider from "../layout/components/StepDivider";
 import QrGenerator from "../layout/components/QrGenerator";
 import DataText from "../layout/components/DataText";
 import SuccessMessage from "../layout/components/SuccessMessage";
 import ErrorMessage from "../layout/components/ErrorMessage";
-import { GenerateQrString } from "../businesslogic/services/QrGenLogic";
-import NormalLink from "../layout/components/NormalLink";
-import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import UnderlineText from "../layout/components/UnderlineText";
+
+import { GenerateQrString } from "../businesslogic/services/QrGenLogic";
 import { AddAttendanceCheck } from "../businesslogic/services/CourseAttendanceData";
+import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
-  const { localData, attendanceId, workplaceId = null } = route.params;
+  const { localData, attendanceId, workplaceId = null, stepNr: initialStep } = route.params;
+  const { t } = useTranslation();
+  const isKeyboardVisible = KeyboardVisibilityHandler();
+
+  const [isOnline, setIsOnline] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isOnline, setIsOnline] = useState(false);
-  const isKeyboardVisible = KeyboardVisibilityHandler();
-  let { stepNr } = route.params;
-  stepNr++;
-  const { t } = useTranslation();
 
-  const [qrValue, setQrValue] = useState(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
-
-  const refreshQrCode = () => {
-    setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
-  };
+  const stepNr = initialStep + 1;
+  const [qrValue, setQrValue] = useState(() => GenerateQrString(localData.studentCode, attendanceId, workplaceId));
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -42,14 +40,29 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
+  const refreshQrCode = () => {
+    setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
+  };
+
+  const navigateBack = useCallback(() => {
+    navigation.navigate("StudentMainView", {
+      localData,
+      attendanceId,
+      workplaceId,
+      stepNr: stepNr - 1,
+    });
+  }, [navigation, localData, attendanceId, workplaceId, stepNr]);
+
   const handleAttendanceCheckAdd = async () => {
     const attendanceCheck: CreateAttendanceCheckModel = {
       studentCode: localData.studentCode,
       courseAttendanceId: attendanceId,
       workplaceId: parseInt(workplaceId) ?? null,
     };
+
     const status = await AddAttendanceCheck(attendanceCheck);
-    if (status == true) {
+
+    if (status === true) {
       setSuccessMessage(t("attendance-check-added"));
       setTimeout(() => {
         setSuccessMessage(null);
@@ -61,12 +74,21 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
     }
   };
 
+  const renderSharedData = () => (
+    <View style={styles.data}>
+      <DataText iconName="person-icon" text={isOnline ? localData.fullName : localData.studentCode} />
+      <DataText iconName="key-icon" text={attendanceId} />
+      <DataText iconName="work-icon" text={workplaceId || t("no-workplace")} />
+    </View>
+  );
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
+
         <View style={styles.onlineToggleContainer}>
           <ModeToggle
             textLeft={t("offline-mode")}
@@ -76,63 +98,34 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             isDisabled={localData.offlineOnly}
           />
         </View>
+
+        <View style={styles.stepDividerContainer}>
+          <StepDivider label={t(isOnline ? "step-end-attendance" : "step-show-qr")} stepNumber={stepNr} />
+        </View>
+
         {isOnline ? (
           <>
-            <View style={styles.stepDividerContainer}>
-              <StepDivider label={t("step-end-attendance")} stepNumber={stepNr} />
-            </View>
             <UnderlineText text={t("verify-details")} />
-            <View style={styles.data}>
-              <DataText iconName="person-icon" text={localData.fullName} />
-              <DataText iconName="key-icon" text={attendanceId} />
-              <DataText iconName="work-icon" text={workplaceId ? workplaceId : t("no-workplace")} />
-            </View>
+            {renderSharedData()}
             <View style={styles.messageContainer}>
               {successMessage && <SuccessMessage text={successMessage} />}
               {errorMessage && <ErrorMessage text={errorMessage} />}
             </View>
             <View style={styles.lowNavButtonContainer}>
-              <NormalLink
-                text={t("something-wrong-back")}
-                onPress={() => {
-                  navigation.navigate("StudentMainView", {
-                    localData,
-                    attendanceId,
-                    workplaceId,
-                    stepNr: stepNr - 1,
-                  });
-                }}
-              />
+              <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
               <NormalButton text={t("check-in")} onPress={handleAttendanceCheckAdd} />
             </View>
           </>
         ) : (
           <>
-            <View style={styles.stepDividerContainer}>
-              <StepDivider label={t("step-show-qr")} stepNumber={stepNr} />
-            </View>
             {!isKeyboardVisible && (
               <View style={styles.qrContainer}>
                 <QrGenerator value={qrValue} />
               </View>
             )}
-            <View style={styles.data}>
-              <DataText iconName="person-icon" text={localData.studentCode} />
-              <DataText iconName="key-icon" text={attendanceId} />
-              <DataText iconName="work-icon" text={workplaceId ? workplaceId : t("no-workplace")} />
-            </View>
+            {renderSharedData()}
             <View style={styles.lowNavButtonContainer}>
-              <NormalLink
-                text={t("something-wrong-back")}
-                onPress={() => {
-                  navigation.navigate("StudentMainView", {
-                    localData,
-                    attendanceId,
-                    workplaceId,
-                    stepNr: stepNr - 1,
-                  });
-                }}
-              />
+              <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
               <NormalButton text={t("refresh-qr")} onPress={refreshQrCode} />
             </View>
           </>
@@ -143,46 +136,10 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1.5,
-    justifyContent: "center",
-  },
-  onlineToggleContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  stepDividerContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  qrContainer: {
-    flex: 4,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  dataContainer: {
-    flex: 2,
-    gap: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  messageContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  linkContainer: {
-    paddingBottom: 4,
-    alignSelf: "center",
-    justifyContent: "flex-end",
-  },
-  lowNavButtonContainer: {
-    flex: 1.5,
-    gap: 4,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
+  headerContainer: { flex: 1.5, justifyContent: "center" },
+  onlineToggleContainer: { flex: 1, justifyContent: "center" },
+  stepDividerContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
+  qrContainer: { flex: 4, justifyContent: "flex-start", alignItems: "center" },
   data: {
     alignSelf: "center",
     width: "85%",
@@ -191,6 +148,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     gap: 10,
     padding: 10,
+  },
+  messageContainer: { flex: 1, alignItems: "center", justifyContent: "flex-end" },
+  lowNavButtonContainer: {
+    flex: 1.5,
+    gap: 4,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });
 

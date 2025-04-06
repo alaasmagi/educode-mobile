@@ -1,83 +1,94 @@
 import React, { useEffect, useState } from "react";
-import NavigationProps from "../../types";
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import * as Haptics from "expo-haptics";
+import { useTranslation } from "react-i18next";
+
+import NavigationProps from "../../types";
+import GlobalStyles from "../layout/styles/GlobalStyles";
+
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
 import QrScanner from "../layout/components/QrScanner";
-import { useTranslation } from "react-i18next";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import StepDivider from "../layout/components/StepDivider";
 import Checkbox from "../layout/components/Checkbox";
 import NormalLink from "../layout/components/NormalLink";
-import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import ErrorMessage from "../layout/components/ErrorMessage";
+
+import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import GetSixDigitTimeStamp from "../businesslogic/helpers/TimeStamp";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
-  const { localData } = route.params;
   const { t } = useTranslation();
-
-  const [scanned, setScanned] = useState(false);
-
-  const { attendanceId: routeAttendanceId } = route.params || {};
-  const [attendanceId, setAttendanceId] = useState(routeAttendanceId || "");
-  const [scannedAttendanceData, setScannedAttendanceData] = useState("");
-
-  const { workplaceId: routeWorkplaceId } = route.params || {};
-  const [workplaceId, setWorkplaceId] = useState(routeWorkplaceId || "");
-
-  const [scanForWorkplace, setScanForWorkplace] = useState(false);
-
-  const { stepNr: initialStepNr = 1 } = route.params || {};
-  const [stepNr, setStepNr] = useState(initialStepNr);
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const isKeyboardVisible = KeyboardVisibilityHandler();
   BackButtonHandler(navigation);
 
+  const {
+    localData,
+    attendanceId: routeAttendanceId,
+    workplaceId: routeWorkplaceId,
+    stepNr: initialStepNr = 1,
+  } = route.params || {};
+
+  const [stepNr, setStepNr] = useState(initialStepNr);
+  const [scanned, setScanned] = useState(false);
+
+  const [attendanceId, setAttendanceId] = useState(routeAttendanceId || "");
+  const [scannedAttendanceData, setScannedAttendanceData] = useState("");
+  const [workplaceId, setWorkplaceId] = useState(routeWorkplaceId || "");
+
+  const [scanForWorkplace, setScanForWorkplace] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const clearErrorMessage = () => setTimeout(() => setErrorMessage(null), 3000);
+
+  const isTimestampValid = (timestampStr: string): boolean => {
+    const scannedTime = parseInt(timestampStr);
+    const currentTime = GetSixDigitTimeStamp();
+    return currentTime - scannedTime <= 20;
+  };
+
   const handleBarcodeScanned = async ({ data }: { data: string }) => {
-    if (!scanned) {
-      setScanned(true);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      if (stepNr == 1 && RegexFilters.attendanceScanId.test(data)) {
-        setScannedAttendanceData(data);
-        const scannedData = data.split("-");
-        const currentTimestamp = GetSixDigitTimeStamp();
-        if (currentTimestamp - parseInt(scannedData[1]) > 20) {
-          setErrorMessage(t("timestamp-error"));
-          setTimeout(() => setErrorMessage(null), 3000);
-          return;
-        }
-        setAttendanceId(ToSixDigit(Number(scannedData[0])));
-      } else if (stepNr == 2 && RegexFilters.defaultId.test(data)) {
-        setWorkplaceId(ToSixDigit(Number(data)));
+    if (scanned) return;
+
+    setScanned(true);
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+    if (stepNr === 1 && RegexFilters.attendanceScanId.test(data)) {
+      const [idPart, timestampPart] = data.split("-");
+      if (!isTimestampValid(timestampPart)) {
+        setErrorMessage(t("timestamp-error"));
+        clearErrorMessage();
       } else {
-        setErrorMessage(t("invalid-qr"));
+        setScannedAttendanceData(data);
+        setAttendanceId(ToSixDigit(Number(idPart)));
       }
-      setTimeout(() => setScanned(false), 3000);
-      setTimeout(() => setErrorMessage(null), 3000);
+    } else if (stepNr === 2 && RegexFilters.defaultId.test(data)) {
+      setWorkplaceId(ToSixDigit(Number(data)));
+    } else {
+      setErrorMessage(t("invalid-qr"));
+      clearErrorMessage();
     }
+
+    setTimeout(() => setScanned(false), 3000);
   };
 
   const handleNextStep = () => {
-    const scannedData = scannedAttendanceData.split("-");
-    const currentTimestamp = GetSixDigitTimeStamp();
-    if (currentTimestamp - parseInt(scannedData[1]) > 20) {
+    const [, timestampPart] = scannedAttendanceData.split("-");
+    if (!isTimestampValid(timestampPart)) {
       setErrorMessage(t("timestamp-error"));
-      setTimeout(() => setErrorMessage(null), 3000);
+      clearErrorMessage();
       return;
     }
-    if (scanForWorkplace == true) {
+
+    if (scanForWorkplace) {
       setStepNr(2);
-      Keyboard.dismiss;
       setScanForWorkplace(false);
+      Keyboard.dismiss();
     } else {
       navigation.navigate("CompleteAttendanceView", {
         localData,
@@ -87,21 +98,33 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     }
   };
 
+  const handleWorkplaceSubmit = () => {
+    navigation.navigate("CompleteAttendanceView", {
+      localData,
+      attendanceId,
+      workplaceId,
+      stepNr,
+    });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
+
         <View style={styles.mainContainer}>
           <View style={styles.stepDividerContainer}>
-            <StepDivider stepNumber={stepNr} label={stepNr == 1 ? t("step-scan-board") : t("step-scan-workplace")} />
+            <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
           </View>
+
           {!isKeyboardVisible && (
             <View style={styles.qrContainer}>
               <QrScanner onQrScanned={handleBarcodeScanned} />
             </View>
           )}
+
           {stepNr === 1 ? (
             <View style={styles.attendanceHandlerContainer}>
               <View style={styles.alternativeMethodContainer}>
@@ -113,6 +136,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   onChangeText={(text) => setScannedAttendanceData(text.trim())}
                 />
               </View>
+
               <View style={styles.checkboxContainer}>
                 {errorMessage ? (
                   <ErrorMessage text={errorMessage} />
@@ -120,6 +144,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace((prev) => !prev)} />
                 )}
               </View>
+
               <View style={styles.lowNavButtonContainer}>
                 <NormalButton
                   text={t("continue")}
@@ -139,27 +164,17 @@ function StudentMainView({ navigation, route }: NavigationProps) {
                   onChangeText={(text) => setWorkplaceId(text.trim())}
                 />
               </View>
+
               <View style={styles.checkboxContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
+
               <View style={styles.linkContainer}>
-                <NormalLink
-                  text={t("something-wrong-back")}
-                  onPress={() => {
-                    setStepNr(1);
-                  }}
-                />
+                <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
               </View>
 
               <View style={styles.lowNavButtonContainer}>
                 <NormalButton
                   text={t("continue")}
-                  onPress={() =>
-                    navigation.navigate("CompleteAttendanceView", {
-                      localData,
-                      attendanceId,
-                      workplaceId,
-                      stepNr,
-                    })
-                  }
+                  onPress={handleWorkplaceSubmit}
                   disabled={!RegexFilters.defaultId.test(workplaceId)}
                 />
               </View>

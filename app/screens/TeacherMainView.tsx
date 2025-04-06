@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import NavigationProps from "../../types";
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
+
+import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import ModeToggle from "../layout/components/ModeToggle";
@@ -11,41 +11,45 @@ import QrScanner from "../layout/components/QrScanner";
 import DataText from "../layout/components/DataText";
 import TextBox from "../layout/components/TextBox";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
-import UnderlineText from "../layout/components/UnderlineText";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import SuccessMessage from "../layout/components/SuccessMessage";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import NormalMessage from "../layout/components/NormalMessage";
 import { AddAttendanceCheck, GetCurrentAttendance } from "../businesslogic/services/CourseAttendanceData";
-import AttendanceModel from "../models/AttendanceModel";
-import ToSixDigit from "../businesslogic/helpers/NumberConverter";
+import { CourseAttendance } from "../models/CourseAttendance";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
+import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
+import UnderlineText from "../layout/components/UnderlineText";
 
 function TeacherMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
-  const [qrScanView, setQrScanView] = useState(true);
+  const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
+
+  const [qrScanView, setQrScanView] = useState(true);
   const [scanned, setScanned] = useState(false);
-  const [currentAttendanceData, setCurrentAttendanceData] = useState<AttendanceModel | null>(null);
+  const [currentAttendanceData, setCurrentAttendanceData] = useState<CourseAttendance | null>(null);
   const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
   const [workplaceId, setWorkplaceId] = useState("");
   const [lastAddedStudentCode, setLastAddedStudentCode] = useState("");
   const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] = useState("");
-  const { t } = useTranslation();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [normalMessage, setNormalMessage] = useState<string | null>(null);
+
   BackButtonHandler(navigation);
 
   const handleBarcodeScanned = async ({ data }: { data: string }) => {
     if (!scanned) {
       setScanned(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
       if (RegexFilters.attendanceCheckData.test(data)) {
         const attendanceCheckData = data.split("-");
         const timestamp = Math.floor(Date.now() / 1000);
+
         if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
           setErrorMessage(t("timestamp-error"));
         } else {
@@ -54,29 +58,30 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             workplaceId: parseInt(attendanceCheckData[2]) ?? null,
             studentCode: attendanceCheckData[3],
           };
+
           const response = await AddAttendanceCheck(model);
 
-          if (!response) {
-            setErrorMessage(t("attendance-check-add-fail"));
+          if (typeof response === "string") {
+            setErrorMessage(t(response));
+            setTimeout(() => setErrorMessage(null), 3000);
           } else {
-            setSuccessMessage(t("attendance-check-add-success") + `${attendanceCheckData[3]}`);
+            setSuccessMessage(`${t("attendance-check-add-success")} ${attendanceCheckData[3]}`);
             setLastAddedStudentCode(attendanceCheckData[3]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 3000);
           }
         }
       } else {
-        console.log(data);
         setErrorMessage(t("attendance-check-add-fail"));
       }
+
       setTimeout(() => setScanned(false), 2000);
       setTimeout(() => setErrorMessage(null), 3000);
       setTimeout(() => setSuccessMessage(null), 3000);
     }
   };
 
-  const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
-  const fetchCurrentAttdencance = async () => {
+  const fetchCurrentAttendance = async () => {
     const status = await GetCurrentAttendance(localData.uniId);
     if (typeof status === "string") {
       setCurrentAttendancePlaceHolder(status);
@@ -85,13 +90,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
     }
   };
 
-  useEffect(() => {
-    fetchCurrentAttdencance();
-    const interval = setInterval(() => {
-      fetchCurrentAttdencance();
-    }, 120000);
-    return () => clearInterval(interval);
-  }, []);
+  const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
 
   const handleAddStudentManually = async () => {
     Keyboard.dismiss();
@@ -99,25 +98,34 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
       setErrorMessage(t("wrong-studentcode"));
       setTimeout(() => setErrorMessage(null), 3000);
     }
+
     const model: CreateAttendanceCheckModel = {
       studentCode: studentCode,
-      courseAttendanceId: currentAttendanceData!.attendanceId,
+      courseAttendanceId: Number(currentAttendanceData!.attendanceId),
       workplaceId: parseInt(workplaceId) ?? null,
     };
+
     const response = await AddAttendanceCheck(model);
 
-    if (!response) {
-      setErrorMessage(t("attendance-check-add-fail"));
+    if (typeof response === "string") {
+      setErrorMessage(t(response));
       setTimeout(() => setErrorMessage(null), 3000);
     } else {
-      setSuccessMessage(t("attendance-check-add-success") + `${studentCode}`);
+      setSuccessMessage(`${t("attendance-check-add-success")} ${studentCode}`);
       setLastAddedStudentCode(studentCode);
       setLastAddedStudentWorkplaceId(workplaceId);
       setTimeout(() => setSuccessMessage(null), 3000);
     }
+
     setStudentCode("");
     setWorkplaceId("");
   };
+
+  useEffect(() => {
+    fetchCurrentAttendance();
+    const interval = setInterval(() => fetchCurrentAttendance(), 120000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -134,6 +142,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             isDisabled={!currentAttendanceData}
           />
         </View>
+
         {!isKeyboardVisible && (
           <View style={styles.currentAttendanceContainer}>
             <View style={styles.data}>
@@ -141,21 +150,18 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 iconName="school-icon"
                 text={
                   currentAttendanceData
-                    ? `${currentAttendanceData?.courseName} (${currentAttendanceData?.courseCode})`
+                    ? `${currentAttendanceData.courseName} (${currentAttendanceData.courseCode})`
                     : t(String(currentAttendancePlaceHolder))
                 }
               />
               <DataText
                 iconName="key-icon"
-                text={
-                  currentAttendanceData
-                    ? `${currentAttendanceData?.attendanceId && ToSixDigit(currentAttendanceData?.attendanceId)}`
-                    : ""
-                }
+                text={currentAttendanceData ? ToSixDigit(Number(currentAttendanceData.attendanceId)) : ""}
               />
             </View>
           </View>
         )}
+
         {qrScanView ? (
           <>
             <View style={styles.qrScannerContainer}>
@@ -176,14 +182,14 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             <View style={styles.manualInputContainer}>
               <View style={styles.textBoxes}>
                 <TextBox
-                  iconName={"person-icon"}
-                  placeHolder={t("student-code") + "*"}
+                  iconName="person-icon"
+                  placeHolder={`${t("student-code")}*`}
                   value={studentCode}
                   onChangeText={(text) => setStudentCode(text.trim())}
                   autoCapitalize="characters"
                 />
                 <TextBox
-                  iconName={"work-icon"}
+                  iconName="work-icon"
                   placeHolder={t("workplace-id")}
                   value={workplaceId}
                   onChangeText={(text) => setWorkplaceId(text.trim())}
@@ -199,14 +205,8 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
               <View style={styles.lastAddedStudentContainer}>
                 <UnderlineText text={t("last-student")} />
                 <View style={styles.data}>
-                  <DataText
-                    iconName="person-icon"
-                    text={lastAddedStudentCode != "" ? lastAddedStudentCode : t("no-last-added-student")}
-                  />
-                  <DataText
-                    iconName="work-icon"
-                    text={lastAddedStudentWorkplaceId != "" ? lastAddedStudentWorkplaceId : ""}
-                  />
+                  <DataText iconName="person-icon" text={lastAddedStudentCode || t("no-last-added-student")} />
+                  <DataText iconName="work-icon" text={lastAddedStudentWorkplaceId || ""} />
                 </View>
               </View>
             )}
