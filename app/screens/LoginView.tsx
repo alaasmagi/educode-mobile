@@ -38,6 +38,7 @@ function LoginView({ navigation, route }: NavigationProps) {
       allowScreenCaptureAsync();
     };
   }, []);
+  
 
   const showTemporaryMessage = (type: "error" | "success", message: string) => {
     type === "error" ? setErrorMessage(message) : setSuccessMessage(message);

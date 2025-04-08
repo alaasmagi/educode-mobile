@@ -38,15 +38,10 @@ function CreateAccountView({ navigation }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   useEffect(() => {
-    async function preventCapture() {
-      await preventScreenCaptureAsync();
-    }
-    async function allowCapture() {
-      await allowScreenCaptureAsync();
-    }
-    preventCapture();
+    preventScreenCaptureAsync();
+
     return () => {
-      allowCapture();
+      allowScreenCaptureAsync();
     };
   }, []);
 
