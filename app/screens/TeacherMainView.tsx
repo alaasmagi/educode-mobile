@@ -201,15 +201,6 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 disabled={!isStudentCodeValid()}
               />
             </View>
-            {!isKeyboardVisible && (
-              <View style={styles.lastAddedStudentContainer}>
-                <UnderlineText text={t("last-student")} />
-                <View style={styles.data}>
-                  <DataText iconName="person-icon" text={lastAddedStudentCode || t("no-last-added-student")} />
-                  <DataText iconName="work-icon" text={lastAddedStudentWorkplaceId || ""} />
-                </View>
-              </View>
-            )}
           </>
         )}
       </SafeAreaView>
@@ -243,14 +234,10 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   manualInputContainer: {
-    flex: 1.5,
+    flex: 3,
     gap: 20,
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-  lastAddedStudentContainer: {
-    flex: 1.5,
-    justifyContent: "flex-end",
   },
   messageContainer: {
     flex: 2,
