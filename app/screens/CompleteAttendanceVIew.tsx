@@ -105,7 +105,9 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 
         {isOnline ? (
           <>
-            <UnderlineText text={t("verify-details")} />
+            <View style={styles.underlineText}>
+              <UnderlineText text={t("verify-details")} />
+            </View>
             {renderSharedData()}
             <View style={styles.messageContainer}>
               {successMessage && <SuccessMessage text={successMessage} />}
@@ -139,10 +141,10 @@ const styles = StyleSheet.create({
   headerContainer: { flex: 1.5, justifyContent: "center" },
   onlineToggleContainer: { flex: 1, justifyContent: "center" },
   stepDividerContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
-  qrContainer: { flex: 4, justifyContent: "flex-start", alignItems: "center" },
+  qrContainer: { flex: 3.5, justifyContent: "flex-start", alignItems: "center" },
   data: {
     alignSelf: "center",
-    width: "85%",
+    width: 270,
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,
@@ -155,6 +157,9 @@ const styles = StyleSheet.create({
     gap: 4,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  underlineText: {
+    marginBottom: 10,
   },
 });
 

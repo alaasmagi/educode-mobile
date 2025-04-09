@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import {
-  preventScreenCaptureAsync,
-  allowScreenCaptureAsync,
-} from "expo-screen-capture";
+import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 
 interface QrGeneratorProperties {
   value: string;
@@ -24,22 +21,17 @@ const styles = StyleSheet.create({
 });
 
 const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
-  /*useEffect(() => {
+  useEffect(() => {
     preventScreenCaptureAsync();
 
     return () => {
       allowScreenCaptureAsync();
     };
-  }, []);*/
+  }, []);
 
   return (
     <View style={styles.container}>
-      <QRCode
-        color="#1E1E1E"
-        size={200}
-        backgroundColor="#BCBCBD"
-        value={value}
-      />
+      <QRCode color="#1E1E1E" size={200} backgroundColor="#BCBCBD" value={value} />
     </View>
   );
 };
