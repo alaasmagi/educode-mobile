@@ -86,5 +86,24 @@
   "attendance-check-added": "Check-in completed for: ",
   "create-account-success": "User account created successfully",
 
-  "login-again": "You'll need to log in again"
+  "login-again": "You'll need to log in again",
+  
+  "attendance-not-found": "Attendance not found",
+  "no-course-attendances-found": "Course has no attendances",
+  "no-user-recent-attendances-found": "User has no recent attendances",
+  "attendance-has-no-checks": "Attendance has no attendance checks",
+  "attendance-types-not-found": "Attendance types not found",
+  "workplace-not-found": "Workplace was not found",
+  "course-not-found": "Course was not found",
+  "attendance-type-not-found": "Attendance type was not found",
+  "attendances-could-not-be-added": "One or more attendances could not be added",
+  "attendance-does-not-exist": "Attendance does not exist",
+  "attendance-check-does-not-exist": "AttendanceCheck does not exist",
+  "course-statuses-not-found": "Course statuses not found",
+  "courses-not-found": "No courses found",
+  "student-counts-not-found": "No student counts found",
+  "course-already-exists": "Course already exists",
+  "course-does-not-exist": "Course does not exist",
+  "users-not-found": "Users not found",
+  "user-not-accessible": "User not accessible"
 }
