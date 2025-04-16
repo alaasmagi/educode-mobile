@@ -48,10 +48,10 @@
   "remember-password": "Salasõna tuli meelde? Mine tagasi!",
   "one-time-key": "Ühekordne kood",
   "one-time-key-prompt": "Ühekordne kood saadeti meilile",
-  "current-attendance": "Praegune ainetund:",
-  "students-in-current-attendance": "Praegu kohalolevad üliõpilased:",
-  "set-new-password": "Määra uus salasõna:",
-  "verify-account": "Kinnita andmed:",
+  "current-attendance": "Praegune ainetund",
+  "students-in-current-attendance": "Praegu kohalolevad üliõpilased",
+  "set-new-password": "Määra uus salasõna",
+  "verify-account": "Kinnita andmed",
   "not-available": "Puudub",
   "last-student": "Viimane lisatud üliõpilane:",
   "back-to-home": "Tagasi avalehele",
@@ -64,10 +64,11 @@
   "invalid-qr": "Kehtetu QR kood",
   "still-remember-password": "Salasõna tuli meelde? Mine tagasi!",
   "name": "Nimi",
+  "course-name": "Õppeaine nimi",
+  "course-code": "Õppeaine kood",
 
   "internet-connection-error": "Viga internetiühenduses",
   "user-not-found": "Kasutajat ei leitud",
-  "current-attendance-not-found": "Käimasolev ainetund puudub",
   "invalid-credentials": "Viga kasutaja andmetes",
   "attendance-check-already-exists": "Oled sellesse ainetundi juba registreerunud",
   "invalid-uni-id-password": "Vale UNI-ID või salasõna",
@@ -82,7 +83,7 @@
 
   "password-changed": "Salasõna vahetus oli edukas",
   "attendance-check-added": "Ainetundi registreerumine oli edukas",
-  "attendance-check-added-for": "Edukalt registreeritud ainetundi:",
+  "attendance-check-added-for": "Edukalt registreeritud ainetundi",
   "create-account-success": "Kasutaja loomine oli edukas",
 
   "login-again": "Palun logi uuesti sisse",
@@ -104,5 +105,7 @@
   "course-already-exists": "Õppeaine on juba olemas",
   "course-does-not-exist": "Õppeainet ei eksisteeri",
   "users-not-found": "Kasutajaid ei leitud",
-  "user-not-accessible": "Kasutajale ei ole võimalik juurde pääseda"
+  "user-not-accessible": "Kasutajale ei ole võimalik juurde pääseda",
+  "current-attendance-not-found": "Käimasolev ainetund puudub",
+  "student-already-registered": "Üliõpilane on ainetundi juba registreeritud"
 }

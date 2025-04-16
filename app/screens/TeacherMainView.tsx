@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
@@ -21,7 +22,7 @@ import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import DataText from "../layout/components/DataText";
 
-function TeacherMainView({ navigation, route }: NavigationProps) {
+function TeacherMainView({ navigation, route }) {
   const { localData } = route.params;
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
@@ -31,6 +32,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
   const [currentAttendanceData, setCurrentAttendanceData] = useState<CourseAttendance | null>(null);
   const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
+  const [fullName, setFullName] = useState("");
   const [workplaceId, setWorkplaceId] = useState("");
   const [lastAddedStudentCode, setLastAddedStudentCode] = useState("");
   const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] = useState("");
@@ -59,14 +61,13 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             fullName: `${names[0]} ${names[1]}`,
             studentCode: attendanceCheckData[4],
           };
-
           const response = await AddAttendanceCheck(model);
 
           if (typeof response === "string") {
-            setErrorMessage(t(response));
+            setErrorMessage(t("student-already-registered"));
             setTimeout(() => setErrorMessage(null), 3000);
           } else {
-            setSuccessMessage(`${t("attendance-check-add-success")} ${attendanceCheckData[3]}`);
+            setSuccessMessage(`${t("attendance-check-added-for")}: ${names[0]} ${names[1]}`);
             setLastAddedStudentCode(attendanceCheckData[3]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 3000);
@@ -85,7 +86,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
   const fetchCurrentAttendance = async () => {
     const status = await GetCurrentAttendance(localData.uniId);
     if (typeof status === "string") {
-      setCurrentAttendancePlaceHolder(status);
+      setNormalMessage(status);
     } else {
       setCurrentAttendanceData(status);
     }
@@ -135,32 +136,31 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
-        <View style={styles.onlineToggleContainer}>
-          <ModeToggle
-            textLeft={t("scan-student")}
-            textRight={t("add-manually")}
-            onPressLeft={() => setQrScanView(true)}
-            onPressRight={() => setQrScanView(false)}
-            isDisabled={!currentAttendanceData}
-          />
-        </View>
+        {!isKeyboardVisible && (
+          <View style={styles.onlineToggleContainer}>
+            <ModeToggle
+              textLeft={t("scan-student")}
+              textRight={t("add-manually")}
+              onPressLeft={() => setQrScanView(true)}
+              onPressRight={() => setQrScanView(false)}
+              isDisabled={!currentAttendanceData}
+            />
+          </View>
+        )}
 
         {!isKeyboardVisible && (
           <View style={styles.currentAttendanceContainer}>
-            <View style={styles.data}>
-              <DataText
-                label="school-icon"
-                text={
-                  currentAttendanceData
-                    ? `${currentAttendanceData.courseName} (${currentAttendanceData.courseCode})`
-                    : t(String(currentAttendancePlaceHolder))
-                }
-              />
-              <DataText
-                label="key-icon"
-                text={currentAttendanceData ? ToSixDigit(Number(currentAttendanceData.attendanceId)) : ""}
-              />
-            </View>
+            {currentAttendanceData ? (
+              <View style={styles.data}>
+                <DataText label={t("course-name")} text={currentAttendanceData.courseName} />
+                <DataText label={t("course-code")} text={currentAttendanceData.courseCode} />
+                <DataText label={t("attendance-id")} text={ToSixDigit(Number(currentAttendanceData.attendanceId))} />
+              </View>
+            ) : (
+              <>
+                <NormalMessage text={t(String(normalMessage))} />
+              </>
+            )}
           </View>
         )}
 
@@ -172,7 +172,6 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             <View style={styles.messageContainer}>
               {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
               {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
-              {normalMessage && !isKeyboardVisible && <NormalMessage text={normalMessage} />}
             </View>
           </>
         ) : (
@@ -183,6 +182,13 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
             </View>
             <View style={styles.manualInputContainer}>
               <View style={styles.textBoxes}>
+                <TextBox
+                  iconName="person-icon"
+                  label={`${t("name")}*`}
+                  value={fullName}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
+                />
                 <TextBox
                   iconName="person-icon"
                   label={`${t("student-code")}*`}
@@ -212,46 +218,47 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 1.5,
+    flex: 0.8,
     justifyContent: "center",
   },
   onlineToggleContainer: {
-    flex: 1,
+    flex: 0.8,
     justifyContent: "center",
   },
   currentAttendanceContainer: {
-    flex: 1,
+    flex: 0.5,
     justifyContent: "center",
     marginBottom: 10,
   },
   qrScannerContainer: {
-    flex: 3,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
   },
   textBoxes: {
-    width: "100%",
+    width: wp("90%"),
     justifyContent: "center",
     alignItems: "center",
-    gap: 25,
+    gap: hp("2%"),
   },
   manualInputContainer: {
-    flex: 3,
-    gap: 20,
+    flex: 2,
+    gap: hp("3%"),
     justifyContent: "flex-end",
     alignItems: "center",
   },
   messageContainer: {
-    flex: 2,
+    flex: 1,
     justifyContent: "flex-start",
+    marginTop: hp("2%"),
   },
   data: {
     alignSelf: "center",
-    width: "90%",
+    width: wp("85%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,
-    gap: 10,
+    gap: hp("0.2%"),
     padding: 10,
   },
 });

@@ -38,6 +38,8 @@
   "password-match-message": "Both passwords need to match",
   "all-fields-required-message": "All fields need to be filled",
   "name": "Name",
+  "course-name": "Course name",
+  "course-code": "Course code",
 
   "scan-student": "Scan student",
   "add-manually": "Add manually",
@@ -50,9 +52,9 @@
   "remember-password": "Remember your password? Go back!",
   "one-time-key": "One-time key",
   "one-time-key-prompt": "One-time key was sent to",
-  "set-new-password": "Set new password:",
-  "current-attendance": "Current attendance:",
-  "students-in-current-attendance": "Students in current attendance:",
+  "set-new-password": "Set new password",
+  "current-attendance": "Current attendance",
+  "students-in-current-attendance": "Students in current attendance",
   "verify-account": "Verify data:",
   "not-available": "None",
   "last-student": "Last added student:",
@@ -83,8 +85,8 @@
   "camera-permission-denied-message": "You need to allow camera access to use EduCode",
 
   "password-changed": "Password changed successfully",
-  "attendance-added": "Check-in completed successfully",
-  "attendance-check-added": "Check-in completed for: ",
+  "attendance-check-added": "Check-in completed successfully",
+  "attendance-check-added-for": "Check-in completed for",
   "create-account-success": "User account created successfully",
 
   "login-again": "You'll need to log in again",
@@ -106,5 +108,7 @@
   "course-already-exists": "Course already exists",
   "course-does-not-exist": "Course does not exist",
   "users-not-found": "Users not found",
-  "user-not-accessible": "User not accessible"
+  "user-not-accessible": "User not accessible",
+  "no-current-attendance-data": "No current attendance",
+  "student-already-registered": "Student already exists in this attendance"
 }
