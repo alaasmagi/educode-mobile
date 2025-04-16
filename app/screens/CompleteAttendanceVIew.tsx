@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import NavigationProps from "../../types";
 import GlobalStyles from "../layout/styles/GlobalStyles";
@@ -10,7 +11,6 @@ import NormalLink from "../layout/components/NormalLink";
 import ModeToggle from "../layout/components/ModeToggle";
 import StepDivider from "../layout/components/StepDivider";
 import QrGenerator from "../layout/components/QrGenerator";
-import DataText from "../layout/components/DataText";
 import SuccessMessage from "../layout/components/SuccessMessage";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import UnderlineText from "../layout/components/UnderlineText";
@@ -19,6 +19,7 @@ import { GenerateQrString } from "../businesslogic/services/QrGenLogic";
 import { AddAttendanceCheck } from "../businesslogic/services/CourseAttendanceData";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
+import IconDataText from "../layout/components/DataText";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   const { localData, attendanceId, workplaceId = null, stepNr: initialStep } = route.params;
@@ -30,18 +31,20 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const stepNr = initialStep + 1;
-  const [qrValue, setQrValue] = useState(() => GenerateQrString(localData.studentCode, attendanceId, workplaceId));
+  const [qrValue, setQrValue] = useState(() =>
+    GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId)
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
+      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
     }, 60000);
 
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
   const refreshQrCode = () => {
-    setQrValue(GenerateQrString(localData.studentCode, attendanceId, workplaceId));
+    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
   };
 
   const navigateBack = useCallback(() => {
@@ -56,6 +59,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   const handleAttendanceCheckAdd = async () => {
     const attendanceCheck: CreateAttendanceCheckModel = {
       studentCode: localData.studentCode,
+      fullName: localData.fullName,
       courseAttendanceId: attendanceId,
       workplaceId: parseInt(workplaceId) ?? null,
     };
@@ -76,9 +80,9 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 
   const renderSharedData = () => (
     <View style={styles.data}>
-      <DataText iconName="person-icon" text={isOnline ? localData.fullName : localData.studentCode} />
-      <DataText iconName="key-icon" text={attendanceId} />
-      <DataText iconName="work-icon" text={workplaceId || t("no-workplace")} />
+      <IconDataText label={t("name")} text={localData.fullName} />
+      <IconDataText label={t("attendance-id")} text={attendanceId} />
+      <IconDataText label={t("workplace-id")} text={workplaceId || t("not-available")} />
     </View>
   );
 
@@ -88,7 +92,6 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
-
         <View style={styles.onlineToggleContainer}>
           <ModeToggle
             textLeft={t("offline-mode")}
@@ -98,20 +101,20 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             isDisabled={localData.offlineOnly}
           />
         </View>
-
         <View style={styles.stepDividerContainer}>
           <StepDivider label={t(isOnline ? "step-end-attendance" : "step-show-qr")} stepNumber={stepNr} />
         </View>
-
         {isOnline ? (
           <>
-            <View style={styles.underlineText}>
-              <UnderlineText text={t("verify-details")} />
-            </View>
-            {renderSharedData()}
-            <View style={styles.messageContainer}>
-              {successMessage && <SuccessMessage text={successMessage} />}
-              {errorMessage && <ErrorMessage text={errorMessage} />}
+            <View style={styles.qrContainer}>
+              <View style={styles.underlineText}>
+                <UnderlineText text={t("verify-details")} />
+              </View>
+              <View style={styles.dataContainer}>{renderSharedData()}</View>
+              <View style={styles.messageContainer}>
+                {successMessage && <SuccessMessage text={successMessage} />}
+                {errorMessage && <ErrorMessage text={errorMessage} />}
+              </View>
             </View>
             <View style={styles.lowNavButtonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
@@ -138,28 +141,50 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 }
 
 const styles = StyleSheet.create({
-  headerContainer: { flex: 1.5, justifyContent: "center" },
-  onlineToggleContainer: { flex: 1, justifyContent: "center" },
-  stepDividerContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
-  qrContainer: { flex: 3.5, justifyContent: "flex-start", alignItems: "center" },
+  headerContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  onlineToggleContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  stepDividerContainer: {
+    flex: 0.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  qrContainer: {
+    flex: 3,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  dataContainer: {
+    flex: 1,
+  },
   data: {
     alignSelf: "center",
-    width: 270,
+    width: wp("75%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,
-    gap: 10,
+    gap: hp("0.2%"),
     padding: 10,
   },
-  messageContainer: { flex: 1, alignItems: "center", justifyContent: "flex-end" },
+  messageContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   lowNavButtonContainer: {
-    flex: 1.5,
+    flex: 1,
     gap: 4,
     justifyContent: "flex-end",
     alignItems: "center",
   },
   underlineText: {
-    marginBottom: 10,
+    marginTop: hp("5%"),
+    marginBottom: hp("0.5%"),
   },
 });
 

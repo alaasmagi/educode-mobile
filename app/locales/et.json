@@ -15,7 +15,7 @@
   "online-mode": "Online režiim",
   "step-scan-board": "Skänni tahvlil olev QR kood",
   "step-scan-workplace": "Skänni töökoha QR kood",
-  "step-show-qr": "Näita õpetajale QR koodi",
+  "step-show-qr": "Näita õppejõule QR koodi",
   "step-end-attendance": "Vii ainetundi registreerumine lõpule",
   "add-workplace": "Lisa töökoht",
   "something-wrong-back": "Midagi valesti? Mine tagasi!",
@@ -63,6 +63,7 @@
   "reload": "Proovi uuesti",
   "invalid-qr": "Kehtetu QR kood",
   "still-remember-password": "Salasõna tuli meelde? Mine tagasi!",
+  "name": "Nimi",
 
   "internet-connection-error": "Viga internetiühenduses",
   "user-not-found": "Kasutajat ei leitud",

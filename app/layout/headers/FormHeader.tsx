@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import LanguageSwitch from "../components/LanguageSwitch";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const FormHeader = () => {
   return (
@@ -13,13 +14,13 @@ const FormHeader = () => {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 298,
-    height: 60,
-    alignSelf: "center",
+    width: wp("70%"),
+    height: hp("7%"),
   },
   structure: {
     flexDirection: "row",
     justifyContent: "space-between",
+    width: wp("90%"),
   },
 });
 

@@ -1,9 +1,8 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import LanguageSwitch from "../components/LanguageSwitch";
-import Storage from "../../businesslogic/data/LocalDataAccess";
 import SettingsButton from "../components/SettingsButton";
-import User from "../../models/OnlineUserModel";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 function NormalHeader({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
@@ -20,17 +19,18 @@ function NormalHeader({ navigation, route }: NavigationProps) {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 239,
-    height: 48,
+    width: wp("55%"),
+    height: hp("6%"),
     alignSelf: "center",
   },
   structure: {
     flexDirection: "row",
     justifyContent: "space-between",
+    width: wp("90%"),
   },
   buttonContainer: {
     flexDirection: "row",
-    gap: 5,
+    gap: wp("1.5%"),
   },
 });
 

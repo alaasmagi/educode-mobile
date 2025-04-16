@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface NormalButtonProperties {
   text: string;
@@ -15,8 +16,8 @@ const styles = StyleSheet.create({
     borderColor: "#4492EA",
     justifyContent: "center",
     alignItems: "center",
-    width: "90%",
-    padding: 15,
+    width: wp("85%"),
+    padding: wp("3.5%"),
     opacity: 1,
   },
   structureDisabled: {
@@ -26,22 +27,18 @@ const styles = StyleSheet.create({
     borderColor: "#4492EA",
     justifyContent: "center",
     alignItems: "center",
-    width: "90%",
-    padding: 15,
+    width: wp("85%"),
+    padding: wp("3.5%"),
     opacity: 0.5,
   },
   content: {
     color: "#BCBCBD",
-    fontSize: 24,
+    fontSize: wp("6%"),
     fontWeight: "bold",
   },
 });
 
-const NormalButton: React.FC<NormalButtonProperties> = ({
-  text,
-  onPress,
-  disabled,
-}) => {
+const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress, disabled }) => {
   return (
     <TouchableOpacity
       style={disabled ? styles.structureDisabled : styles.structure}

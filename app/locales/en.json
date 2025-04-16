@@ -37,6 +37,7 @@
   "password-length-message": "Password length must be at least 8 characters",
   "password-match-message": "Both passwords need to match",
   "all-fields-required-message": "All fields need to be filled",
+  "name": "Name",
 
   "scan-student": "Scan student",
   "add-manually": "Add manually",
@@ -87,7 +88,7 @@
   "create-account-success": "User account created successfully",
 
   "login-again": "You'll need to log in again",
-  
+
   "attendance-not-found": "Attendance not found",
   "no-course-attendances-found": "Course has no attendances",
   "no-user-recent-attendances-found": "User has no recent attendances",

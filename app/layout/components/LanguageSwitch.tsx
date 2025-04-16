@@ -3,6 +3,7 @@ import { TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Icons } from "./Icons";
 import i18next from "../../businesslogic/services/i18next";
 import { SaveCurrentLanguage } from "../../businesslogic/services/UserDataOffline";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const LanguageSwitch = () => {
   const currentLang = i18next.language;
@@ -26,13 +27,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 2,
     borderColor: "#4492EA",
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingVertical: hp("0.5%"),
+    paddingHorizontal: wp("3%"),
     justifyContent: "center",
   },
   image: {
-    height: 20,
-    width: 30,
+    height: hp("3%"),
+    width: wp("9%"),
   },
 });
 

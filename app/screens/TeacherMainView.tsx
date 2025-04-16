@@ -8,7 +8,6 @@ import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import ModeToggle from "../layout/components/ModeToggle";
 import QrScanner from "../layout/components/QrScanner";
-import DataText from "../layout/components/DataText";
 import TextBox from "../layout/components/TextBox";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
@@ -20,7 +19,7 @@ import { CourseAttendance } from "../models/CourseAttendance";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
-import UnderlineText from "../layout/components/UnderlineText";
+import DataText from "../layout/components/DataText";
 
 function TeacherMainView({ navigation, route }: NavigationProps) {
   const { localData } = route.params;
@@ -49,6 +48,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
       if (RegexFilters.attendanceCheckData.test(data)) {
         const attendanceCheckData = data.split("-");
         const timestamp = Math.floor(Date.now() / 1000);
+        const names = attendanceCheckData[3].split("+");
 
         if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
           setErrorMessage(t("timestamp-error"));
@@ -56,7 +56,8 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
           const model: CreateAttendanceCheckModel = {
             courseAttendanceId: parseInt(attendanceCheckData[1]),
             workplaceId: parseInt(attendanceCheckData[2]) ?? null,
-            studentCode: attendanceCheckData[3],
+            fullName: `${names[0]} ${names[1]}`,
+            studentCode: attendanceCheckData[4],
           };
 
           const response = await AddAttendanceCheck(model);
@@ -101,6 +102,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
 
     const model: CreateAttendanceCheckModel = {
       studentCode: studentCode,
+      fullName: "UJDFJF",
       courseAttendanceId: Number(currentAttendanceData!.attendanceId),
       workplaceId: parseInt(workplaceId) ?? null,
     };
@@ -147,7 +149,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
           <View style={styles.currentAttendanceContainer}>
             <View style={styles.data}>
               <DataText
-                iconName="school-icon"
+                label="school-icon"
                 text={
                   currentAttendanceData
                     ? `${currentAttendanceData.courseName} (${currentAttendanceData.courseCode})`
@@ -155,7 +157,7 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
                 }
               />
               <DataText
-                iconName="key-icon"
+                label="key-icon"
                 text={currentAttendanceData ? ToSixDigit(Number(currentAttendanceData.attendanceId)) : ""}
               />
             </View>
@@ -183,14 +185,14 @@ function TeacherMainView({ navigation, route }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={`${t("student-code")}*`}
+                  label={`${t("student-code")}*`}
                   value={studentCode}
                   onChangeText={(text) => setStudentCode(text.trim())}
                   autoCapitalize="characters"
                 />
                 <TextBox
                   iconName="work-icon"
-                  placeHolder={t("workplace-id")}
+                  label={t("workplace-id")}
                   value={workplaceId}
                   onChangeText={(text) => setWorkplaceId(text.trim())}
                 />

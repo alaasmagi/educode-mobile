@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +24,7 @@ import StepDivider from "../layout/components/StepDivider";
 import Checkbox from "../layout/components/Checkbox";
 import NormalLink from "../layout/components/NormalLink";
 import ErrorMessage from "../layout/components/ErrorMessage";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
@@ -98,7 +108,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     }
   };
 
-  const handleWorkplaceSubmit = () => {
+  const handleDataSubmit = () => {
     navigation.navigate("CompleteAttendanceView", {
       localData,
       attendanceId,
@@ -113,74 +123,58 @@ function StudentMainView({ navigation, route }: NavigationProps) {
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
-
-        <View style={styles.mainContainer}>
-          <View style={styles.stepDividerContainer}>
-            <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
-          </View>
-
-          {!isKeyboardVisible && (
-            <View style={styles.qrContainer}>
-              <QrScanner onQrScanned={handleBarcodeScanned} />
-            </View>
-          )}
-
-          {stepNr === 1 ? (
-            <View style={styles.attendanceHandlerContainer}>
-              <View style={styles.alternativeMethodContainer}>
-                <SeparatorLine text={t("or-enter-id-manually")} />
-                <TextBox
-                  iconName="key-icon"
-                  placeHolder={t("attendance-id")}
-                  value={scannedAttendanceData}
-                  onChangeText={(text) => setScannedAttendanceData(text.trim())}
-                />
-              </View>
-
-              <View style={styles.checkboxContainer}>
-                {errorMessage ? (
-                  <ErrorMessage text={errorMessage} />
-                ) : (
-                  <Checkbox label={t("add-workplace")} onChange={() => setScanForWorkplace((prev) => !prev)} />
-                )}
-              </View>
-
-              <View style={styles.lowNavButtonContainer}>
-                <NormalButton
-                  text={t("continue")}
-                  onPress={handleNextStep}
-                  disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
-                />
-              </View>
-            </View>
-          ) : (
-            <View style={styles.workplaceHandlerContainer}>
-              <View style={styles.alternativeMethodContainer}>
-                <SeparatorLine text={t("or-enter-id-manually")} />
-                <TextBox
-                  iconName="work-icon"
-                  placeHolder={t("workplace-id")}
-                  value={workplaceId}
-                  onChangeText={(text) => setWorkplaceId(text.trim())}
-                />
-              </View>
-
-              <View style={styles.checkboxContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
-
-              <View style={styles.linkContainer}>
-                <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
-              </View>
-
-              <View style={styles.lowNavButtonContainer}>
-                <NormalButton
-                  text={t("continue")}
-                  onPress={handleWorkplaceSubmit}
-                  disabled={!RegexFilters.defaultId.test(workplaceId)}
-                />
-              </View>
-            </View>
-          )}
+        <View style={styles.stepDividerContainer}>
+          <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
         </View>
+        {!isKeyboardVisible && (
+          <View style={styles.qrContainer}>
+            <QrScanner onQrScanned={handleBarcodeScanned} />
+          </View>
+        )}
+        {stepNr === 1 ? (
+          <View style={styles.manualInputContainer}>
+            <SeparatorLine text={t("or-enter-id-manually")} />
+            <TextBox
+              iconName="key-icon"
+              label={t("attendance-id")}
+              value={scannedAttendanceData}
+              onChangeText={(text) => setScannedAttendanceData(text.trim())}
+            />
+            <View style={styles.additionalFieldContainer}>
+              {errorMessage ? (
+                <ErrorMessage text={errorMessage} />
+              ) : (
+                <Checkbox
+                  label={t("add-workplace")}
+                  checked={scanForWorkplace}
+                  onChange={() => setScanForWorkplace((prev) => !prev)}
+                />
+              )}
+            </View>
+            <View style={styles.lowNavButtonContainer}>
+              <NormalButton
+                text={t("continue")}
+                onPress={handleNextStep}
+                disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
+              />
+            </View>
+          </View>
+        ) : (
+          <View style={styles.manualInputContainer}>
+            <SeparatorLine text={t("or-enter-id-manually")} />
+            <TextBox
+              iconName="work-icon"
+              label={t("workplace-id")}
+              value={workplaceId}
+              onChangeText={(text) => setWorkplaceId(text.trim())}
+            />
+            <View style={styles.additionalFieldContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
+            <View style={styles.lowNavButtonContainer}>
+              <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
+              <NormalButton text={t("continue")} onPress={handleDataSubmit} />
+            </View>
+          </View>
+        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -188,44 +182,34 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 3,
+    flex: 1,
     justifyContent: "center",
   },
-  mainContainer: {
-    flex: 14,
-  },
   stepDividerContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   qrContainer: {
-    flex: 5,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
   },
-  alternativeMethodContainer: {
+  manualInputContainer: {
     flex: 2,
-    gap: 25,
+    gap: hp("2%"),
     alignItems: "center",
+    justifyContent: "center",
   },
-  attendanceHandlerContainer: {
-    flex: 5,
-  },
-  workplaceHandlerContainer: {
-    flex: 5,
-  },
-  checkboxContainer: {
-    flex: 1.5,
+  additionalFieldContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
   lowNavButtonContainer: {
-    flex: 2,
+    gap: hp("0.5%"),
     alignItems: "center",
   },
   linkContainer: {
-    paddingBottom: 4,
+    paddingBottom: wp("1%"),
     alignItems: "center",
     justifyContent: "flex-end",
   },

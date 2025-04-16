@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface ModeToggleProperties {
   textLeft: string;
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: hp("2%"),
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#BCBCBD",
-    fontSize: 24,
+    fontSize: wp("6%"),
     fontWeight: "bold",
   },
 });

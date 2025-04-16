@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface CheckboxProps {
   label: string;
@@ -7,11 +8,7 @@ interface CheckboxProps {
   onChange?: (checked: boolean) => void;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({
-  label,
-  checked = false,
-  onChange,
-}) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   const toggleCheckbox = () => {
@@ -23,9 +20,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
   return (
     <TouchableOpacity style={styles.container} onPress={toggleCheckbox}>
-      <View style={[styles.checkbox]}>
-        {isChecked && <View style={styles.innerCircle} />}
-      </View>
+      <View style={[styles.checkbox]}>{isChecked && <View style={styles.innerCircle} />}</View>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -35,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: wp("3%"),
   },
   checkbox: {
     width: 30,
@@ -54,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#4492EA",
   },
   label: {
-    fontSize: 18,
+    fontSize: wp("4.5%"),
     color: "#BCBCBD",
   },
 });

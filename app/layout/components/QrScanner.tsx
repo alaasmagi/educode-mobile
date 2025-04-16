@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import { CameraView } from "expo-camera";
 import { Icons } from "./Icons";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface QrScannerProperties {
   onQrScanned: (event: { data: string }) => void;
@@ -9,48 +10,45 @@ interface QrScannerProperties {
 
 const styles = StyleSheet.create({
   camera: {
-    height: 250,
-    width: 250,
-    borderRadius: 20,
-    borderWidth: 10,
+    height: wp("70%"),
+    width: wp("70%"),
+    aspectRatio: 1,
+    borderRadius: wp("5%"),
+    borderWidth: wp("3%"),
     borderColor: "#525252",
   },
   text: {
     color: "#BCBCBD",
-    fontSize: 23,
+    fontSize: wp("6%"),
     fontWeight: "bold",
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    paddingHorizontal: wp("1%"),
+    paddingVertical: hp("0.5%"),
   },
-  image: {
-    width: 40,
-    height: 40,
+  icon: {
+    width: wp("9.5%"),
+    height: wp("9.5%"),
     resizeMode: "contain",
   },
   container: {
-    paddingLeft: "10%",
+    paddingLeft: wp("8%"),
     flexDirection: "row",
-    gap: 5,
+    gap: wp("1%"),
   },
   sideContainer: {
     justifyContent: "center",
-    gap: 25,
+    gap: hp("3%"),
   },
   buttonsContainer: {
-    gap: 10,
+    gap: hp("1%"),
   },
 });
 const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned }) => {
   const [zoom, setZoom] = useState<number>(0.25);
   return (
     <View style={styles.container}>
-      <CameraView
-        zoom={zoom}
-        style={styles.camera}
-        onBarcodeScanned={onQrScanned}
-      />
+      <CameraView zoom={zoom} style={styles.camera} onBarcodeScanned={onQrScanned} />
       <View style={styles.sideContainer}>
-        <Image style={styles.image} source={Icons["zoom-icon"]} />
+        <Image style={styles.icon} source={Icons["zoom-icon"]} />
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={() => setZoom(0.25)}>

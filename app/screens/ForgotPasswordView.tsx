@@ -14,6 +14,7 @@ import UnderlineText from "../layout/components/UnderlineText";
 import NavigationProps from "../../types";
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import { RequestOTP, VerifyOTP, ChangeUserPassword } from "../businesslogic/services/UserDataOnline";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import ChangePasswordModel from "../models/ChangePasswordModel";
 import VerifyOTPModel from "../models/VerifyOTPModel";
@@ -112,7 +113,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder="Uni-ID"
+                  label="Uni-ID"
                   onChangeText={(text) => setUniId(text.trim())}
                   value={uniId}
                   autoCapitalize="none"
@@ -145,7 +146,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="pincode-icon"
-                  placeHolder={`${t("one-time-key")}*`}
+                  label={`${t("one-time-key")}*`}
                   onChangeText={(text) => setEmailCode(text.trim())}
                   value={emailCode}
                 />
@@ -170,18 +171,18 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         {stepNr === 3 && (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText text={t("set-new-password")} />
+              {!isKeyboardVisible && <UnderlineText text={t("set-new-password")} />}
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="lock-icon"
-                  placeHolder={t("password")}
+                  label={t("password")}
                   isPassword
                   onChangeText={(text) => setPassword(text.trim())}
                   value={password}
                 />
                 <TextBox
                   iconName="lock-icon"
-                  placeHolder={t("repeat-password")}
+                  label={t("repeat-password")}
                   isPassword
                   onChangeText={(text) => setPasswordAgain(text.trim())}
                   value={passwordAgain}
@@ -212,24 +213,25 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 2.2,
-    gap: 70,
+    flex: 1,
     justifyContent: "flex-end",
+    gap: hp("4%"),
   },
   textBoxContainer: {
-    flex: 2,
+    flex: 1.5,
+    gap: hp("2%"),
     justifyContent: "center",
-    gap: 20,
   },
   textBoxes: {
-    gap: 25,
+    gap: hp("1%"),
     alignItems: "center",
   },
   errorContainer: {
-    marginTop: 10,
+    marginTop: hp("2%"),
   },
   buttonContainer: {
-    flex: 1.1,
+    flex: 0.5,
+    gap: hp("1%"),
     justifyContent: "center",
     alignItems: "center",
   },

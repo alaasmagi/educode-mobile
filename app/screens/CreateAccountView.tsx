@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import NavigationProps from "../../types";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import TextBox from "../layout/components/TextBox";
@@ -127,13 +128,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("first-name")}
+                  label={t("first-name")}
                   value={firstName}
                   onChangeText={(text) => setFirstName(text.trim())}
                 />
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("last-name")}
+                  label={t("last-name")}
                   value={lastName}
                   onChangeText={(text) => setLastName(text.trim())}
                 />
@@ -153,14 +154,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  placeHolder="Uni-ID"
+                  label="Uni-ID"
                   autoCapitalize="none"
                   value={uniId}
                   onChangeText={(text) => setUniId(text.trim())}
                 />
                 <TextBox
                   iconName="person-icon"
-                  placeHolder={t("student-code")}
+                  label={t("student-code")}
                   autoCapitalize="characters"
                   value={studentCode}
                   onChangeText={(text) => setStudentCode(text.trim())}
@@ -183,7 +184,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="pincode-icon"
-                  placeHolder={t("one-time-key")}
+                  label={t("one-time-key")}
                   value={emailCode}
                   onChangeText={(text) => setEmailCode(text.trim())}
                 />
@@ -207,14 +208,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="lock-icon"
-                  placeHolder={t("password")}
+                  label={t("password")}
                   isPassword
                   value={password}
                   onChangeText={(text) => setPassword(text.trim())}
                 />
                 <TextBox
                   iconName="lock-icon"
-                  placeHolder={t("repeat-password")}
+                  label={t("repeat-password")}
                   isPassword
                   value={passwordAgain}
                   onChangeText={(text) => setPasswordAgain(text.trim())}
@@ -235,9 +236,9 @@ function CreateAccountView({ navigation }: NavigationProps) {
             <View style={styles.textBoxContainer}>
               <UnderlineText text={t("verify-details")} />
               <View style={styles.data}>
-                <DataText iconName="person-icon" text={`${firstName} ${lastName}`} />
-                <DataText iconName="person-icon" text={uniId} />
-                <DataText iconName="person-icon" text={studentCode} />
+                <DataText label={t("name")} text={`${firstName} ${lastName}`} />
+                <DataText label={"Uni-ID"} text={uniId} />
+                <DataText label={t("student-code")} text={studentCode} />
               </View>
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
@@ -266,34 +267,34 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 2.2,
-    gap: 70,
+    flex: 1,
     justifyContent: "flex-end",
+    gap: hp("4%"),
   },
   textBoxContainer: {
-    flex: 2,
-    gap: 2,
+    flex: 1.5,
+    gap: hp("2%"),
     justifyContent: "center",
   },
   data: {
     alignSelf: "center",
-    width: "80%",
+    width: wp("80%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,
-    gap: 25,
+    gap: hp("0.2%"),
     padding: 10,
   },
   textBoxes: {
-    gap: 25,
+    gap: hp("1%"),
     alignItems: "center",
   },
   errorContainer: {
-    marginTop: 10,
+    marginTop: hp("2%"),
   },
   buttonContainer: {
-    flex: 1.1,
-    gap: 3,
+    flex: 1,
+    gap: hp("1%"),
     justifyContent: "center",
     alignItems: "center",
   },

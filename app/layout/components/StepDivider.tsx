@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface StepDividerProps {
   stepNumber: number;
@@ -21,12 +22,14 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    justifyContent: "center",
+    width: wp("90%"),
+    gap: wp("3%"),
   },
   circle: {
-    width: 50,
-    height: 35,
-    borderRadius: 20,
+    width: wp("10%"),
+    height: hp("3.5%"),
+    borderRadius: wp("3%"),
     backgroundColor: "#2B2B2B",
     justifyContent: "center",
     alignItems: "center",
@@ -35,10 +38,10 @@ const styles = StyleSheet.create({
   },
   number: {
     color: "#BCBCBD",
-    fontSize: 18,
+    fontSize: wp("4.5%"),
   },
   text: {
-    fontSize: 18,
+    fontSize: wp("4.5%"),
     color: "#BCBCBD",
   },
 });

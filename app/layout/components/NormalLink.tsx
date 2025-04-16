@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface NormalLinkProperties {
   text: string;
@@ -9,7 +10,7 @@ interface NormalLinkProperties {
 const styles = StyleSheet.create({
   content: {
     color: "#BCBCBD",
-    fontSize: 20,
+    fontSize: wp("4.5%"),
     textDecorationLine: "underline",
   },
 });

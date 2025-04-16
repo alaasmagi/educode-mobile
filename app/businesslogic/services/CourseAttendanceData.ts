@@ -10,6 +10,7 @@ export async function AddAttendanceCheck(model: CreateAttendanceCheckModel): Pro
     `${Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL}/Attendance/AttendanceCheck/Add`,
     {
       studentCode: model.studentCode,
+      fullName: model.fullName,
       courseAttendanceId: model.courseAttendanceId,
       workplaceId: model.workplaceId,
       creator: "educode-mobile",
@@ -26,7 +27,7 @@ export async function AddAttendanceCheck(model: CreateAttendanceCheckModel): Pro
   if (response.status == 200) {
     return true;
   }
-
+  console.log(response);
   return response.data.error ?? "internet-connection-error";
 }
 
