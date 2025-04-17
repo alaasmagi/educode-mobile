@@ -110,5 +110,8 @@
   "users-not-found": "Users not found",
   "user-not-accessible": "User not accessible",
   "no-current-attendance-data": "No current attendance",
-  "student-already-registered": "Student already exists in this attendance"
+  "student-already-registered": "Student already exists in this attendance",
+  "for-example-abbr": "eg.",
+  "format": "format:",
+  "confirmation": "Confirmation"
 }

@@ -54,7 +54,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const isNameFormValid = () => firstName !== "" && lastName !== "";
   const isStudentIDFormValid = () =>
-    RegexFilters.studentUniId.test(uniId) && RegexFilters.studentCode.test(studentCode);
+    uniId !== "" && RegexFilters.studentCode.test(studentCode);
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
 
   useEffect(() => {
@@ -156,12 +156,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   iconName="person-icon"
                   label="Uni-ID"
                   autoCapitalize="none"
+                  placeHolder={t("for-example-abbr") + " abcdef"}
                   value={uniId}
                   onChangeText={(text) => setUniId(text.trim())}
                 />
                 <TextBox
                   iconName="person-icon"
                   label={t("student-code")}
+                  placeHolder={t("for-example-abbr") + " 123456ABCD"}
                   autoCapitalize="characters"
                   value={studentCode}
                   onChangeText={(text) => setStudentCode(text.trim())}
@@ -186,18 +188,19 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   iconName="pincode-icon"
                   label={t("one-time-key")}
                   value={emailCode}
+                  placeHolder={t("for-example-abbr") + " 123456"}
                   onChangeText={(text) => setEmailCode(text.trim())}
                 />
               </View>
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
             <View style={styles.buttonContainer}>
+            {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
               <NormalButton
                 text={t("continue")}
                 onPress={handleOTPVerification}
                 disabled={!RegexFilters.defaultId.test(emailCode)}
               />
-              {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
             </View>
           </>
         );

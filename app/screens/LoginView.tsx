@@ -98,7 +98,7 @@ function LoginView({ navigation, route }: NavigationProps) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <ScrollView keyboardShouldPersistTaps="never" contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.headerContainer}>
             <FormHeader />
             {!isKeyboardVisible && <Greeting text={t("hello-again")} />}

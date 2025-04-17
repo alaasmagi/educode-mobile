@@ -137,6 +137,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
             <TextBox
               iconName="key-icon"
               label={t("attendance-id")}
+              placeHolder={t("for-example-abbr") + " 123456-123456"}
               value={scannedAttendanceData}
               onChangeText={(text) => setScannedAttendanceData(text.trim())}
             />
@@ -165,6 +166,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
             <TextBox
               iconName="work-icon"
               label={t("workplace-id")}
+              placeHolder={t("for-example-abbr") + " 123456"}
               value={workplaceId}
               onChangeText={(text) => setWorkplaceId(text.trim())}
             />

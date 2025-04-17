@@ -45,7 +45,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     };
   }, []);
 
-  const isStudentIDFormValid = () => !!uniId;
+  const isStudentIDFormValid = () => uniId != "";
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         {stepNr === 1 && (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText text={t("verify-account")} />
+              <UnderlineText text={t("verify-account") +  ": "} />
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"

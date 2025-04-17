@@ -16,7 +16,10 @@ import { useCameraPermissions } from "expo-camera";
 import * as SplashScreen from "expo-splash-screen";
 import { useTranslation } from "react-i18next";
 import i18next from "../businesslogic/services/i18next";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalButton from "../layout/components/NormalButton";
@@ -28,8 +31,16 @@ import NavigationProps from "../../types";
 import FormHeader from "../layout/headers/FormHeader";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import LocalUserData from "../models/LocalUserDataModel";
-import { GetCurrentLanguage, GetOfflineUserData, SaveOfflineUserData } from "../businesslogic/services/UserDataOffline";
-import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/services/UserDataOnline";
+import {
+  DeleteOfflineUserData,
+  GetCurrentLanguage,
+  GetOfflineUserData,
+  SaveOfflineUserData,
+} from "../businesslogic/services/UserDataOffline";
+import {
+  FetchAndSaveUserDataByUniId,
+  TestConnection,
+} from "../businesslogic/services/UserDataOnline";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import NormalLink from "../layout/components/NormalLink";
@@ -43,6 +54,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const isKeyboardVisible = KeyboardVisibilityHandler();
+  const [isConnection, setIsConnection] = useState<boolean>(false);
 
   BackButtonHandler(navigation);
 
@@ -56,43 +68,47 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         return true;
       };
 
-      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
       return () => backHandler.remove();
     }, [])
   );
 
   useEffect(() => {
     const init = async () => {
-      await SplashScreen.preventAutoHideAsync();
-
       const connection = await TestConnection();
-      if (!connection) {
-        return Alert.alert(t("connection-error"), t("connection-error-prompt"), [
-          { text: t("exit-app"), onPress: () => BackHandler.exitApp(), style: "cancel" },
-          { text: t("reload"), onPress: init },
-        ]);
-      }
-
       const lang = await GetCurrentLanguage();
       if (lang) i18next.changeLanguage(lang);
+      if (!connection) {
+        setNormalMessage(t("login-again"));
+        setTimeout(() => setNormalMessage(null), 3000);
+        setIsConnection(false);
+      } else {
+        setNormalMessage(null);
+        setIsConnection(true);
+      }
 
       let localData = await GetOfflineUserData();
-
-      if (localData?.offlineOnly) {
+      if (localData?.offlineOnly === true) {
         navigation.navigate("StudentMainView", { localData });
-      } else if (localData?.uniId) {
-        const loginSuccess = await FetchAndSaveUserDataByUniId(localData.uniId);
-        if (loginSuccess) {
+      } else if (localData?.offlineOnly === false) {
+        const loginSuccess = await FetchAndSaveUserDataByUniId(
+          String(localData?.uniId)
+        );
+        if (typeof(loginSuccess) !== "string") {
           localData = await GetOfflineUserData();
-          const target = localData?.userType === "Teacher" ? "TeacherMainView" : "StudentMainView";
+          const target =
+            localData?.userType === "Teacher"
+              ? "TeacherMainView"
+              : "StudentMainView";
           navigation.navigate(target, { localData });
         } else {
           setNormalMessage(t("login-again"));
           setTimeout(() => setNormalMessage(null), 3000);
         }
       }
-
-      await SplashScreen.hideAsync();
     };
 
     init();
@@ -104,10 +120,13 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     if (!permission?.granted) {
       const { granted } = await requestPermission();
       if (!granted) {
-        return Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
+        return Alert.alert(
+          t("camera-permission-denied"),
+          t("camera-permission-denied-message")
+        );
       }
     }
-
+    await DeleteOfflineUserData();
     const localData: LocalUserData = {
       userType: "Student",
       studentCode: String(studentCode),
@@ -126,7 +145,10 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <ScrollView keyboardShouldPersistTaps="never" contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView
+          keyboardShouldPersistTaps="never"
+          contentContainerStyle={styles.scrollViewContent}
+        >
           <View style={styles.headerContainer}>
             <FormHeader />
           </View>
@@ -134,10 +156,15 @@ function InitialSelectionView({ navigation }: NavigationProps) {
             <View style={styles.mainContainer}>
               {!isKeyboardVisible && (
                 <View style={styles.mainLoginContainer}>
-                  <NormalButton text={t("log-in")} onPress={() => navigation.navigate("LoginView")} />
+                  <NormalButton
+                    text={t("log-in")}
+                    onPress={() => navigation.navigate("LoginView")}
+                    disabled={!isConnection}
+                  />
                   <NormalButton
                     text={t("register-as-student")}
                     onPress={() => navigation.navigate("CreateAccountView")}
+                    disabled={!isConnection}
                   />
                   {normalMessage && <NormalMessage text={normalMessage} />}
                 </View>
@@ -147,6 +174,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                 <TextBox
                   iconName="person-icon"
                   label={t("student-code")}
+                  placeHolder={t("for-example-abbr") + " 123456ABCD"}
                   onChangeText={(text) => setStudentCode(text.trim())}
                   value={studentCode ?? ""}
                   autoCapitalize="characters"
@@ -177,7 +205,10 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                   autoCapitalize="sentences"
                 />
                 <View style={styles.buttonContainer}>
-                  <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
+                  <NormalLink
+                    text={t("something-wrong-back")}
+                    onPress={() => setStepNr(1)}
+                  />
                   <NormalButton
                     text={t("continue")}
                     onPress={handleOfflineLogin}
@@ -200,6 +231,9 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 3,
+  },
+  messageContainer: {
+    flex: 0.5
   },
   headerContainer: {
     flex: 1,

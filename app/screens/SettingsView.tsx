@@ -98,7 +98,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
       <View style={styles.headerContainer}>
         <NormalHeader navigation={navigation} route={route} />
       </View>
-
       {!isOfflineOnly && (
         <View style={styles.firstOptionContainer}>
           {!isKeyboardVisible && (
@@ -122,7 +121,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
             iconName="person-icon"
             value={newStudentCode}
             onChangeText={setNewStudentCode}
-            placeHolder={t("student-code")}
+            label={t("student-code")}
             autoCapitalize="characters"
           />
           <NormalButton
@@ -138,7 +137,8 @@ function SettingsView({ navigation, route }: NavigationProps) {
             iconName="person-icon"
             value={confirmationText ?? ""}
             onChangeText={setConfirmationText}
-            placeHolder={t("type-delete") + " *"}
+            label={t("confirmation")}
+            placeHolder={t("type-delete")}
           />
           <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete} />
         </View>

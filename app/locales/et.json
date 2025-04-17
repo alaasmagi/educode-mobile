@@ -107,5 +107,8 @@
   "users-not-found": "Kasutajaid ei leitud",
   "user-not-accessible": "Kasutajale ei ole võimalik juurde pääseda",
   "current-attendance-not-found": "Käimasolev ainetund puudub",
-  "student-already-registered": "Üliõpilane on ainetundi juba registreeritud"
+  "student-already-registered": "Üliõpilane on ainetundi juba registreeritud",
+  "for-example-abbr": "nt.",
+  "format": "formaat:",
+  "confirmation": "Kinnitus"
 }

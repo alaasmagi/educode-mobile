@@ -7,6 +7,7 @@ interface ModeToggleProperties {
   textRight: string;
   onPressLeft: () => void;
   onPressRight: () => void;
+  isLeftSelected: boolean;
   isDisabled?: boolean;
 }
 
@@ -48,29 +49,23 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
   textRight,
   onPressLeft,
   onPressRight,
+  isLeftSelected,
   isDisabled = false,
 }) => {
-  const [isRight, setIsRight] = useState(false);
 
   return (
     <View style={isDisabled ? styles.containerDisabled : styles.container}>
       <TouchableOpacity
-        style={[styles.option, !isRight && styles.selected]}
+        style={[styles.option, isLeftSelected && styles.selected]}
         disabled={isDisabled}
-        onPress={() => {
-          onPressLeft();
-          setIsRight(false);
-        }}
+        onPress={() => onPressLeft()}
       >
         <Text style={styles.text}>{textLeft}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.option, isRight && styles.selected]}
+        style={[styles.option, !isLeftSelected && styles.selected]}
         disabled={isDisabled}
-        onPress={() => {
-          onPressRight();
-          setIsRight(true);
-        }}
+        onPress={() => onPressRight()}
       >
         <Text style={styles.text}>{textRight}</Text>
       </TouchableOpacity>

@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { useTranslation } from "react-i18next";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import NavigationProps from "../../types";
 import GlobalStyles from "../layout/styles/GlobalStyles";
@@ -22,29 +31,54 @@ import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import IconDataText from "../layout/components/DataText";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
-  const { localData, attendanceId, workplaceId = null, stepNr: initialStep } = route.params;
+  const {
+    localData,
+    attendanceId,
+    workplaceId = null,
+    stepNr: initialStep,
+  } = route.params;
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   const [isOnline, setIsOnline] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isModeToggleInLeftPos, setIsModeToggleInLeftPos] = useState<boolean>(true);
 
   const stepNr = initialStep + 1;
   const [qrValue, setQrValue] = useState(() =>
-    GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId)
+    GenerateQrString(
+      localData.studentCode,
+      localData.fullName,
+      attendanceId,
+      workplaceId
+    )
   );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
+      setQrValue(
+        GenerateQrString(
+          localData.studentCode,
+          localData.fullName,
+          attendanceId,
+          workplaceId
+        )
+      );
     }, 60000);
 
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
   const refreshQrCode = () => {
-    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
+    setQrValue(
+      GenerateQrString(
+        localData.studentCode,
+        localData.fullName,
+        attendanceId,
+        workplaceId
+      )
+    );
   };
 
   const navigateBack = useCallback(() => {
@@ -82,7 +116,10 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
     <View style={styles.data}>
       <IconDataText label={t("name")} text={localData.fullName} />
       <IconDataText label={t("attendance-id")} text={attendanceId} />
-      <IconDataText label={t("workplace-id")} text={workplaceId || t("not-available")} />
+      <IconDataText
+        label={t("workplace-id")}
+        text={workplaceId || t("not-available")}
+      />
     </View>
   );
 
@@ -96,13 +133,23 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
           <ModeToggle
             textLeft={t("offline-mode")}
             textRight={t("online-mode")}
-            onPressLeft={() => setIsOnline(false)}
-            onPressRight={() => setIsOnline(true)}
+            isLeftSelected={isModeToggleInLeftPos}
+            onPressLeft={() => {
+              setIsOnline(false);
+              setIsModeToggleInLeftPos(true);
+            }}
+            onPressRight={() => {
+              setIsOnline(true);
+              setIsModeToggleInLeftPos(false);
+            }}
             isDisabled={localData.offlineOnly}
           />
         </View>
         <View style={styles.stepDividerContainer}>
-          <StepDivider label={t(isOnline ? "step-end-attendance" : "step-show-qr")} stepNumber={stepNr} />
+          <StepDivider
+            label={t(isOnline ? "step-end-attendance" : "step-show-qr")}
+            stepNumber={stepNr}
+          />
         </View>
         {isOnline ? (
           <>
@@ -117,8 +164,14 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
               </View>
             </View>
             <View style={styles.lowNavButtonContainer}>
-              <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
-              <NormalButton text={t("check-in")} onPress={handleAttendanceCheckAdd} />
+              <NormalLink
+                text={t("something-wrong-back")}
+                onPress={navigateBack}
+              />
+              <NormalButton
+                text={t("check-in")}
+                onPress={handleAttendanceCheckAdd}
+              />
             </View>
           </>
         ) : (
@@ -130,7 +183,10 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             )}
             {renderSharedData()}
             <View style={styles.lowNavButtonContainer}>
-              <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
+              <NormalLink
+                text={t("something-wrong-back")}
+                onPress={navigateBack}
+              />
               <NormalButton text={t("refresh-qr")} onPress={refreshQrCode} />
             </View>
           </>
