@@ -47,8 +47,8 @@ To do so, please contact the developer directly.
 
 If You have any questions about this Privacy Policy, please contact us:
 
-📧: [[aleksander.laasmagi@gmail.com](aleksander.laasmagi@gmail.com)]
-GitHub: [[alaasmagi](https://github.com/alaasmagi)]
+📧: [[aleksander.laasmagi@gmail.com](aleksander.laasmagi@gmail.com)]  
+GitHub: [[alaasmagi](https://github.com/alaasmagi)]  
 LinkedIn: [[Aleksander Laasmägi](https://www.linkedin.com/in/alaasmagi/)]
 
 
