@@ -22,13 +22,13 @@ const styles = StyleSheet.create({
 });
 
 const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
-  useEffect(() => {
+ /*useEffect(() => {
     preventScreenCaptureAsync();
 
     return () => {
       allowScreenCaptureAsync();
     };
-  }, []);
+  }, []);*/
 
   return (
     <View style={styles.container}>
