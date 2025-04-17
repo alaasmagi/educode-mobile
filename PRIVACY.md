@@ -4,9 +4,8 @@ _Last updated: April 17, 2025_
 
 **EduCode** respects Your privacy and is committed to protecting user data. This Privacy Policy explains what information is collected, how it is used, and what rights You have.
 
----
 
-## 1. Data We Collect
+## Data We Collect
 
 EduCode may collect the following types of information:
 
@@ -17,27 +16,23 @@ EduCode may collect the following types of information:
 
 > EduCode does **not** collect or share personally identifiable information (PII) with third parties.
 
----
 
-## 2. Offline Mode
+## Offline Mode
 
 When using offline mode, data is stored temporarily on the device. This data can be shared with a teacher via QR code scanning and is not transmitted over the internet.
 
----
 
-## 3. Data Sharing
+## Data Sharing
 
 We do **not** share any user data with third parties. All data remains within the app or with the teacher managing attendance.
 
----
 
-## 4. Data Security
+## Data Security
 
 We take appropriate technical and organizational measures to protect Your data against unauthorized access, loss, or misuse.
 
----
 
-## 5. User Rights
+## User Rights
 
 You have the right to:
 
@@ -47,9 +42,8 @@ You have the right to:
 
 To do so, please contact the developer directly.
 
----
 
-## 6. Contact
+## Contact
 
 If You have any questions about this Privacy Policy, please contact us:
 
@@ -57,6 +51,5 @@ If You have any questions about this Privacy Policy, please contact us:
 GitHub: [[alaasmagi](https://github.com/alaasmagi)]
 LinkedIn: [[Aleksander Laasmägi](https://www.linkedin.com/in/alaasmagi/)]
 
----
 
 **Note:** This application is currently in a **prototype phase** and does not store or transmit sensitive personal data.
