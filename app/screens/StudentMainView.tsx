@@ -24,7 +24,10 @@ import StepDivider from "../layout/components/StepDivider";
 import Checkbox from "../layout/components/Checkbox";
 import NormalLink from "../layout/components/NormalLink";
 import ErrorMessage from "../layout/components/ErrorMessage";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
@@ -124,7 +127,12 @@ function StudentMainView({ navigation, route }: NavigationProps) {
           <NormalHeader navigation={navigation} route={route} />
         </View>
         <View style={styles.stepDividerContainer}>
-          <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
+          <StepDivider
+            stepNumber={stepNr}
+            label={
+              stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")
+            }
+          />
         </View>
         {!isKeyboardVisible && (
           <View style={styles.qrContainer}>
@@ -156,7 +164,9 @@ function StudentMainView({ navigation, route }: NavigationProps) {
               <NormalButton
                 text={t("continue")}
                 onPress={handleNextStep}
-                disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
+                disabled={
+                  !RegexFilters.attendanceScanId.test(scannedAttendanceData)
+                }
               />
             </View>
           </View>
@@ -170,10 +180,19 @@ function StudentMainView({ navigation, route }: NavigationProps) {
               value={workplaceId}
               onChangeText={(text) => setWorkplaceId(text.trim())}
             />
-            <View style={styles.additionalFieldContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
+            <View style={styles.additionalFieldContainer}>
+              {errorMessage && <ErrorMessage text={errorMessage} />}
+            </View>
             <View style={styles.lowNavButtonContainer}>
-              <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
-              <NormalButton text={t("continue")} onPress={handleDataSubmit} />
+              <NormalLink
+                text={t("something-wrong-back")}
+                onPress={() => setStepNr(1)}
+              />
+              <NormalButton
+                text={t("continue")}
+                disabled={!RegexFilters.defaultId.test(workplaceId)}
+                onPress={handleDataSubmit}
+              />
             </View>
           </View>
         )}

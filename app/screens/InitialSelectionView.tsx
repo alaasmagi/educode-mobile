@@ -8,8 +8,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCameraPermissions } from "expo-camera";
@@ -43,14 +41,12 @@ import {
 } from "../businesslogic/services/UserDataOnline";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
-import NormalLink from "../layout/components/NormalLink";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
   const [stepNr, setStepNr] = useState<number>(1);
   const [studentCode, setStudentCode] = useState<string | null>(null);
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [lastName, setLastName] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string>("");
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const isKeyboardVisible = KeyboardVisibilityHandler();
@@ -75,6 +71,9 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       return () => backHandler.remove();
     }, [])
   );
+
+  const isNameFormValid = () => fullName !== "" && !fullName.includes(";");
+  const isStudentCodeValid = () => RegexFilters.studentCode.test(String(studentCode));
 
   useEffect(() => {
     const init = async () => {
@@ -130,7 +129,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     const localData: LocalUserData = {
       userType: "Student",
       studentCode: String(studentCode),
-      fullName: `${firstName} ${lastName}`,
+      fullName: fullName.trim(),
       offlineOnly: true,
     };
 
@@ -145,10 +144,6 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <ScrollView
-          keyboardShouldPersistTaps="never"
-          contentContainerStyle={styles.scrollViewContent}
-        >
           <View style={styles.headerContainer}>
             <FormHeader />
           </View>
@@ -179,58 +174,30 @@ function InitialSelectionView({ navigation }: NavigationProps) {
                   value={studentCode ?? ""}
                   autoCapitalize="characters"
                 />
+                <TextBox
+                  iconName="person-icon"
+                  label={`${t("name")}`}
+                  value={fullName}
+                  placeHolder={t("for-example-abbr") + " Andres Tamm"}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
+                />
                 <NormalButton
                   text={t("continue")}
-                  onPress={() => setStepNr(2)}
-                  disabled={!RegexFilters.studentCode.test(String(studentCode))}
+                  onPress={handleOfflineLogin}
+                  disabled={!isStudentCodeValid() || !isNameFormValid()}
                 />
               </View>
             </View>
           )}
-          {stepNr == 2 && (
-            <View style={styles.mainContainer}>
-              <View style={styles.alternateLoginContainer}>
-                <TextBox
-                  iconName="person-icon"
-                  label={t("first-name")}
-                  onChangeText={(text) => setFirstName(text.trim())}
-                  value={firstName ?? ""}
-                  autoCapitalize="sentences"
-                />
-                <TextBox
-                  iconName="person-icon"
-                  label={t("last-name")}
-                  onChangeText={(text) => setLastName(text.trim())}
-                  value={lastName ?? ""}
-                  autoCapitalize="sentences"
-                />
-                <View style={styles.buttonContainer}>
-                  <NormalLink
-                    text={t("something-wrong-back")}
-                    onPress={() => setStepNr(1)}
-                  />
-                  <NormalButton
-                    text={t("continue")}
-                    onPress={handleOfflineLogin}
-                    disabled={firstName === null || lastName == null}
-                  />
-                </View>
-              </View>
-            </View>
-          )}
-        </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: "space-between",
-  },
   mainContainer: {
-    flex: 3,
+    flex: 6,
   },
   messageContainer: {
     flex: 0.5
@@ -243,13 +210,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    gap: hp("3%"),
+    gap: hp("2%"),
   },
   alternateLoginContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: hp("3%"),
+    gap: hp("2%"),
   },
   buttonContainer: {
     alignItems: "center",

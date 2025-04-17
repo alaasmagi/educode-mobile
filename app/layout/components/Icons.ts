@@ -14,4 +14,5 @@ export const Icons = {
   "visibility-on": require("../../assets/icons/visibility-on.png"),
   "visibility-off": require("../../assets/icons/visibility-off.png"),
   "zoom-icon": require("../../assets/icons/zoom-icon.png"),
+  "code-icon": require("../../assets/icons/code-icon.png")
 };

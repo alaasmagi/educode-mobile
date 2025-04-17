@@ -65,9 +65,8 @@ function TeacherMainView({ navigation, route }) {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
       if (RegexFilters.attendanceCheckData.test(data)) {
-        const attendanceCheckData = data.split("-");
+        const attendanceCheckData = data.split(";");
         const timestamp = Math.floor(Date.now() / 1000);
-        const names = attendanceCheckData[3].split("+");
 
         if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
           setErrorMessage(t("timestamp-error"));
@@ -75,7 +74,7 @@ function TeacherMainView({ navigation, route }) {
           const model: CreateAttendanceCheckModel = {
             courseAttendanceId: parseInt(attendanceCheckData[1]),
             workplaceId: parseInt(attendanceCheckData[2]) ?? null,
-            fullName: `${names[0]} ${names[1]}`,
+            fullName: attendanceCheckData[3],
             studentCode: attendanceCheckData[4],
           };
           const response = await AddAttendanceCheck(model);
@@ -85,9 +84,9 @@ function TeacherMainView({ navigation, route }) {
             setTimeout(() => setErrorMessage(null), 3000);
           } else {
             setSuccessMessage(
-              `${t("attendance-check-added-for")}: ${names[0]} ${names[1]}`
+              `${t("attendance-check-added-for")}: ${attendanceCheckData[2]}`
             );
-            setLastAddedStudentCode(attendanceCheckData[3]);
+            setLastAddedStudentCode(attendanceCheckData[4]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 3000);
           }
@@ -112,6 +111,8 @@ function TeacherMainView({ navigation, route }) {
   };
 
   const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
+  const isFullNameValid = () => fullName !== "" && !fullName.includes(";");
+
 
   const handleAddStudentManually = async () => {
     Keyboard.dismiss();
@@ -122,7 +123,7 @@ function TeacherMainView({ navigation, route }) {
 
     const model: CreateAttendanceCheckModel = {
       studentCode: studentCode,
-      fullName: fullName,
+      fullName: fullName.trim(),
       courseAttendanceId: Number(currentAttendanceData!.attendanceId),
       workplaceId: parseInt(workplaceId) ?? null,
     };
@@ -229,7 +230,7 @@ function TeacherMainView({ navigation, route }) {
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
-                  label={`${t("name")}*`}
+                  label={`${t("name")}`}
                   value={fullName}
                   placeHolder={t("for-example-abbr") + " Andres Tamm"}
                   onChangeText={setFullName}
@@ -237,7 +238,7 @@ function TeacherMainView({ navigation, route }) {
                 />
                 <TextBox
                   iconName="person-icon"
-                  label={`${t("student-code")}*`}
+                  label={`${t("student-code")}`}
                   value={studentCode}
                   placeHolder={t("for-example-abbr") + " 123456ABCD"}
                   onChangeText={(text) => setStudentCode(text.trim())}
@@ -254,7 +255,7 @@ function TeacherMainView({ navigation, route }) {
               <NormalButton
                 text={t("add-manually")}
                 onPress={handleAddStudentManually}
-                disabled={!isStudentCodeValid()}
+                disabled={!isStudentCodeValid() || !isFullNameValid()}
               />
             </View>
           </>
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
   },
   data: {
     alignSelf: "center",
-    width: wp("85%"),
+    width: wp("90%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,

@@ -110,5 +110,6 @@
   "student-already-registered": "Üliõpilane on ainetundi juba registreeritud",
   "for-example-abbr": "nt.",
   "format": "formaat:",
-  "confirmation": "Kinnitus"
+  "confirmation": "Kinnitus",
+  "delete-my-data": "Kustuta mu kasutajaandmed"
 }

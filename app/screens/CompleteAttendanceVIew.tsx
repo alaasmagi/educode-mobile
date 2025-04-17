@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   data: {
     alignSelf: "center",
-    width: wp("75%"),
+    width: wp("90%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,

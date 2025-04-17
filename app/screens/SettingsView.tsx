@@ -3,6 +3,7 @@ import NavigationProps from "../../types";
 import { SafeAreaView, StyleSheet, View, Alert, BackHandler, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import GlobalStyles from "../layout/styles/GlobalStyles";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
@@ -134,7 +135,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
         <View style={styles.deleteAccount}>
           <SeparatorLine text={t("delete-account")} />
           <TextBox
-            iconName="person-icon"
+            iconName="code-icon"
             value={confirmationText ?? ""}
             onChangeText={setConfirmationText}
             label={t("confirmation")}
@@ -147,7 +148,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
       <View style={styles.lowButtonContainer}>
         {!isKeyboardVisible && <NormalButton text={t("back-to-home")} onPress={handleBackToHome} />}
         {!isKeyboardVisible && (
-          <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-account")} onPress={handleLogout} />
+          <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
         )}
       </View>
     </SafeAreaView>
@@ -161,8 +162,8 @@ const styles = StyleSheet.create({
   },
   firstOptionContainer: {
     flex: 1.5,
-    width: "100%",
-    gap: 15,
+    width: wp("90%"),
+    gap: hp("2%"),
     justifyContent: "center",
     alignItems: "center",
   },
@@ -171,14 +172,14 @@ const styles = StyleSheet.create({
   },
   deleteAccount: {
     flex: 1.5,
-    width: "100%",
+    width: wp("90%"),
     justifyContent: "center",
     alignItems: "center",
-    gap: 15,
+    gap: hp("2%"),
   },
   lowButtonContainer: {
     flex: 1.5,
-    gap: 15,
+    gap: hp("2%"),
     justifyContent: "center",
     alignItems: "center",
   },

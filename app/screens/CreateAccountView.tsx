@@ -26,8 +26,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
 
   const [stepNr, setStepNr] = useState(1);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [uniId, setUniId] = useState("");
   const [studentCode, setStudentCode] = useState("");
   const [emailCode, setEmailCode] = useState("");
@@ -52,14 +51,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
     return () => clearTimeout(timeout);
   }, []);
 
-  const isNameFormValid = () => firstName !== "" && lastName !== "";
+  const isNameFormValid = () => fullName !== "" && !fullName.includes(";");
   const isStudentIDFormValid = () =>
     uniId !== "" && RegexFilters.studentCode.test(studentCode);
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
 
   useEffect(() => {
     setNormalMessage(!isNameFormValid() ? t("all-fields-required-message") : "");
-  }, [firstName, lastName]);
+  }, [fullName]);
 
   useEffect(() => {
     setNormalMessage(!isStudentIDFormValid() ? t("all-fields-required-message") : "");
@@ -77,13 +76,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const handleOTPRequest = useCallback(async () => {
     Keyboard.dismiss();
-    const status = await RequestOTP(uniId, firstName + lastName);
+    const status = await RequestOTP(uniId, fullName);
     if (status === true) {
       setStepNr(3);
     } else {
       showTemporaryError(t(String(status)));
     }
-  }, [uniId, firstName, lastName, t, showTemporaryError]);
+  }, [uniId, fullName, t, showTemporaryError]);
 
   const handleOTPVerification = useCallback(async () => {
     Keyboard.dismiss();
@@ -101,7 +100,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
     const userData: CreateUserModel = {
       uniId,
       studentCode,
-      fullName: `${firstName} ${lastName}`,
+      fullName: fullName.trim(),
       password,
     };
     const status = await CreateUserAccount(userData);
@@ -110,7 +109,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
     } else {
       showTemporaryError(t(String(status)));
     }
-  }, [uniId, studentCode, firstName, lastName, password, navigation, t, showTemporaryError]);
+  }, [uniId, studentCode, fullName, password, navigation, t, showTemporaryError]);
 
   const renderStep = () => {
     const sharedMessage = !isKeyboardVisible && (normalMessage || errorMessage);
@@ -126,17 +125,13 @@ function CreateAccountView({ navigation }: NavigationProps) {
           <>
             <View style={styles.textBoxContainer}>
               <View style={styles.textBoxes}>
-                <TextBox
+              <TextBox
                   iconName="person-icon"
-                  label={t("first-name")}
-                  value={firstName}
-                  onChangeText={(text) => setFirstName(text.trim())}
-                />
-                <TextBox
-                  iconName="person-icon"
-                  label={t("last-name")}
-                  value={lastName}
-                  onChangeText={(text) => setLastName(text.trim())}
+                  label={`${t("name")}`}
+                  value={fullName}
+                  placeHolder={t("for-example-abbr") + " Andres Tamm"}
+                  onChangeText={setFullName}
+                  autoCapitalize="words"
                 />
               </View>
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
@@ -239,7 +234,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
             <View style={styles.textBoxContainer}>
               <UnderlineText text={t("verify-details")} />
               <View style={styles.data}>
-                <DataText label={t("name")} text={`${firstName} ${lastName}`} />
+                <DataText label={t("name")} text={fullName}/>
                 <DataText label={"Uni-ID"} text={uniId} />
                 <DataText label={t("student-code")} text={studentCode} />
               </View>
@@ -281,7 +276,7 @@ const styles = StyleSheet.create({
   },
   data: {
     alignSelf: "center",
-    width: wp("80%"),
+    width: wp("90%"),
     borderWidth: 2,
     borderColor: "#BCBCBD",
     borderRadius: 20,

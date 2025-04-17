@@ -113,5 +113,6 @@
   "student-already-registered": "Student already exists in this attendance",
   "for-example-abbr": "eg.",
   "format": "format:",
-  "confirmation": "Confirmation"
+  "confirmation": "Confirmation",
+  "delete-my-data": "Delete my user data"
 }
