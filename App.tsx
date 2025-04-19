@@ -11,6 +11,7 @@ import CompleteAttendanceView from "./app/screens/CompleteAttendanceVIew";
 import TeacherMainView from "./app/screens/TeacherMainView";
 import ForgotPasswordView from "./app/screens/ForgotPasswordView";
 
+
 const Stack = createStackNavigator();
 
 export default function App() {

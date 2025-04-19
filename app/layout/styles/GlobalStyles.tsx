@@ -7,6 +7,6 @@ export default StyleSheet.create({
     backgroundColor: "#2B2B2B",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     paddingBottom: hp("2.5%"),
-    paddingHorizontal: wp("5%"),
+    paddingHorizontal: wp("5%")
   },
 });

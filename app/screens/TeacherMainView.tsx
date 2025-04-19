@@ -84,10 +84,10 @@ function TeacherMainView({ navigation, route }) {
             setTimeout(() => setErrorMessage(null), 3000);
           } else {
             setSuccessMessage(
-              `${t("attendance-check-added-for")}: ${attendanceCheckData[2]}`
+              `${t("attendance-check-added-for")}: ${attendanceCheckData[3]}`
             );
             setLastAddedStudentCode(attendanceCheckData[4]);
-            setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
+            setLastAddedStudentWorkplaceId(attendanceCheckData[3]);
             setTimeout(() => setSuccessMessage(null), 3000);
           }
         }
