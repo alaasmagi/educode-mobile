@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
@@ -24,10 +15,7 @@ import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import SuccessMessage from "../layout/components/SuccessMessage";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import NormalMessage from "../layout/components/NormalMessage";
-import {
-  AddAttendanceCheck,
-  GetCurrentAttendance,
-} from "../businesslogic/services/CourseAttendanceData";
+import { AddAttendanceCheck, GetCurrentAttendance } from "../businesslogic/services/CourseAttendanceData";
 import { CourseAttendance } from "../models/CourseAttendance";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
@@ -42,16 +30,13 @@ function TeacherMainView({ navigation, route }) {
 
   const [qrScanView, setQrScanView] = useState(true);
   const [scanned, setScanned] = useState(false);
-  const [currentAttendanceData, setCurrentAttendanceData] =
-    useState<CourseAttendance | null>(null);
-  const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] =
-    useState<string | null>(null);
+  const [currentAttendanceData, setCurrentAttendanceData] = useState<CourseAttendance | null>(null);
+  const [currentAttendancePlaceHolder, setCurrentAttendancePlaceHolder] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
   const [fullName, setFullName] = useState("");
   const [workplaceId, setWorkplaceId] = useState("");
   const [lastAddedStudentCode, setLastAddedStudentCode] = useState("");
-  const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] =
-    useState("");
+  const [lastAddedStudentWorkplaceId, setLastAddedStudentWorkplaceId] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
@@ -83,9 +68,7 @@ function TeacherMainView({ navigation, route }) {
             setErrorMessage(t("student-already-registered"));
             setTimeout(() => setErrorMessage(null), 3000);
           } else {
-            setSuccessMessage(
-              `${t("attendance-check-added-for")}: ${attendanceCheckData[2]}`
-            );
+            setSuccessMessage(`${t("attendance-check-added-for")}: ${attendanceCheckData[3]}`);
             setLastAddedStudentCode(attendanceCheckData[4]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 3000);
@@ -112,7 +95,6 @@ function TeacherMainView({ navigation, route }) {
 
   const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
   const isFullNameValid = () => fullName !== "" && !fullName.includes(";");
-
 
   const handleAddStudentManually = async () => {
     Keyboard.dismiss();
@@ -179,18 +161,9 @@ function TeacherMainView({ navigation, route }) {
           <View style={styles.currentAttendanceContainer}>
             {currentAttendanceData ? (
               <View style={styles.data}>
-                <DataText
-                  label={t("course-name")}
-                  text={currentAttendanceData.courseName}
-                />
-                <DataText
-                  label={t("course-code")}
-                  text={currentAttendanceData.courseCode}
-                />
-                <DataText
-                  label={t("attendance-id")}
-                  text={ToSixDigit(Number(currentAttendanceData.attendanceId))}
-                />
+                <DataText label={t("course-name")} text={currentAttendanceData.courseName} />
+                <DataText label={t("course-code")} text={currentAttendanceData.courseCode} />
+                <DataText label={t("attendance-id")} text={ToSixDigit(Number(currentAttendanceData.attendanceId))} />
               </View>
             ) : (
               <>
@@ -203,28 +176,18 @@ function TeacherMainView({ navigation, route }) {
         {qrScanView ? (
           <>
             <View style={styles.qrScannerContainer}>
-              {currentAttendanceData && (
-                <QrScanner onQrScanned={handleBarcodeScanned} />
-              )}
+              {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} />}
             </View>
             <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && (
-                <SuccessMessage text={successMessage} />
-              )}
-              {errorMessage && !isKeyboardVisible && (
-                <ErrorMessage text={errorMessage} />
-              )}
+              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
             </View>
           </>
         ) : (
           <>
             <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && (
-                <SuccessMessage text={successMessage} />
-              )}
-              {errorMessage && !isKeyboardVisible && (
-                <ErrorMessage text={errorMessage} />
-              )}
+              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
             </View>
             <View style={styles.manualInputContainer}>
               <View style={styles.textBoxes}>
