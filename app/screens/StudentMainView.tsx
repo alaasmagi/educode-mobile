@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   stepDividerContainer: {
-    flex: 0.3,
+    flex: 0.5,
     justifyContent: "center",
     alignItems: "center",
   },

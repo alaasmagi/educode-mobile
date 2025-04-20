@@ -10,8 +10,8 @@ interface QrScannerProperties {
 
 const styles = StyleSheet.create({
   camera: {
-    height: wp("70%"),
-    width: wp("70%"),
+    height: "85%",
+    width: "85%",
     aspectRatio: 1,
     borderRadius: wp("5%"),
     borderWidth: wp("3%"),

@@ -10,8 +10,9 @@ interface QrGeneratorProperties {
 
 const styles = StyleSheet.create({
   container: {
-    height: wp("75%"),
-    width: wp("75%"),
+    height: "85%",
+    width: "85%",
+    aspectRatio: 1,
     borderRadius: wp("5%"),
     borderWidth: wp("3%"),
     backgroundColor: "#BCBCBD",
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
- useEffect(() => {
+  useEffect(() => {
     preventScreenCaptureAsync();
 
     return () => {
@@ -32,7 +33,7 @@ const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
 
   return (
     <View style={styles.container}>
-      <QRCode color="#1E1E1E" size={wp("60%")} backgroundColor="#BCBCBD" value={value} />
+      <QRCode color="#1E1E1E" size={hp("25%")} backgroundColor="#BCBCBD" value={value} />
     </View>
   );
 };
