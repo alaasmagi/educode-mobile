@@ -38,12 +38,13 @@ function LoginView({ navigation, route }: NavigationProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(route?.params?.successMessage || null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isKeyboardVisible = KeyboardVisibilityHandler();
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
-  const isFormValid = uniId.trim() !== "" && password.trim() !== "";
+  const isFormValid = uniId !== "" && password !== "";
 
   useEffect(() => {
     preventScreenCaptureAsync();
-    const timeout = setTimeout(() => setSuccessMessage(null), 3000);
+    const timeout = setTimeout(() => setSuccessMessage(null), 2000);
     return () => {
       clearTimeout(timeout);
       allowScreenCaptureAsync();
@@ -54,7 +55,7 @@ function LoginView({ navigation, route }: NavigationProps) {
     type === "error" ? setErrorMessage(message) : setSuccessMessage(message);
     setTimeout(() => {
       type === "error" ? setErrorMessage(null) : setSuccessMessage(null);
-    }, 3000);
+    }, 2000);
   };
 
   const checkPermissions = async (): Promise<boolean> => {
@@ -69,11 +70,12 @@ function LoginView({ navigation, route }: NavigationProps) {
 
   const handleLogin = async () => {
     Keyboard.dismiss();
-
+    setIsButtonDisabled(true);
     if (!(await checkPermissions())) return;
 
     const loginStatus = await UserLogin(uniId.trim(), password.trim());
 
+    setIsButtonDisabled(false);
     if (loginStatus === true) {
       const fetchDataStatus = await FetchAndSaveUserDataByUniId(uniId.trim());
 
@@ -133,7 +135,7 @@ function LoginView({ navigation, route }: NavigationProps) {
           </View>
 
           <View style={styles.buttonContainer}>
-            <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid} />
+            <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid || isButtonDisabled} />
             <NormalLink text={t("register-now")} onPress={() => navigation.navigate("CreateAccountView")} />
           </View>
         </ScrollView>

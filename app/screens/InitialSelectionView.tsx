@@ -14,10 +14,7 @@ import { useCameraPermissions } from "expo-camera";
 import * as SplashScreen from "expo-splash-screen";
 import { useTranslation } from "react-i18next";
 import i18next from "../businesslogic/services/i18next";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalButton from "../layout/components/NormalButton";
@@ -35,10 +32,7 @@ import {
   GetOfflineUserData,
   SaveOfflineUserData,
 } from "../businesslogic/services/UserDataOffline";
-import {
-  FetchAndSaveUserDataByUniId,
-  TestConnection,
-} from "../businesslogic/services/UserDataOnline";
+import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/services/UserDataOnline";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 
@@ -51,6 +45,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   const [permission, requestPermission] = useCameraPermissions();
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [isConnection, setIsConnection] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   BackButtonHandler(navigation);
 
@@ -64,10 +59,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         return true;
       };
 
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
       return () => backHandler.remove();
     }, [])
   );
@@ -82,7 +74,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       if (lang) i18next.changeLanguage(lang);
       if (!connection) {
         setNormalMessage(t("login-again"));
-        setTimeout(() => setNormalMessage(null), 3000);
+        setTimeout(() => setNormalMessage(null), 2000);
         setIsConnection(false);
       } else {
         setNormalMessage(null);
@@ -93,19 +85,14 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       if (localData?.offlineOnly === true) {
         navigation.navigate("StudentMainView", { localData });
       } else if (localData?.offlineOnly === false) {
-        const loginSuccess = await FetchAndSaveUserDataByUniId(
-          String(localData?.uniId)
-        );
-        if (typeof(loginSuccess) !== "string") {
+        const loginSuccess = await FetchAndSaveUserDataByUniId(String(localData?.uniId));
+        if (typeof loginSuccess !== "string") {
           localData = await GetOfflineUserData();
-          const target =
-            localData?.userType === "Teacher"
-              ? "TeacherMainView"
-              : "StudentMainView";
+          const target = localData?.userType === "Teacher" ? "TeacherMainView" : "StudentMainView";
           navigation.navigate(target, { localData });
         } else {
           setNormalMessage(t("login-again"));
-          setTimeout(() => setNormalMessage(null), 3000);
+          setTimeout(() => setNormalMessage(null), 2000);
         }
       }
     };
@@ -115,25 +102,24 @@ function InitialSelectionView({ navigation }: NavigationProps) {
 
   const handleOfflineLogin = async () => {
     Keyboard.dismiss();
-
+    setIsButtonDisabled(true);
     if (!permission?.granted) {
       const { granted } = await requestPermission();
       if (!granted) {
-        return Alert.alert(
-          t("camera-permission-denied"),
-          t("camera-permission-denied-message")
-        );
+        setIsButtonDisabled(false);
+        return Alert.alert(t("camera-permission-denied"), t("camera-permission-denied-message"));
       }
     }
     await DeleteOfflineUserData();
     const localData: LocalUserData = {
       userType: "Student",
-      studentCode: String(studentCode),
+      studentCode: String(studentCode).trim().toUpperCase(),
       fullName: fullName.trim(),
       offlineOnly: true,
     };
 
     await SaveOfflineUserData(localData);
+    setIsButtonDisabled(false);
     navigation.navigate("StudentMainView", { localData });
   };
 
@@ -144,52 +130,52 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-          <View style={styles.headerContainer}>
-            <FormHeader />
-          </View>
-          {stepNr == 1 && (
-            <View style={styles.mainContainer}>
-              {!isKeyboardVisible && (
-                <View style={styles.mainLoginContainer}>
-                  <NormalButton
-                    text={t("log-in")}
-                    onPress={() => navigation.navigate("LoginView")}
-                    disabled={!isConnection}
-                  />
-                  <NormalButton
-                    text={t("register-as-student")}
-                    onPress={() => navigation.navigate("CreateAccountView")}
-                    disabled={!isConnection}
-                  />
-                  {normalMessage && <NormalMessage text={normalMessage} />}
-                </View>
-              )}
-              <View style={styles.alternateLoginContainer}>
-                <SeparatorLine text={t("or-use-offline-only")} />
-                <TextBox
-                  iconName="person-icon"
-                  label={t("student-code")}
-                  placeHolder={t("for-example-abbr") + " 123456ABCD"}
-                  onChangeText={(text) => setStudentCode(text.trim())}
-                  value={studentCode ?? ""}
-                  autoCapitalize="characters"
-                />
-                <TextBox
-                  iconName="person-icon"
-                  label={`${t("name")}`}
-                  value={fullName}
-                  placeHolder={t("for-example-abbr") + " Andres Tamm"}
-                  onChangeText={setFullName}
-                  autoCapitalize="words"
+        <View style={styles.headerContainer}>
+          <FormHeader />
+        </View>
+        {stepNr == 1 && (
+          <View style={styles.mainContainer}>
+            {!isKeyboardVisible && (
+              <View style={styles.mainLoginContainer}>
+                <NormalButton
+                  text={t("log-in")}
+                  onPress={() => navigation.navigate("LoginView")}
+                  disabled={!isConnection}
                 />
                 <NormalButton
-                  text={t("continue")}
-                  onPress={handleOfflineLogin}
-                  disabled={!isStudentCodeValid() || !isNameFormValid()}
+                  text={t("register-as-student")}
+                  onPress={() => navigation.navigate("CreateAccountView")}
+                  disabled={!isConnection}
                 />
+                {normalMessage && <NormalMessage text={normalMessage} />}
               </View>
+            )}
+            <View style={styles.alternateLoginContainer}>
+              <SeparatorLine text={t("or-use-offline-only")} />
+              <TextBox
+                iconName="person-icon"
+                label={t("student-code")}
+                placeHolder={t("for-example-abbr") + " 123456ABCD"}
+                onChangeText={(text) => setStudentCode(text.trim())}
+                value={studentCode ?? ""}
+                autoCapitalize="characters"
+              />
+              <TextBox
+                iconName="person-icon"
+                label={`${t("name")}`}
+                value={fullName}
+                placeHolder={t("for-example-abbr") + " Andres Tamm"}
+                onChangeText={setFullName}
+                autoCapitalize="words"
+              />
+              <NormalButton
+                text={t("continue")}
+                onPress={handleOfflineLogin}
+                disabled={!isStudentCodeValid() || !isNameFormValid() || isButtonDisabled}
+              />
             </View>
-          )}
+          </View>
+        )}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -200,7 +186,7 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   messageContainer: {
-    flex: 0.5
+    flex: 0.5,
   },
   headerContainer: {
     flex: 1,

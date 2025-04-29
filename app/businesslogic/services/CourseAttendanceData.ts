@@ -24,11 +24,10 @@ export async function AddAttendanceCheck(model: CreateAttendanceCheckModel): Pro
     }
   );
 
-  if (response.status == 200) {
+  if (response.status == 200 && !response.data.messageCode) {
     return true;
   }
-  console.log(response);
-  return response.data.error ?? "internet-connection-error";
+  return response.data.messageCode ?? "internet-connection-error";
 }
 
 export async function GetCurrentAttendance(uniId: string): Promise<CourseAttendance | string> {
@@ -44,7 +43,7 @@ export async function GetCurrentAttendance(uniId: string): Promise<CourseAttenda
     }
   );
 
-  if (response.status == 200) {
+  if (response.status == 200 && !response.data.messageCode) {
     const data = response.data;
     return {
       courseId: data.course.id,
@@ -58,5 +57,5 @@ export async function GetCurrentAttendance(uniId: string): Promise<CourseAttenda
       endTime: data.endTime,
     } as CourseAttendance;
   }
-  return response.data.error ?? "internet-connection-error";
+  return response.data.messageCode ?? "internet-connection-error";
 }

@@ -33,6 +33,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const [newStudentCode, setNewStudentCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
     }
     if (message) {
       setSuccessMessage(message);
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setTimeout(() => setSuccessMessage(null), 2000);
     }
   }, [localData.uniId, message]);
 
@@ -67,29 +68,35 @@ function SettingsView({ navigation, route }: NavigationProps) {
 
   const handleDelete = async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const status = await DeleteUser(localData.uniId);
+    setIsButtonDisabled(false);
     if (status === true) {
       await DeleteCurrentLanguage();
       await DeleteOfflineUserData();
       navigation.navigate("InitialSelectionView");
     } else {
       setErrorMessage(t(String(status)));
-      setTimeout(() => setErrorMessage(null), 3000);
+      setTimeout(() => setErrorMessage(null), 2000);
     }
   };
 
   const handleLogout = async () => {
+    setIsButtonDisabled(true);
     await DeleteOfflineUserData();
+    setIsButtonDisabled(false);
     navigation.navigate("InitialSelectionView");
   };
 
   const handleStudentCodeChange = async () => {
     Keyboard.dismiss();
-    localData.studentCode = newStudentCode;
+    setIsButtonDisabled(true);
+    localData.studentCode = newStudentCode.toUpperCase();
     await SaveOfflineUserData(localData);
+    setIsButtonDisabled(false);
     setNewStudentCode("");
     setSuccessMessage(t("studentcode-change-success"));
-    setTimeout(() => setSuccessMessage(null), 3000);
+    setTimeout(() => setSuccessMessage(null), 2000);
   };
 
   BackButtonHandler(navigation);
@@ -105,6 +112,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
             <NormalButton
               text={t("change-password")}
               onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
+              disabled={isButtonDisabled}
             />
           )}
         </View>
@@ -121,14 +129,14 @@ function SettingsView({ navigation, route }: NavigationProps) {
           <TextBox
             iconName="person-icon"
             value={newStudentCode}
-            onChangeText={setNewStudentCode}
+            onChangeText={(text) => setNewStudentCode(text.trim())}
             label={t("student-code")}
             autoCapitalize="characters"
           />
           <NormalButton
             text={t("save-account-changes")}
             onPress={handleStudentCodeChange}
-            disabled={!isStudentCodeValid()}
+            disabled={!isStudentCodeValid() || isButtonDisabled}
           />
         </View>
       ) : (
@@ -141,12 +149,18 @@ function SettingsView({ navigation, route }: NavigationProps) {
             label={t("confirmation")}
             placeHolder={t("type-delete")}
           />
-          <NormalButton text={t("delete-account")} disabled={confirmationText !== "DELETE"} onPress={handleDelete} />
+          <NormalButton
+            text={t("delete-account")}
+            disabled={confirmationText !== "DELETE" || isButtonDisabled}
+            onPress={handleDelete}
+          />
         </View>
       )}
 
       <View style={styles.lowButtonContainer}>
-        {!isKeyboardVisible && <NormalButton text={t("back-to-home")} onPress={handleBackToHome} />}
+        {!isKeyboardVisible && (
+          <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />
+        )}
         {!isKeyboardVisible && (
           <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
         )}

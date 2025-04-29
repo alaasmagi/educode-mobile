@@ -41,7 +41,8 @@ export default {
       router: {
         origin: false
       },
-      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL || "https://educode.share.zrok.io/",
+      EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? "https://educode.share.zrok.io/",
+      EXPO_PUBLIC_EMAILDOMAIN: process.env.EXPO_PUBLIC_EMAILDOMAIN ?? "@taltech.ee",
       eas: {
         projectId: "6a2ef7e1-936b-4005-a953-e2d4393bf9dd"
       }

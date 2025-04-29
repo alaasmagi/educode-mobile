@@ -21,6 +21,7 @@ import { CreateUserAccount, RequestOTP, VerifyOTP } from "../businesslogic/servi
 import CreateUserModel from "../models/CreateUserModel";
 import VerifyOTPModel from "../models/VerifyOTPModel";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import Constants from "expo-constants";
 
 function CreateAccountView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
   const [passwordAgain, setPasswordAgain] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
@@ -47,13 +49,12 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const showTemporaryError = useCallback((message: string) => {
     setErrorMessage(message);
-    const timeout = setTimeout(() => setErrorMessage(null), 3000);
+    const timeout = setTimeout(() => setErrorMessage(null), 2000);
     return () => clearTimeout(timeout);
   }, []);
 
   const isNameFormValid = () => fullName !== "" && !fullName.includes(";");
-  const isStudentIDFormValid = () =>
-    uniId !== "" && RegexFilters.studentCode.test(studentCode);
+  const isStudentIDFormValid = () => uniId !== "" && RegexFilters.studentCode.test(studentCode);
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
 
   useEffect(() => {
@@ -76,7 +77,9 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const handleOTPRequest = useCallback(async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const status = await RequestOTP(uniId, fullName);
+    setIsButtonDisabled(false);
     if (status === true) {
       setStepNr(3);
     } else {
@@ -86,8 +89,10 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const handleOTPVerification = useCallback(async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const otpData: VerifyOTPModel = { uniId, otp: emailCode };
     const status = await VerifyOTP(otpData);
+    setIsButtonDisabled(false);
     if (status === true) {
       setStepNr(4);
     } else {
@@ -97,13 +102,15 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   const handleRegister = useCallback(async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const userData: CreateUserModel = {
       uniId,
-      studentCode,
+      studentCode: studentCode.toUpperCase(),
       fullName: fullName.trim(),
-      password,
+      password: password.trim(),
     };
     const status = await CreateUserAccount(userData);
+    setIsButtonDisabled(false);
     if (status === true) {
       navigation.navigate("LoginView", { successMessage: t("create-account-success") });
     } else {
@@ -125,7 +132,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
           <>
             <View style={styles.textBoxContainer}>
               <View style={styles.textBoxes}>
-              <TextBox
+                <TextBox
                   iconName="person-icon"
                   label={`${t("name")}`}
                   value={fullName}
@@ -137,7 +144,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
             <View style={styles.buttonContainer}>
-              <NormalButton text={t("continue")} onPress={() => setStepNr(2)} disabled={!isNameFormValid()} />
+              <NormalButton
+                text={t("continue")}
+                onPress={() => setStepNr(2)}
+                disabled={!isNameFormValid() || isButtonDisabled}
+              />
               <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
@@ -168,7 +179,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
-              <NormalButton text={t("continue")} onPress={handleOTPRequest} disabled={!isStudentIDFormValid()} />
+              <NormalButton
+                text={t("continue")}
+                onPress={handleOTPRequest}
+                disabled={!isStudentIDFormValid() || isButtonDisabled}
+              />
               <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
@@ -177,7 +192,9 @@ function CreateAccountView({ navigation }: NavigationProps) {
         return (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText text={`${t("one-time-key-prompt")} ${uniId}@taltech.ee`} />
+              <UnderlineText
+                text={`${t("one-time-key-prompt")} ${uniId + Constants.expoConfig?.extra?.EXPO_PUBLIC_EMAILDOMAIN}`}
+              />
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="pincode-icon"
@@ -190,11 +207,11 @@ function CreateAccountView({ navigation }: NavigationProps) {
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
             <View style={styles.buttonContainer}>
-            {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
+              {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
               <NormalButton
                 text={t("continue")}
                 onPress={handleOTPVerification}
-                disabled={!RegexFilters.defaultId.test(emailCode)}
+                disabled={!RegexFilters.defaultId.test(emailCode) || isButtonDisabled}
               />
             </View>
           </>
@@ -209,21 +226,25 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   label={t("password")}
                   isPassword
                   value={password}
-                  onChangeText={(text) => setPassword(text.trim())}
+                  onChangeText={setPassword}
                 />
                 <TextBox
                   iconName="lock-icon"
                   label={t("repeat-password")}
                   isPassword
                   value={passwordAgain}
-                  onChangeText={(text) => setPasswordAgain(text.trim())}
+                  onChangeText={setPasswordAgain}
                 />
               </View>
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(3)} />
-              <NormalButton text={t("continue")} onPress={() => setStepNr(5)} disabled={!isPasswordFormValid()} />
+              <NormalButton
+                text={t("continue")}
+                onPress={() => setStepNr(5)}
+                disabled={!isPasswordFormValid() || isButtonDisabled}
+              />
               <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>
@@ -234,15 +255,15 @@ function CreateAccountView({ navigation }: NavigationProps) {
             <View style={styles.textBoxContainer}>
               <UnderlineText text={t("verify-details")} />
               <View style={styles.data}>
-                <DataText label={t("name")} text={fullName}/>
+                <DataText label={t("name")} text={fullName} />
                 <DataText label={"Uni-ID"} text={uniId} />
-                <DataText label={t("student-code")} text={studentCode} />
+                <DataText label={t("student-code")} text={studentCode.toUpperCase()} />
               </View>
               {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(4)} />
-              <NormalButton text={t("create-account")} onPress={handleRegister} />
+              <NormalButton text={t("create-account")} onPress={handleRegister} disabled={isButtonDisabled} />
               <NormalLink text={t("already-registered")} onPress={() => navigation.navigate("LoginView")} />
             </View>
           </>

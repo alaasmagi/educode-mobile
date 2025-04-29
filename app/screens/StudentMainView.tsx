@@ -54,7 +54,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
   const [scanForWorkplace, setScanForWorkplace] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const clearErrorMessage = () => setTimeout(() => setErrorMessage(null), 3000);
+  const clearErrorMessage = () => setTimeout(() => setErrorMessage(null), 2000);
 
   const isTimestampValid = (timestampStr: string): boolean => {
     const scannedTime = parseInt(timestampStr);
@@ -84,7 +84,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
       clearErrorMessage();
     }
 
-    setTimeout(() => setScanned(false), 3000);
+    setTimeout(() => setScanned(false), 2000);
   };
 
   const handleNextStep = () => {

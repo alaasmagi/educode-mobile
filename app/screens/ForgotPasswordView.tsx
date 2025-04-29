@@ -16,8 +16,7 @@ import GlobalStyles from "../layout/styles/GlobalStyles";
 import { RequestOTP, VerifyOTP, ChangeUserPassword } from "../businesslogic/services/UserDataOnline";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
-import ChangePasswordModel from "../models/ChangePasswordModel";
-import VerifyOTPModel from "../models/VerifyOTPModel";
+import Constants from "expo-constants";
 
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
@@ -34,6 +33,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
@@ -64,7 +64,9 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   const handleOTPRequest = async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const status = await RequestOTP(uniId);
+    setIsButtonDisabled(false);
     if (status === true) {
       setStepNr(2);
     } else {
@@ -74,7 +76,9 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   const handleOTPVerification = async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const status = await VerifyOTP({ uniId, otp: emailCode });
+    setIsButtonDisabled(false);
     if (status === true) {
       setStepNr(3);
     } else {
@@ -84,7 +88,9 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   const handlePasswordChange = async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     const status = await ChangeUserPassword({ uniId, newPassword: password });
+    setIsButtonDisabled(false);
     if (status === true) {
       const successMessage = t("password-changed");
       const targetScreen = isNormalPassChange ? "SettingsView" : "LoginView";
@@ -96,7 +102,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   const showError = (message: string) => {
     setErrorMessage(t(message));
-    setTimeout(() => setErrorMessage(null), 3000);
+    setTimeout(() => setErrorMessage(null), 2000);
   };
 
   return (
@@ -109,7 +115,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         {stepNr === 1 && (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText text={t("verify-account") +  ": "} />
+              <UnderlineText text={t("verify-account") + ": "} />
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="person-icon"
@@ -125,7 +131,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                 </View>
               )}
             </View>
-
             <View style={styles.buttonContainer}>
               <NormalLink
                 text={isNormalPassChange ? t("dont-change-password") : t("still-remember-password")}
@@ -135,14 +140,20 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                     : navigation.navigate("LoginView")
                 }
               />
-              <NormalButton text={t("continue")} onPress={handleOTPRequest} disabled={!isStudentIDFormValid()} />
+              <NormalButton
+                text={t("continue")}
+                onPress={handleOTPRequest}
+                disabled={!isStudentIDFormValid() || isButtonDisabled}
+              />
             </View>
           </>
         )}
         {stepNr === 2 && (
           <>
             <View style={styles.textBoxContainer}>
-              <UnderlineText text={`${t("one-time-key-prompt")} ${uniId}@taltech.ee`} />
+              <UnderlineText
+                text={`${t("one-time-key-prompt")} ${uniId + Constants.expoConfig?.extra?.EXPO_PUBLIC_EMAILDOMAIN}`}
+              />
               <View style={styles.textBoxes}>
                 <TextBox
                   iconName="pincode-icon"
@@ -157,12 +168,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                 </View>
               )}
             </View>
-
             <View style={styles.buttonContainer}>
               <NormalButton
                 text={t("continue")}
                 onPress={handleOTPVerification}
-                disabled={!RegexFilters.defaultId.test(emailCode)}
+                disabled={!RegexFilters.defaultId.test(emailCode) || isButtonDisabled}
               />
               {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />}
             </View>
@@ -177,14 +187,14 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                   iconName="lock-icon"
                   label={t("password")}
                   isPassword
-                  onChangeText={(text) => setPassword(text.trim())}
+                  onChangeText={setPassword}
                   value={password}
                 />
                 <TextBox
                   iconName="lock-icon"
                   label={t("repeat-password")}
                   isPassword
-                  onChangeText={(text) => setPasswordAgain(text.trim())}
+                  onChangeText={setPasswordAgain}
                   value={passwordAgain}
                 />
               </View>
@@ -201,7 +211,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
             </View>
 
             <View style={styles.buttonContainer}>
-              <NormalButton text={t("continue")} onPress={handlePasswordChange} disabled={!isPasswordFormValid()} />
+              <NormalButton
+                text={t("continue")}
+                onPress={handlePasswordChange}
+                disabled={!isPasswordFormValid() || isButtonDisabled}
+              />
               {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
             </View>
           </>

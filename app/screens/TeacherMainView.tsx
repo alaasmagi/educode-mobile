@@ -21,7 +21,6 @@ import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import DataText from "../layout/components/DataText";
-import { use } from "i18next";
 
 function TeacherMainView({ navigation, route }) {
   const { localData } = route.params;
@@ -41,6 +40,7 @@ function TeacherMainView({ navigation, route }) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [isModeToggleInLeftPos, setIsModeToggleInLeftPos] = useState<boolean>(true);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   BackButtonHandler(navigation);
 
@@ -66,12 +66,12 @@ function TeacherMainView({ navigation, route }) {
 
           if (typeof response === "string") {
             setErrorMessage(t("student-already-registered"));
-            setTimeout(() => setErrorMessage(null), 3000);
+            setTimeout(() => setErrorMessage(null), 2000);
           } else {
             setSuccessMessage(`${t("attendance-check-added-for")}: ${attendanceCheckData[3]}`);
             setLastAddedStudentCode(attendanceCheckData[4]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
-            setTimeout(() => setSuccessMessage(null), 3000);
+            setTimeout(() => setSuccessMessage(null), 2000);
           }
         }
       } else {
@@ -79,8 +79,8 @@ function TeacherMainView({ navigation, route }) {
       }
 
       setTimeout(() => setScanned(false), 2000);
-      setTimeout(() => setErrorMessage(null), 3000);
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setTimeout(() => setErrorMessage(null), 2000);
+      setTimeout(() => setSuccessMessage(null), 2000);
     }
   };
 
@@ -98,23 +98,24 @@ function TeacherMainView({ navigation, route }) {
 
   const handleAddStudentManually = async () => {
     Keyboard.dismiss();
+    setIsButtonDisabled(true);
     if (workplaceId !== "" && !RegexFilters.defaultId.test(workplaceId)) {
       setErrorMessage(t("wrong-studentcode"));
-      setTimeout(() => setErrorMessage(null), 3000);
+      setTimeout(() => setErrorMessage(null), 2000);
     }
 
     const model: CreateAttendanceCheckModel = {
-      studentCode: studentCode,
+      studentCode: studentCode.toUpperCase(),
       fullName: fullName.trim(),
       courseAttendanceId: Number(currentAttendanceData!.attendanceId),
       workplaceId: parseInt(workplaceId) ?? null,
     };
 
     const response = await AddAttendanceCheck(model);
-
+    setIsButtonDisabled(false);
     if (typeof response === "string") {
       setErrorMessage(t("student-already-registered"));
-      setTimeout(() => setErrorMessage(null), 3000);
+      setTimeout(() => setErrorMessage(null), 2000);
     } else {
       setSuccessMessage(`${t("attendance-check-added-for")}:  ${fullName}`);
       setLastAddedStudentCode(studentCode);
@@ -122,7 +123,7 @@ function TeacherMainView({ navigation, route }) {
       setFullName("");
       setStudentCode("");
       setWorkplaceId("");
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setTimeout(() => setSuccessMessage(null), 2000);
     }
   };
 
@@ -218,7 +219,7 @@ function TeacherMainView({ navigation, route }) {
               <NormalButton
                 text={t("add-manually")}
                 onPress={handleAddStudentManually}
-                disabled={!isStudentCodeValid() || !isFullNameValid()}
+                disabled={!isStudentCodeValid() || !isFullNameValid() || isButtonDisabled}
               />
             </View>
           </>
