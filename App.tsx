@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import LoginView from "./app/screens/LoginView";
 import SettingsView from "./app/screens/SettingsView";
@@ -19,38 +19,14 @@ export default function App() {
       <StatusBar style="light" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="InitialSelectionView"
-            component={InitialSelectionView}
-          />
-          <Stack.Screen
-            name="LoginView"
-            component={LoginView}
-            options={{ gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="StudentMainView"
-            component={StudentMainView}
-            options={{ gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="SettingsView"
-            component={SettingsView}
-            options={{ gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="CompleteAttendanceView"
-            component={CompleteAttendanceView}
-          />
-          <Stack.Screen
-            name="CreateAccountView"
-            component={CreateAccountView}
-          />
+          <Stack.Screen name="InitialSelectionView" component={InitialSelectionView} />
+          <Stack.Screen name="LoginView" component={LoginView} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="StudentMainView" component={StudentMainView} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="SettingsView" component={SettingsView} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="CompleteAttendanceView" component={CompleteAttendanceView} />
+          <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
           <Stack.Screen name="TeacherMainView" component={TeacherMainView} />
-          <Stack.Screen
-            name="ForgotPasswordView"
-            component={ForgotPasswordView}
-          />
+          <Stack.Screen name="ForgotPasswordView" component={ForgotPasswordView} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

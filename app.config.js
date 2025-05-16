@@ -9,23 +9,27 @@ export default {
     splash: {
       image: "./app/assets/logos/splash-logo.png",
       resizeMode: "contain",
-      backgroundColor: "#2B2B2B"
+      backgroundColor: "#2B2B2B",
+    },
+    androidNavigationBar: {
+      barStyle: "light-content",
+      backgroundColor: "#2B2B2B",
     },
     ios: {
       supportsTablet: true,
       icon: "./app/assets/logos/app-icon.png",
-      bundleIdentifier: "com.educode.mobile"
+      bundleIdentifier: "com.educode.mobile",
     },
     android: {
       package: "com.educode.mobile",
       adaptiveIcon: {
         foregroundImage: "./app/assets/logos/app-icon.png",
-        backgroundColor: "#2B2B2B"
+        backgroundColor: "#2B2B2B",
       },
-      permissions: ["android.permission.CAMERA"]
+      permissions: ["android.permission.CAMERA"],
     },
     web: {
-      favicon: "./app/assets/favicon.png"
+      favicon: "./app/assets/favicon.png",
     },
     plugins: [
       "expo-router",
@@ -33,19 +37,25 @@ export default {
         "expo-camera",
         {
           cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
-          recordAudioAndroid: false
-        }
-      ]
+          recordAudioAndroid: false,
+        },
+      ],
+      [
+        "expo-splash-screen",
+        {
+          splashScreenBackgroundColor: "#2B2B2B",
+        },
+      ],
     ],
     extra: {
       router: {
-        origin: false
+        origin: false,
       },
       EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? "https://educode.share.zrok.io/",
       EXPO_PUBLIC_EMAILDOMAIN: process.env.EXPO_PUBLIC_EMAILDOMAIN ?? "@taltech.ee",
       eas: {
-        projectId: "6a2ef7e1-936b-4005-a953-e2d4393bf9dd"
-      }
-    }
-  }
+        projectId: "6a2ef7e1-936b-4005-a953-e2d4393bf9dd",
+      },
+    },
+  },
 };
