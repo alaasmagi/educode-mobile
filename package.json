@@ -55,8 +55,15 @@
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
-        "listUnknownPackages": false
+        "listUnknownPackages": false,
+        "exclude": [
+          "react-native-responsive-screen",
+          "i18next"
+        ]
       }
     }
+  },
+  "overrides": {
+    "@expo/config-plugins": "~10.0.0"
   }
 }
