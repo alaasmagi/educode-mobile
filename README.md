@@ -4,19 +4,20 @@
 * UI language: Estonian or English 
 * Development year: **2025**
 * Languages and technologies: **TypeScript, React Native, Expo**
-* This is the mobile app component of my Bachelor's final thesis project, which also includes [backend](https://github.com/alaasmagi/educode-backend) and [browser client](https://github.com/alaasmagi/educode-web).
+* This is the mobile app component of my Bachelor's final thesis project, which also includes [backend](https://github.com/alaasmagi/educode-backend) and [browser client](https://github.com/alaasmagi/educode-web)
 
 ## How to run
 
 ### Prerequisites
 
 * Node.js
-* Modern web browser
+* Expo
+* Android device
 
 The application should have .env file in the root folder `/` and it shoult have following content:
 ```bash
-VITE_API_URL=<your-educode-backend-instance-url>/api
-VITE_EMAIL_DOMAIN=<email-domain-for-otp> //For example: "@taltech.ee"
+EXPO_PUBLIC_API_URL=<your-educode-backend-instance-url>/api
+EXPO_PUBLIC_EMAILDOMAIN=<email-domain-for-otp> //For example: "@taltech.ee"
 ```
 
 ### Running the app
