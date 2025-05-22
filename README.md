@@ -173,6 +173,8 @@ export default VerifyOTPModel;
 
 
 ## Improvements & scaling possibilities
+### IOS Release
+* User testing results suggested the necessity of releasing the app to IOS platform as well
 ### Integration with more education related services
 * User testing results suggested the idea of integrating this application with the existing infrastructure of the University (e.g., the TalTech app)
 
