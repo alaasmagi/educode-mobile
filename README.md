@@ -32,14 +32,13 @@ npm i; npx expo start --clear
 * The mobile app can be launched on your Android device by scanning QR code from terminal/cmd with [the Expo Go app on Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
 ## Features
-- Teachers can sign up and log in with university email addresses
-- Teachers can manage courses
-- Teachers can manage course attendances
-- Teachers can view QR codes for each course attendance so students can register themselves
+- Students can sign up and log in with university email addresses
+- Students can enter the application's offline mode without logging in
+- Teachers can log in with university email addresses
+- Students can register to course attendances in online mode
+- Students can be registered to course attendances in offline mode
+- Teachers can register offline mode students in course attendances
 - Teachers can manually register students to course attendances
-- Teachers can view the list of registered students for each course attendance
-- Teachers can download the list of registered students as a PDF
-- Teachers can view statistics of course attendances by course
 
 ## Design choices
 
