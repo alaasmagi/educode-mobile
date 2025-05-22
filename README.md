@@ -12,6 +12,7 @@
 ### Prerequisites
 
 * Node.js
+* npx package manager
 * Expo
 * Android device
 
