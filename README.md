@@ -53,33 +53,22 @@ The project is divided into 6 folders:
 * **screens** - contains all the views/pages of the browser client application
   
 ### Data Transfer Objects (DTOs)
-There are 13 DTOs in `/models` folder which are responsible for communication between the client app and backend API.
-* **AttendanceCheckModel**
+There are 10 DTOs in `/models` folder which are responsible for communication between the client app and backend API.
+* **AttendanceCheckData**
 ```typescript
-interface AttendanceCheckModel {
-  id?: number;
+interface AttendanceCheckData {
   studentCode: string;
-  fullName: string;
   courseAttendanceId: number;
   workplaceId?: number;
 }
 
-export default AttendanceCheckModel;
-```
-* **AttendanceType**
-```typescript
-interface AttendanceType {
-  id: number;
-  attendanceType: string;
-}
-
-export default AttendanceType;
+export default AttendanceCheckData;
 ```
 * **ChangePasswordModel**
 ```typescript
 interface ChangePasswordModel {
-    uniId: string;
-    newPassword: string;
+  uniId: string;
+  newPassword: string;
 }
 
 export default ChangePasswordModel;
@@ -88,70 +77,55 @@ export default ChangePasswordModel;
 ```typescript
 export interface CourseAttendance {
   courseId: number;
-  courseCode?: string;
-  courseName?: string;
+  courseCode: string;
+  courseName: string;
   attendanceId?: number;
   attendanceTypeId: string;
-  attendanceType?: string;
+  attendanceType: string;
   date: string;
   startTime: string;
   endTime: string;
 }
-
-export interface MultipleCourseAttendances {
-  attendanceId?: number;
-  courseId: number;
-  attendanceTypeId: string;
-  dates: string[];
-  startTime: string;
-  endTime: string;
-}
 ```
-* **Course**
+* **CreateAttendanceCheckModel**
 ```typescript
-interface Course {
-  id?: number;
-  courseCode: string;
-  courseName: string;
-  courseValidStatus: number;
+interface CreateAttendanceCheckModel {
+  studentCode: string;
+  fullName: string;
+  courseAttendanceId: number;
+  workplaceId?: number;
 }
 
-export default Course;
-```
-* **CourseStatus**
-```typescript
-export interface CourseStatus {
-  id: number;
-  status: string;
-}
+export default CreateAttendanceCheckModel;
 ```
 * **CreateUserModel**
 ```typescript
 interface CreateUserModel {
-    uniId: string;
-    fullName: string;
-    password: string;
+  uniId: string;
+  studentCode: string;
+  fullName: string;
+  password: string;
 }
 
 export default CreateUserModel;
 ```
-* **LocalDataModel**
+* **LocalTokenModel**
 ```typescript
-interface LocalDataModel {
-    uniId: string;
-    token: string;
+interface LocalTokenModel {
+  uniId: string;
+  token: string;
 }
 
-export default LocalDataModel;
+export default LocalTokenModel;
 ```
 * **LocalUserData**
 ```typescript
 interface LocalUserData {
-    userType: string,
-    uniId?: string;
-    studentCode?: string;
-    offlineOnly: boolean;
-    fullName?: string;
+  userType: string;
+  fullName: string;
+  uniId?: string;
+  studentCode?: string;
+  offlineOnly: boolean;
 }
 
 export default LocalUserData;
@@ -159,13 +133,13 @@ export default LocalUserData;
 * **OnlineUserModel**
 ```typescript
 interface OnlineUserModel {
-    id: number;
-    userType: {
-        userType: string;
-    };
-    uniId: string;
-    studentCode?: string;
-    fullName: string;
+  id: number;
+  userType: {
+    userType: string;
+  };
+  uniId: string;
+  studentCode?: string;
+  fullName: string;
 }
 
 export default OnlineUserModel;
@@ -173,27 +147,18 @@ export default OnlineUserModel;
 * **StudentAttendanceModel**
 ```typescript
 interface StudentAttendanceModel {
-    attendaceCheckId: number,
-    studentCode: string;
-    workplaceId?: number;
+  attendaceCheckId: number;
+  studentCode: string;
+  workplaceId?: number;
 }
 
 export default StudentAttendanceModel;
 ```
-* **StudentCountModel**
-```typescript
-interface StudentCountModel {
-    attendanceDate: string;
-    studentCount: number;
-}
-
-export default StudentCountModel;
-```
 * **VerifyOTPModel**
 ```typescript
 interface VerifyOTPModel {
-    uniId: string;
-    otp: string;
+  uniId: string;
+  otp: string;
 }
 
 export default VerifyOTPModel;
