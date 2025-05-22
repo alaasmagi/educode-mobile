@@ -28,7 +28,7 @@ After meeting all prerequisites above -
 ```bash
 npm i; npx expo start --clear
 ```
-* The mobile app can be launched on your Android device by scanning QR code from terminal/cmd with [the Expo Go app on Google Play store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+* The mobile app can be launched on your Android device by scanning QR code from terminal/cmd with [the Expo Go app on Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
 ## Features
 - Teachers can sign up and log in with university email addresses
