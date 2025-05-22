@@ -26,9 +26,9 @@ EXPO_PUBLIC_EMAILDOMAIN=<email-domain-for-otp> //For example: "@taltech.ee"
 After meeting all prerequisites above - 
 * browser client application can be run via terminal/cmd opened in the root folder `/` by command
 ```bash
-npm i; npm start
+npm i; npx expo start --clear
 ```
-* The UI can be viewed from the web browser on the address the application provided in the terminal/cmd
+* The mobile app can be launched on your Android device by scanning QR code from terminal/cmd with [the Expo Go app on Google Play store](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
 ## Features
 - Teachers can sign up and log in with university email addresses
