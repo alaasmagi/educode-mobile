@@ -285,3 +285,7 @@ yarn-error.*
 *.tsbuildinfo
 
 # @end expo-cli
+
+# Android builds
+*.apk
+*.aab
