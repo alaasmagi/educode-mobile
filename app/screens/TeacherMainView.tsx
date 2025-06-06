@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -135,96 +143,102 @@ function TeacherMainView({ navigation, route }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
-          <NormalHeader navigation={navigation} route={route} />
-        </View>
-        {!isKeyboardVisible && (
-          <View style={styles.onlineToggleContainer}>
-            <ModeToggle
-              textLeft={t("scan-student")}
-              textRight={t("add-manually")}
-              isLeftSelected={isModeToggleInLeftPos}
-              onPressLeft={() => {
-                setQrScanView(true);
-                setIsModeToggleInLeftPos(true);
-              }}
-              onPressRight={() => {
-                setQrScanView(false);
-                setIsModeToggleInLeftPos(false);
-              }}
-              isDisabled={!currentAttendanceData}
-            />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+      >
+        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+          <View style={styles.headerContainer}>
+            <NormalHeader navigation={navigation} route={route} />
           </View>
-        )}
-
-        {!isKeyboardVisible && (
-          <View style={styles.currentAttendanceContainer}>
-            {currentAttendanceData ? (
-              <View style={styles.data}>
-                <DataText label={t("course-name")} text={currentAttendanceData.courseName} />
-                <DataText label={t("course-code")} text={currentAttendanceData.courseCode} />
-                <DataText label={t("attendance-id")} text={ToSixDigit(Number(currentAttendanceData.attendanceId))} />
-              </View>
-            ) : (
-              <>
-                <NormalMessage text={t(String(normalMessage))} />
-              </>
-            )}
-          </View>
-        )}
-
-        {qrScanView ? (
-          <>
-            <View style={styles.qrScannerContainer}>
-              {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} />}
-            </View>
-            <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
-              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
-            </View>
-          </>
-        ) : (
-          <>
-            <View style={styles.messageContainer}>
-              {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
-              {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
-            </View>
-            <View style={styles.manualInputContainer}>
-              <View style={styles.textBoxes}>
-                <TextBox
-                  iconName="person-icon"
-                  label={`${t("name")}`}
-                  value={fullName}
-                  placeHolder={t("for-example-abbr") + " Andres Tamm"}
-                  onChangeText={setFullName}
-                  autoCapitalize="words"
-                />
-                <TextBox
-                  iconName="person-icon"
-                  label={`${t("student-code")}`}
-                  value={studentCode}
-                  placeHolder={t("for-example-abbr") + " 123456ABCD"}
-                  onChangeText={(text) => setStudentCode(text.trim())}
-                  autoCapitalize="characters"
-                />
-                <TextBox
-                  iconName="work-icon"
-                  label={t("workplace-id")}
-                  placeHolder={t("for-example-abbr") + " 123456"}
-                  value={workplaceId}
-                  onChangeText={(text) => setWorkplaceId(text.trim())}
-                />
-              </View>
-              <NormalButton
-                text={t("add-manually")}
-                onPress={handleAddStudentManually}
-                disabled={!isStudentCodeValid() || !isFullNameValid() || isButtonDisabled}
+          {!isKeyboardVisible && (
+            <View style={styles.onlineToggleContainer}>
+              <ModeToggle
+                textLeft={t("scan-student")}
+                textRight={t("add-manually")}
+                isLeftSelected={isModeToggleInLeftPos}
+                onPressLeft={() => {
+                  setQrScanView(true);
+                  setIsModeToggleInLeftPos(true);
+                }}
+                onPressRight={() => {
+                  setQrScanView(false);
+                  setIsModeToggleInLeftPos(false);
+                }}
+                isDisabled={!currentAttendanceData}
               />
             </View>
-          </>
-        )}
-      </SafeAreaView>
+          )}
+
+          {!isKeyboardVisible && (
+            <View style={styles.currentAttendanceContainer}>
+              {currentAttendanceData ? (
+                <View style={styles.data}>
+                  <DataText label={t("course-name")} text={currentAttendanceData.courseName} />
+                  <DataText label={t("course-code")} text={currentAttendanceData.courseCode} />
+                  <DataText label={t("attendance-id")} text={ToSixDigit(Number(currentAttendanceData.attendanceId))} />
+                </View>
+              ) : (
+                <>
+                  <NormalMessage text={t(String(normalMessage))} />
+                </>
+              )}
+            </View>
+          )}
+
+          {qrScanView ? (
+            <>
+              <View style={styles.qrScannerContainer}>
+                {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} />}
+              </View>
+              <View style={styles.messageContainer}>
+                {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+                {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={styles.messageContainer}>
+                {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
+                {errorMessage && !isKeyboardVisible && <ErrorMessage text={errorMessage} />}
+              </View>
+              <View style={styles.manualInputContainer}>
+                <View style={styles.textBoxes}>
+                  <TextBox
+                    iconName="person-icon"
+                    label={`${t("name")}`}
+                    value={fullName}
+                    placeHolder={t("for-example-abbr") + " Andres Tamm"}
+                    onChangeText={setFullName}
+                    autoCapitalize="words"
+                  />
+                  <TextBox
+                    iconName="person-icon"
+                    label={`${t("student-code")}`}
+                    value={studentCode}
+                    placeHolder={t("for-example-abbr") + " 123456ABCD"}
+                    onChangeText={(text) => setStudentCode(text.trim())}
+                    autoCapitalize="characters"
+                  />
+                  <TextBox
+                    iconName="work-icon"
+                    label={t("workplace-id")}
+                    placeHolder={t("for-example-abbr") + " 123456"}
+                    value={workplaceId}
+                    onChangeText={(text) => setWorkplaceId(text.trim())}
+                  />
+                </View>
+                <NormalButton
+                  text={t("add-manually")}
+                  onPress={handleAddStudentManually}
+                  disabled={!isStudentCodeValid() || !isFullNameValid() || isButtonDisabled}
+                />
+              </View>
+            </>
+          )}
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

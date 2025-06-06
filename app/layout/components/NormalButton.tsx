@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
-    padding: wp("3.5%"),
+    paddingHorizontal: wp("3.5%"),
+    paddingVertical: hp("1.5%"),
     opacity: 1,
   },
   structureDisabled: {
@@ -28,7 +29,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
-    padding: wp("3.5%"),
+    paddingHorizontal: wp("3.5%"),
+    paddingVertical: hp("1.5%"),
     opacity: 0.5,
   },
   content: {

@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCameraPermissions } from "expo-camera";
-import * as SplashScreen from "expo-splash-screen";
 import { useTranslation } from "react-i18next";
 import i18next from "../businesslogic/services/i18next";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -127,7 +126,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <View style={styles.headerContainer}>

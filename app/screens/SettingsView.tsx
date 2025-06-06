@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NavigationProps from "../../types";
-import { SafeAreaView, StyleSheet, View, Alert, BackHandler, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Alert,
+  BackHandler,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -102,70 +111,76 @@ function SettingsView({ navigation, route }: NavigationProps) {
   BackButtonHandler(navigation);
 
   return (
-    <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-      <View style={styles.headerContainer}>
-        <NormalHeader navigation={navigation} route={route} />
-      </View>
-      {!isOfflineOnly && (
-        <View style={styles.firstOptionContainer}>
-          {!isKeyboardVisible && (
-            <NormalButton
-              text={t("change-password")}
-              onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
-              disabled={isButtonDisabled}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+    >
+      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+        <View style={styles.headerContainer}>
+          <NormalHeader navigation={navigation} route={route} />
+        </View>
+        {!isOfflineOnly && (
+          <View style={styles.firstOptionContainer}>
+            {!isKeyboardVisible && (
+              <NormalButton
+                text={t("change-password")}
+                onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
+                disabled={isButtonDisabled}
+              />
+            )}
+          </View>
+        )}
+
+        <View style={styles.messageContainer}>
+          {errorMessage && <ErrorMessage text={errorMessage} />}
+          {successMessage && <SuccessMessage text={successMessage} />}
+        </View>
+
+        {isOfflineOnly ? (
+          <View style={styles.firstOptionContainer}>
+            <SeparatorLine text={t("offline-mode-settings")} />
+            <TextBox
+              iconName="person-icon"
+              value={newStudentCode}
+              onChangeText={(text) => setNewStudentCode(text.trim())}
+              label={t("student-code")}
+              autoCapitalize="characters"
             />
+            <NormalButton
+              text={t("save-account-changes")}
+              onPress={handleStudentCodeChange}
+              disabled={!isStudentCodeValid() || isButtonDisabled}
+            />
+          </View>
+        ) : (
+          <View style={styles.deleteAccount}>
+            <SeparatorLine text={t("delete-account")} />
+            <TextBox
+              iconName="code-icon"
+              value={confirmationText ?? ""}
+              onChangeText={setConfirmationText}
+              label={t("confirmation")}
+              placeHolder={t("type-delete")}
+            />
+            <NormalButton
+              text={t("delete-account")}
+              disabled={confirmationText !== "DELETE" || isButtonDisabled}
+              onPress={handleDelete}
+            />
+          </View>
+        )}
+
+        <View style={styles.lowButtonContainer}>
+          {!isKeyboardVisible && (
+            <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />
+          )}
+          {!isKeyboardVisible && (
+            <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
           )}
         </View>
-      )}
-
-      <View style={styles.messageContainer}>
-        {errorMessage && <ErrorMessage text={errorMessage} />}
-        {successMessage && <SuccessMessage text={successMessage} />}
-      </View>
-
-      {isOfflineOnly ? (
-        <View style={styles.firstOptionContainer}>
-          <SeparatorLine text={t("offline-mode-settings")} />
-          <TextBox
-            iconName="person-icon"
-            value={newStudentCode}
-            onChangeText={(text) => setNewStudentCode(text.trim())}
-            label={t("student-code")}
-            autoCapitalize="characters"
-          />
-          <NormalButton
-            text={t("save-account-changes")}
-            onPress={handleStudentCodeChange}
-            disabled={!isStudentCodeValid() || isButtonDisabled}
-          />
-        </View>
-      ) : (
-        <View style={styles.deleteAccount}>
-          <SeparatorLine text={t("delete-account")} />
-          <TextBox
-            iconName="code-icon"
-            value={confirmationText ?? ""}
-            onChangeText={setConfirmationText}
-            label={t("confirmation")}
-            placeHolder={t("type-delete")}
-          />
-          <NormalButton
-            text={t("delete-account")}
-            disabled={confirmationText !== "DELETE" || isButtonDisabled}
-            onPress={handleDelete}
-          />
-        </View>
-      )}
-
-      <View style={styles.lowButtonContainer}>
-        {!isKeyboardVisible && (
-          <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />
-        )}
-        {!isKeyboardVisible && (
-          <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
-        )}
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

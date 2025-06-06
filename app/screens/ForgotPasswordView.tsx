@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 
 import TextBox from "../layout/components/TextBox";
@@ -107,120 +115,126 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
-          <FormHeader />
-          {!isKeyboardVisible && <Greeting text={isNormalPassChange ? t("change-password") : t("forgot-password")} />}
-        </View>
-        {stepNr === 1 && (
-          <>
-            <View style={styles.textBoxContainer}>
-              <UnderlineText text={t("verify-account") + ": "} />
-              <View style={styles.textBoxes}>
-                <TextBox
-                  iconName="person-icon"
-                  label="Uni-ID"
-                  onChangeText={(text) => setUniId(text.trim())}
-                  value={uniId}
-                  autoCapitalize="none"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+      >
+        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+          <View style={styles.headerContainer}>
+            <FormHeader />
+            {!isKeyboardVisible && <Greeting text={isNormalPassChange ? t("change-password") : t("forgot-password")} />}
+          </View>
+          {stepNr === 1 && (
+            <>
+              <View style={styles.textBoxContainer}>
+                <UnderlineText text={t("verify-account") + ": "} />
+                <View style={styles.textBoxes}>
+                  <TextBox
+                    iconName="person-icon"
+                    label="Uni-ID"
+                    onChangeText={(text) => setUniId(text.trim())}
+                    value={uniId}
+                    autoCapitalize="none"
+                  />
+                </View>
+                {!isKeyboardVisible && errorMessage && (
+                  <View style={styles.errorContainer}>
+                    <ErrorMessage text={errorMessage} />
+                  </View>
+                )}
+              </View>
+              <View style={styles.buttonContainer}>
+                <NormalLink
+                  text={isNormalPassChange ? t("dont-change-password") : t("still-remember-password")}
+                  onPress={() =>
+                    isNormalPassChange
+                      ? navigation.navigate("SettingsView", { localData })
+                      : navigation.navigate("LoginView")
+                  }
+                />
+                <NormalButton
+                  text={t("continue")}
+                  onPress={handleOTPRequest}
+                  disabled={!isStudentIDFormValid() || isButtonDisabled}
                 />
               </View>
-              {!isKeyboardVisible && errorMessage && (
-                <View style={styles.errorContainer}>
-                  <ErrorMessage text={errorMessage} />
-                </View>
-              )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <NormalLink
-                text={isNormalPassChange ? t("dont-change-password") : t("still-remember-password")}
-                onPress={() =>
-                  isNormalPassChange
-                    ? navigation.navigate("SettingsView", { localData })
-                    : navigation.navigate("LoginView")
-                }
-              />
-              <NormalButton
-                text={t("continue")}
-                onPress={handleOTPRequest}
-                disabled={!isStudentIDFormValid() || isButtonDisabled}
-              />
-            </View>
-          </>
-        )}
-        {stepNr === 2 && (
-          <>
-            <View style={styles.textBoxContainer}>
-              <UnderlineText
-                text={`${t("one-time-key-prompt")} ${uniId + Constants.expoConfig?.extra?.EXPO_PUBLIC_EMAILDOMAIN}`}
-              />
-              <View style={styles.textBoxes}>
-                <TextBox
-                  iconName="pincode-icon"
-                  label={`${t("one-time-key")}*`}
-                  onChangeText={(text) => setEmailCode(text.trim())}
-                  value={emailCode}
+            </>
+          )}
+          {stepNr === 2 && (
+            <>
+              <View style={styles.textBoxContainer}>
+                <UnderlineText
+                  text={`${t("one-time-key-prompt")} ${uniId + Constants.expoConfig?.extra?.EXPO_PUBLIC_EMAILDOMAIN}`}
                 />
+                <View style={styles.textBoxes}>
+                  <TextBox
+                    iconName="pincode-icon"
+                    label={`${t("one-time-key")}*`}
+                    onChangeText={(text) => setEmailCode(text.trim())}
+                    value={emailCode}
+                  />
+                </View>
+                {!isKeyboardVisible && errorMessage && (
+                  <View style={styles.errorContainer}>
+                    <ErrorMessage text={errorMessage} />
+                  </View>
+                )}
               </View>
-              {!isKeyboardVisible && errorMessage && (
-                <View style={styles.errorContainer}>
-                  <ErrorMessage text={errorMessage} />
-                </View>
-              )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <NormalButton
-                text={t("continue")}
-                onPress={handleOTPVerification}
-                disabled={!RegexFilters.defaultId.test(emailCode) || isButtonDisabled}
-              />
-              {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />}
-            </View>
-          </>
-        )}
-        {stepNr === 3 && (
-          <>
-            <View style={styles.textBoxContainer}>
-              {!isKeyboardVisible && <UnderlineText text={t("set-new-password")} />}
-              <View style={styles.textBoxes}>
-                <TextBox
-                  iconName="lock-icon"
-                  label={t("password")}
-                  isPassword
-                  onChangeText={setPassword}
-                  value={password}
+              <View style={styles.buttonContainer}>
+                <NormalButton
+                  text={t("continue")}
+                  onPress={handleOTPVerification}
+                  disabled={!RegexFilters.defaultId.test(emailCode) || isButtonDisabled}
                 />
-                <TextBox
-                  iconName="lock-icon"
-                  label={t("repeat-password")}
-                  isPassword
-                  onChangeText={setPasswordAgain}
-                  value={passwordAgain}
-                />
+                {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />}
               </View>
-              {!isKeyboardVisible && normalMessage && (
-                <View style={styles.errorContainer}>
-                  <NormalMessage text={normalMessage} />
+            </>
+          )}
+          {stepNr === 3 && (
+            <>
+              <View style={styles.textBoxContainer}>
+                {!isKeyboardVisible && <UnderlineText text={t("set-new-password")} />}
+                <View style={styles.textBoxes}>
+                  <TextBox
+                    iconName="lock-icon"
+                    label={t("password")}
+                    isPassword
+                    onChangeText={setPassword}
+                    value={password}
+                  />
+                  <TextBox
+                    iconName="lock-icon"
+                    label={t("repeat-password")}
+                    isPassword
+                    onChangeText={setPasswordAgain}
+                    value={passwordAgain}
+                  />
                 </View>
-              )}
-              {!isKeyboardVisible && errorMessage && (
-                <View style={styles.errorContainer}>
-                  <NormalMessage text={errorMessage} />
-                </View>
-              )}
-            </View>
+                {!isKeyboardVisible && normalMessage && (
+                  <View style={styles.errorContainer}>
+                    <NormalMessage text={normalMessage} />
+                  </View>
+                )}
+                {!isKeyboardVisible && errorMessage && (
+                  <View style={styles.errorContainer}>
+                    <NormalMessage text={errorMessage} />
+                  </View>
+                )}
+              </View>
 
-            <View style={styles.buttonContainer}>
-              <NormalButton
-                text={t("continue")}
-                onPress={handlePasswordChange}
-                disabled={!isPasswordFormValid() || isButtonDisabled}
-              />
-              {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
-            </View>
-          </>
-        )}
-      </SafeAreaView>
+              <View style={styles.buttonContainer}>
+                <NormalButton
+                  text={t("continue")}
+                  onPress={handlePasswordChange}
+                  disabled={!isPasswordFormValid() || isButtonDisabled}
+                />
+                {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
+              </View>
+            </>
+          )}
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
@@ -244,7 +258,7 @@ const styles = StyleSheet.create({
     marginTop: hp("2%"),
   },
   buttonContainer: {
-    flex: 0.5,
+    flex: 2,
     gap: hp("1%"),
     justifyContent: "center",
     alignItems: "center",

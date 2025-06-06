@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, StyleSheet, View, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import NavigationProps from "../../types";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
@@ -273,20 +281,26 @@ function CreateAccountView({ navigation }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
-          <FormHeader />
-          {!isKeyboardVisible && <Greeting text={t("welcome")} />}
-        </View>
-        {renderStep()}
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+      >
+        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+          <View style={styles.headerContainer}>
+            <FormHeader />
+            {!isKeyboardVisible && <Greeting text={t("welcome")} />}
+          </View>
+          {renderStep()}
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 1,
+    flex: 1.2,
     justifyContent: "flex-end",
     gap: hp("4%"),
   },
@@ -312,7 +326,7 @@ const styles = StyleSheet.create({
     marginTop: hp("2%"),
   },
   buttonContainer: {
-    flex: 1,
+    flex: 1.5,
     gap: hp("1%"),
     justifyContent: "center",
     alignItems: "center",

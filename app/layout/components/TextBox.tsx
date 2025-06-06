@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   inputUnFocused: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: hp("1%"),
+    paddingVertical: hp("0.1%"),
     paddingHorizontal: wp("2%"),
     gap: wp("1%"),
     borderWidth: 1,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: wp("1%"),
-    paddingVertical: hp("1%"),
+    paddingVertical: hp("0.1%"),
     paddingHorizontal: wp("2%"),
     borderWidth: 1,
     borderColor: "#4492EA",

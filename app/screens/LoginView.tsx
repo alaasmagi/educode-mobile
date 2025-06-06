@@ -97,7 +97,7 @@ function LoginView({ navigation, route }: NavigationProps) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("8%")}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
     >
       <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollViewContent}>
@@ -133,7 +133,6 @@ function LoginView({ navigation, route }: NavigationProps) {
               {!isKeyboardVisible && successMessage && <SuccessMessage text={successMessage} />}
             </View>
           </View>
-
           <View style={styles.buttonContainer}>
             <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid || isButtonDisabled} />
             <NormalLink text={t("register-now")} onPress={() => navigation.navigate("CreateAccountView")} />
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    flex: 1,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
     gap: hp("1%"),
