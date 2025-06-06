@@ -111,5 +111,6 @@
   "for-example-abbr": "nt.",
   "format": "formaat:",
   "confirmation": "Kinnitus",
-  "delete-my-data": "Kustuta mu kasutajaandmed"
+  "delete-my-data": "Kustuta mu kasutajaandmed",
+  "attendance-check-add-fail": "Tudengi lisamine ainetundi ebaõnnestus"
 }

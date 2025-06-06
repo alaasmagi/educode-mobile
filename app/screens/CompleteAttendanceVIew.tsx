@@ -34,19 +34,19 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 
   const stepNr = initialStep + 1;
   const [qrValue, setQrValue] = useState(() =>
-    GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId)
+    GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000")
   );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
+      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
     }, 60000);
 
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
   const refreshQrCode = () => {
-    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId));
+    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
   };
 
   const navigateBack = useCallback(() => {

@@ -58,7 +58,7 @@ function TeacherMainView({ navigation, route }) {
         } else {
           const model: CreateAttendanceCheckModel = {
             courseAttendanceId: parseInt(attendanceCheckData[1]),
-            workplaceId: parseInt(attendanceCheckData[2]) ?? null,
+            workplaceId: attendanceCheckData[2] === "000000" ? undefined : parseInt(attendanceCheckData[2]),
             fullName: attendanceCheckData[3],
             studentCode: attendanceCheckData[4],
           };
