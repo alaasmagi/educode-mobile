@@ -10,10 +10,10 @@ interface NormalButtonProperties {
 
 const styles = StyleSheet.create({
   structure: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#262626",
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   structureDisabled: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#262626",
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   content: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("6%"),
     fontWeight: "bold",
   },

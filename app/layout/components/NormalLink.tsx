@@ -9,7 +9,7 @@ interface NormalLinkProperties {
 
 const styles = StyleSheet.create({
   content: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("4.5%"),
     textDecorationLine: "underline",
   },

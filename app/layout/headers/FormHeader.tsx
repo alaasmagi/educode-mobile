@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 const FormHeader = () => {
   return (
     <View style={styles.structure}>
-      <Image style={styles.logo} resizeMode="contain" source={require("../../assets/logos/normal-logo.png")} />
+      <Image style={styles.logo} resizeMode="contain" source={require("../../assets/app-logos/logo-dark.png")} />
       <LanguageSwitch />
     </View>
   );

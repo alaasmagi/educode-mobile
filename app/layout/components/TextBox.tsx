@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("2%"),
     gap: wp("1%"),
     borderWidth: 1,
-    borderColor: "#BCBCBD",
+    borderColor: "#E8EEF1",
     borderRadius: wp("3%"),
   },
   label: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("4.5%"),
   },
   icon: {
@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   input: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("5%"),
     flex: 1,
   },
   inputDisabled: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("5%"),
     flex: 1,
     opacity: 0.5,
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp("0.1%"),
     paddingHorizontal: wp("2%"),
     borderWidth: 1,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
     borderRadius: wp("3%"),
   },
 });

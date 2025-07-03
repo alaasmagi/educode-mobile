@@ -8,10 +8,10 @@ interface SettingsButtonProperties {
 
 const styles = StyleSheet.create({
   structure: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#262626",
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
     paddingHorizontal: 10,
     paddingVertical: 10,
   },

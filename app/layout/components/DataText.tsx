@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
     width: wp("90%"),
   },
   text: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("5%"),
   },
   label: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("5%"),
     fontWeight: "bold",
   },

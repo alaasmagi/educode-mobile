@@ -37,20 +37,20 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#262626",
   },
   innerCircle: {
     width: 17,
     height: 17,
     borderRadius: 3,
-    backgroundColor: "#4492EA",
+    backgroundColor: "#1977E2",
   },
   label: {
     fontSize: wp("4.5%"),
-    color: "#BCBCBD",
+    color: "#E8EEF1",
   },
 });
 

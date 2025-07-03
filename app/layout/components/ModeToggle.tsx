@@ -33,12 +33,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   selected: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#262626",
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
   },
   text: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("6%"),
     fontWeight: "bold",
   },

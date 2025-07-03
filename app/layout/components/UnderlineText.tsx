@@ -7,7 +7,7 @@ interface UnderlinetextProperties {
 
 const styles = StyleSheet.create({
   text: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: 25,
     textDecorationLine: "underline",
     textAlign: "center",

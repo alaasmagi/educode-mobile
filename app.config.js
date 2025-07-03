@@ -7,9 +7,13 @@ export default {
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     splash: {
-      image: "./app/assets/logos/splash-logo.png",
-      resizeMode: "contain",
-      backgroundColor: "#2B2B2B",
+      backgroundColor: "#FFFFFF", // TODO change
+          image: "./app/assets/app-icons/splash/splash-light.png",
+          dark: {
+            backgroundColor: "#000000",
+            image: "./app/assets/app-icons/splash/splash-dark.png"
+          },
+          imageWidth: 200,
     },
     androidNavigationBar: {
       barStyle: "light-content",
@@ -17,14 +21,18 @@ export default {
     },
     ios: {
       supportsTablet: true,
-      icon: "./app/assets/logos/app-icon.png",
+      icon: {
+        light: "./app/assets/app-icons/ios/ios-light.png",
+        dark: "./app/assets/app-icons/ios/ios-dark.png",
+        tinted: "./app/assets/app-icons/ios/ios-tinted.png"
+      },
       bundleIdentifier: "com.educode.mobile",
     },
     android: {
       package: "com.educode.mobile",
       adaptiveIcon: {
-        foregroundImage: "./app/assets/logos/app-icon.png",
-        backgroundColor: "#2B2B2B",
+        foregroundImage: "./app/assets/app-icons/android/android-adaptive.png",
+        backgroundColor: "#2B2B2B", //TODO verify
       },
       permissions: ["android.permission.CAMERA"],
     },
@@ -43,8 +51,12 @@ export default {
       [
         "expo-splash-screen",
         {
-          backgroundColor: "#2B2B2B",
-          image: "./app/assets/logos/splash-logo.png",
+          backgroundColor: "#FFFFFF", // TODO change
+          image: "./app/assets/app-icons/splash/splash-light.png",
+          dark: {
+            backgroundColor: "#000000",
+            image: "./app/assets/app-icons/splash/splash-dark.png"
+          },
           imageWidth: 200,
         },
       ],

@@ -34,15 +34,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#4492EA",
+    borderColor: "#1977E2",
   },
   number: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("4.5%"),
   },
   text: {
     fontSize: wp("4.5%"),
-    color: "#BCBCBD",
+    color: "#E8EEF1",
   },
 });
 

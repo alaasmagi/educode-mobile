@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: wp("5%"),
     borderWidth: wp("3%"),
-    backgroundColor: "#BCBCBD",
+    backgroundColor: "#E8EEF1",
     borderColor: "#525252",
     alignItems: "center",
     justifyContent: "center",

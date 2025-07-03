@@ -15,10 +15,10 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: "#BCBCBD",
+    backgroundColor: "#E8EEF1",
   },
   lineText: {
-    color: "#BCBCBD",
+    color: "#E8EEF1",
     fontSize: wp("4%"),
     marginHorizontal: wp("2%"),
   },

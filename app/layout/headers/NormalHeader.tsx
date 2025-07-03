@@ -4,11 +4,11 @@ import LanguageSwitch from "../components/LanguageSwitch";
 import SettingsButton from "../components/SettingsButton";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-function NormalHeader({ navigation, route }: NavigationProps) {
+function NormalHeader({ navigation, route }) {
   const { localData } = route.params;
   return (
     <View style={styles.structure}>
-      <Image style={styles.logo} resizeMode="contain" source={require("../../assets/logos/normal-logo.png")} />
+      <Image style={styles.logo} resizeMode="contain" source={require("../../assets/app-logos/logo-dark.png")} />
       <View style={styles.buttonContainer}>
         <LanguageSwitch />
         <SettingsButton onPress={() => navigation.navigate("SettingsView", { localData })} />

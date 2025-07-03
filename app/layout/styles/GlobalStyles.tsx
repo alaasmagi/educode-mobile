@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 export default StyleSheet.create({
   anrdoidSafeArea: {
     flex: 1,
-    backgroundColor: "#2B2B2B",
+    backgroundColor: "#343434",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     paddingBottom: hp("2.5%"),
     paddingHorizontal: wp("5%"),
