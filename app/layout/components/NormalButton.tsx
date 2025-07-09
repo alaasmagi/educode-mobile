@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   },
   content: {
     color: "#E8EEF1",
+    textAlign: "center",
     fontSize: wp("6%"),
     fontWeight: "bold",
   },

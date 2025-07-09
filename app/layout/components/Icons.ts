@@ -15,8 +15,11 @@ export const Icons = {
   "ger-flag": require("../../assets/icons/ger-flag.png"),
   "fin-flag": require("../../assets/icons/fin-flag.png"),
   "rus-flag": require("../../assets/icons/rus-flag.png"),
+  "lat-flag": require("../../assets/icons/lat-flag.png"),
+  "lit-flag": require("../../assets/icons/lit-flag.png"),
   "visibility-on": require("../../assets/icons/visibility-on.png"),
   "visibility-off": require("../../assets/icons/visibility-off.png"),
   "zoom-icon": require("../../assets/icons/zoom-icon.png"),
-  "code-icon": require("../../assets/icons/code-icon.png")
+  "code-icon": require("../../assets/icons/code-icon.png"),
+  "arrow-up-icon": require("../../assets/icons/arrow-up-icon.png"),
 };
