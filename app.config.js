@@ -7,7 +7,7 @@ export default {
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     splash: {
-      backgroundColor: "#FFFFFF", // TODO change
+      backgroundColor: "#E8EEF1",
           image: "./app/assets/app-icons/splash/splash-light.png",
           dark: {
             backgroundColor: "#000000",
@@ -32,7 +32,7 @@ export default {
       package: "com.educode.mobile",
       adaptiveIcon: {
         foregroundImage: "./app/assets/app-icons/android/android-adaptive.png",
-        backgroundColor: "#2B2B2B", //TODO verify
+        backgroundColor: "#343434",
       },
       permissions: ["android.permission.CAMERA"],
     },
@@ -51,7 +51,7 @@ export default {
       [
         "expo-splash-screen",
         {
-          backgroundColor: "#FFFFFF", // TODO change
+          backgroundColor: "#E8EEF1",
           image: "./app/assets/app-icons/splash/splash-light.png",
           dark: {
             backgroundColor: "#000000",
