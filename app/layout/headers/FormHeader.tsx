@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
   structure: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     width: wp("90%"),
   },
 });
