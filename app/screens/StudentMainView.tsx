@@ -31,6 +31,7 @@ import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibility
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import GetSixDigitTimeStamp from "../businesslogic/helpers/TimeStamp";
+import { EQrStatus } from "../models/EQrStatus";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -53,8 +54,10 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
   const [scanForWorkplace, setScanForWorkplace] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [scanStatus, setScanStatus] = useState<EQrStatus>(EQrStatus.Undefined);
 
   const clearErrorMessage = () => setTimeout(() => setErrorMessage(null), 2000);
+  const clearScanStatus = () => setTimeout(() => setScanStatus(EQrStatus.Undefined), 2000);
 
   const isTimestampValid = (timestampStr: string): boolean => {
     const scannedTime = parseInt(timestampStr);
@@ -62,7 +65,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     return currentTime - scannedTime <= 20;
   };
 
-  const handleBarcodeScanned = async ({ data }: { data: string }) => {
+  const handleQrScanned = async ({ data }: { data: string }) => {
     if (scanned) return;
 
     setScanned(true);
@@ -72,16 +75,24 @@ function StudentMainView({ navigation, route }: NavigationProps) {
       const [idPart, timestampPart] = data.split("-");
       if (!isTimestampValid(timestampPart)) {
         setErrorMessage(t("timestamp-error"));
+        setScanStatus(EQrStatus.Incorrect);
         clearErrorMessage();
+        clearScanStatus();
       } else {
+        setScanStatus(EQrStatus.Correct);
+        clearScanStatus();
         setScannedAttendanceData(data);
         setAttendanceId(ToSixDigit(Number(idPart)));
       }
     } else if (stepNr === 2 && RegexFilters.defaultId.test(data)) {
       setWorkplaceId(ToSixDigit(Number(data)));
+      setScanStatus(EQrStatus.Correct);
+      clearScanStatus();
     } else {
       setErrorMessage(t("invalid-qr"));
+      setScanStatus(EQrStatus.Incorrect);
       clearErrorMessage();
+      clearScanStatus();
     }
 
     setTimeout(() => setScanned(false), 2000);
@@ -133,7 +144,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
           </View>
           {!isKeyboardVisible && (
             <View style={styles.qrContainer}>
-              <QrScanner onQrScanned={handleBarcodeScanned} />
+              <QrScanner onQrScanned={handleQrScanned} qrStatus={scanStatus} />
             </View>
           )}
           {stepNr === 1 ? (
