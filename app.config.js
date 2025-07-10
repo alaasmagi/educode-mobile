@@ -8,12 +8,12 @@ export default {
     newArchEnabled: true,
     splash: {
       backgroundColor: "#E8EEF1",
-          image: "./app/assets/app-icons/splash/splash-light.png",
-          dark: {
-            backgroundColor: "#000000",
-            image: "./app/assets/app-icons/splash/splash-dark.png"
-          },
-          imageWidth: 200,
+      image: "./app/assets/app-icons/splash/splash-light.png",
+      dark: {
+        backgroundColor: "#000000",
+        image: "./app/assets/app-icons/splash/splash-dark.png",
+      },
+      imageWidth: 200,
     },
     androidNavigationBar: {
       barStyle: "light-content",
@@ -21,18 +21,15 @@ export default {
     },
     ios: {
       supportsTablet: true,
-      icon: {
-        light: "./app/assets/app-icons/ios/ios-light.png",
-        dark: "./app/assets/app-icons/ios/ios-dark.png",
-        tinted: "./app/assets/app-icons/ios/ios-tinted.png"
-      },
+      icon: "./app/assets/app-icons/ios/ios-tinted.png",
       bundleIdentifier: "com.educode.mobile",
     },
     android: {
+      targetSdkVersion: 35,
       package: "com.educode.mobile",
       adaptiveIcon: {
         foregroundImage: "./app/assets/app-icons/android/android-adaptive.png",
-        backgroundColor: "#343434",
+        backgroundColor: "#1977E2",
       },
       permissions: ["android.permission.CAMERA"],
     },
@@ -55,7 +52,7 @@ export default {
           image: "./app/assets/app-icons/splash/splash-light.png",
           dark: {
             backgroundColor: "#000000",
-            image: "./app/assets/app-icons/splash/splash-dark.png"
+            image: "./app/assets/app-icons/splash/splash-dark.png",
           },
           imageWidth: 200,
         },
