@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: wp("10%"),
     height: hp("3.5%"),
     borderRadius: wp("3%"),
-    backgroundColor: "#2B2B2B",
+    backgroundColor: "#262626",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
