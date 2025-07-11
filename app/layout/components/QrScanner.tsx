@@ -72,7 +72,7 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
             styles.camera,
             {
               borderColor:
-                qrStatus === EQrStatus.Incorrect ? "#DD2D4A" : qrStatus === EQrStatus.Correct ? "#57A773" : "#515151",
+                qrStatus === EQrStatus.Incorrect ? "#DD2D4A" : qrStatus === EQrStatus.Correct ? "#2DD452" : "#515151",
             },
           ]}
           onBarcodeScanned={onQrScanned}

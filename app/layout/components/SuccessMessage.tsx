@@ -14,12 +14,13 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "90%",
     borderRadius: 20,
-    borderColor: "#57A773",
+    borderColor: "#2DD452",
     borderWidth: 2,
   },
   content: {
     fontWeight: "bold",
-    color: "#57A773",
+    textAlign: "center",
+    color: "#2DD452",
     fontSize: 18,
   },
 });
