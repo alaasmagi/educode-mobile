@@ -11,7 +11,6 @@ import CompleteAttendanceView from "./app/screens/CompleteAttendanceVIew";
 import TeacherMainView from "./app/screens/TeacherMainView";
 import ForgotPasswordView from "./app/screens/ForgotPasswordView";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { KeyboardProvider } from "react-native-keyboard-controller";
 
 const Stack = createStackNavigator();
 
@@ -19,21 +18,19 @@ export default function App() {
   return (
     <>
       <SafeAreaProvider>
-        <KeyboardProvider>
-          <StatusBar style="light" />
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="InitialSelectionView" component={InitialSelectionView} />
-              <Stack.Screen name="LoginView" component={LoginView} options={{ gestureEnabled: false }} />
-              <Stack.Screen name="StudentMainView" component={StudentMainView} options={{ gestureEnabled: false }} />
-              <Stack.Screen name="SettingsView" component={SettingsView} options={{ gestureEnabled: false }} />
-              <Stack.Screen name="CompleteAttendanceView" component={CompleteAttendanceView} />
-              <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
-              <Stack.Screen name="TeacherMainView" component={TeacherMainView} />
-              <Stack.Screen name="ForgotPasswordView" component={ForgotPasswordView} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </KeyboardProvider>
+        <StatusBar style="light" />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="InitialSelectionView" component={InitialSelectionView} />
+            <Stack.Screen name="LoginView" component={LoginView} options={{ gestureEnabled: false }} />
+            <Stack.Screen name="StudentMainView" component={StudentMainView} options={{ gestureEnabled: false }} />
+            <Stack.Screen name="SettingsView" component={SettingsView} options={{ gestureEnabled: false }} />
+            <Stack.Screen name="CompleteAttendanceView" component={CompleteAttendanceView} />
+            <Stack.Screen name="CreateAccountView" component={CreateAccountView} />
+            <Stack.Screen name="TeacherMainView" component={TeacherMainView} />
+            <Stack.Screen name="ForgotPasswordView" component={ForgotPasswordView} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </SafeAreaProvider>
     </>
   );

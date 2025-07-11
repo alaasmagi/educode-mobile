@@ -130,69 +130,77 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
-          <NormalHeader navigation={navigation} route={route} />
-        </View>
-        <View style={styles.stepDividerContainer}>
-          <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
-        </View>
-        {!isKeyboardVisible && (
-          <View style={styles.qrContainer}>
-            <QrScanner onQrScanned={handleQrScanned} qrStatus={scanStatus} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+      >
+        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+          <View style={styles.headerContainer}>
+            <NormalHeader navigation={navigation} route={route} />
           </View>
-        )}
-        {stepNr === 1 ? (
-          <View style={styles.manualInputContainer}>
-            <SeparatorLine text={t("or-enter-id-manually")} />
-            <TextBox
-              iconName="key-icon"
-              label={t("attendance-id")}
-              placeHolder={t("for-example-abbr") + " 123456-123456"}
-              value={scannedAttendanceData}
-              onChangeText={(text) => setScannedAttendanceData(text.trim())}
-            />
-            <View style={styles.additionalFieldContainer}>
-              {errorMessage ? (
-                <ErrorMessage text={errorMessage} />
-              ) : (
-                <Checkbox
-                  label={t("add-workplace")}
-                  checked={scanForWorkplace}
-                  onChange={() => setScanForWorkplace((prev) => !prev)}
+          <View style={styles.stepDividerContainer}>
+            <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
+          </View>
+          {!isKeyboardVisible && (
+            <View style={styles.qrContainer}>
+              <QrScanner onQrScanned={handleQrScanned} qrStatus={scanStatus} />
+            </View>
+          )}
+          {stepNr === 1 ? (
+            <View style={styles.manualInputContainer}>
+              <SeparatorLine text={t("or-enter-id-manually")} />
+              <TextBox
+                iconName="key-icon"
+                label={t("attendance-id")}
+                placeHolder={t("for-example-abbr") + " 123456-123456"}
+                value={scannedAttendanceData}
+                onChangeText={(text) => setScannedAttendanceData(text.trim())}
+              />
+              <View style={styles.additionalFieldContainer}>
+                {errorMessage ? (
+                  <ErrorMessage text={errorMessage} />
+                ) : (
+                  <Checkbox
+                    label={t("add-workplace")}
+                    checked={scanForWorkplace}
+                    onChange={() => setScanForWorkplace((prev) => !prev)}
+                  />
+                )}
+              </View>
+              <View style={styles.lowNavButtonContainer}>
+                <NormalButton
+                  text={t("continue")}
+                  onPress={handleNextStep}
+                  disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
                 />
-              )}
+              </View>
             </View>
-            <View style={styles.lowNavButtonContainer}>
-              <NormalButton
-                text={t("continue")}
-                onPress={handleNextStep}
-                disabled={!RegexFilters.attendanceScanId.test(scannedAttendanceData)}
+          ) : (
+            <View style={styles.manualInputContainer}>
+              <SeparatorLine text={t("or-enter-id-manually")} />
+              <TextBox
+                iconName="work-icon"
+                label={t("workplace-id")}
+                placeHolder={t("for-example-abbr") + " 123456"}
+                value={workplaceId}
+                onChangeText={(text) => setWorkplaceId(text.trim())}
               />
+              <View style={styles.additionalFieldContainer}>
+                {errorMessage && <ErrorMessage text={errorMessage} />}
+              </View>
+              <View style={styles.lowNavButtonContainer}>
+                <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
+                <NormalButton
+                  text={t("continue")}
+                  disabled={!RegexFilters.defaultId.test(workplaceId)}
+                  onPress={handleDataSubmit}
+                />
+              </View>
             </View>
-          </View>
-        ) : (
-          <View style={styles.manualInputContainer}>
-            <SeparatorLine text={t("or-enter-id-manually")} />
-            <TextBox
-              iconName="work-icon"
-              label={t("workplace-id")}
-              placeHolder={t("for-example-abbr") + " 123456"}
-              value={workplaceId}
-              onChangeText={(text) => setWorkplaceId(text.trim())}
-            />
-            <View style={styles.additionalFieldContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
-            <View style={styles.lowNavButtonContainer}>
-              <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
-              <NormalButton
-                text={t("continue")}
-                disabled={!RegexFilters.defaultId.test(workplaceId)}
-                onPress={handleDataSubmit}
-              />
-            </View>
-          </View>
-        )}
-      </SafeAreaView>
+          )}
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
