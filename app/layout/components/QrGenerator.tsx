@@ -12,7 +12,7 @@ interface QrGeneratorProperties {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.9)",
+    backgroundColor: "rgba(0,0,0,0.96)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -43,13 +43,9 @@ const styles = StyleSheet.create({
 const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
   const [enlarged, setIsEnlarged] = useState(false);
   const originalBrightness = useRef<number | null>(null);
-  const clampBrightness = (b: number) => Math.max(0.1, Math.min(b, 1.0));
 
   const restoreBrightness = async () => {
-    if (originalBrightness.current !== null) {
-      await Brightness.setBrightnessAsync(clampBrightness(originalBrightness.current));
-      originalBrightness.current = null;
-    }
+    await Brightness.restoreSystemBrightnessAsync();
   };
 
   useEffect(() => {
@@ -63,11 +59,6 @@ const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
   useEffect(() => {
     if (enlarged) {
       (async () => {
-        if (originalBrightness.current === null) {
-          const current = await Brightness.getBrightnessAsync();
-          originalBrightness.current = clampBrightness(current);
-          console.log("Saved user brightness:", originalBrightness.current);
-        }
         await Brightness.setBrightnessAsync(1.0);
       })();
     } else {
@@ -84,7 +75,14 @@ const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
           </TouchableOpacity>
         </View>
       )}
-      <Modal visible={enlarged} transparent animationType="fade" onRequestClose={() => setIsEnlarged(false)}>
+      <Modal
+        visible={enlarged}
+        statusBarTranslucent={true}
+        navigationBarTranslucent={true}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsEnlarged(false)}
+      >
         <TouchableOpacity style={styles.overlay} onPress={() => setIsEnlarged(false)}>
           <View style={styles.containerEnlarged}>
             <QRCode color="#1E1E1E" size={hp("34%")} backgroundColor="#E8EEF1" value={value} />

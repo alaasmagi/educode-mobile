@@ -26,6 +26,7 @@ export default {
     },
     android: {
       targetSdkVersion: 35,
+      edgeToEdgeEnabled: true,
       package: "com.educode.mobile",
       adaptiveIcon: {
         foregroundImage: "./app/assets/app-icons/android/android-adaptive.png",
