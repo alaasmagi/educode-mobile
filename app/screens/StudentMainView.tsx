@@ -139,9 +139,9 @@ function StudentMainView({ navigation, route }: NavigationProps) {
           <View style={styles.headerContainer}>
             <NormalHeader navigation={navigation} route={route} />
           </View>
-          <View style={styles.stepDividerContainer}>
+          {!isKeyboardVisible && (<View style={styles.stepDividerContainer}>
             <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
-          </View>
+          </View>)}
           {!isKeyboardVisible && (
             <View style={styles.qrContainer}>
               <QrScanner onQrScanned={handleQrScanned} qrStatus={scanStatus} />
@@ -207,7 +207,7 @@ function StudentMainView({ navigation, route }: NavigationProps) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: "center",
   },
   stepDividerContainer: {

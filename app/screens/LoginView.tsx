@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerContainer: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: "flex-end",
     gap: hp("4%"),
   },

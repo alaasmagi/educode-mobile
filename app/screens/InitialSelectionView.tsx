@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
   headerContainer: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: "flex-end",
   },
   mainLoginContainer: {
