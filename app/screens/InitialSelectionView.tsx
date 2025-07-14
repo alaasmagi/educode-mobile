@@ -1,26 +1,15 @@
 import React, { useEffect, useCallback, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  BackHandler,
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, BackHandler, Alert, Keyboard } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCameraPermissions } from "expo-camera";
 import { useTranslation } from "react-i18next";
 import i18next from "../businesslogic/services/i18next";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalButton from "../layout/components/NormalButton";
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
 import NormalMessage from "../layout/components/NormalMessage";
-
 import NavigationProps from "../../types";
 import FormHeader from "../layout/headers/FormHeader";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
@@ -34,6 +23,7 @@ import {
 import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/services/UserDataOnline";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import { ScreenContainer } from "../layout/containers/ScreenContainer";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -57,7 +47,6 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         ]);
         return true;
       };
-
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
       return () => backHandler.remove();
     }, [])
@@ -79,7 +68,6 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         setNormalMessage(null);
         setIsConnection(true);
       }
-
       let localData = await GetOfflineUserData();
       if (localData?.offlineOnly === true) {
         navigation.navigate("StudentMainView", { localData });
@@ -95,7 +83,6 @@ function InitialSelectionView({ navigation }: NavigationProps) {
         }
       }
     };
-
     init();
   }, []);
 
@@ -116,96 +103,76 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       fullName: fullName.trim(),
       offlineOnly: true,
     };
-
     await SaveOfflineUserData(localData);
     setIsButtonDisabled(false);
     navigation.navigate("StudentMainView", { localData });
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+    <ScreenContainer
+      header={<FormHeader />}
+      safeAreaStyle={GlobalStyles.anrdoidSafeArea}
     >
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
-          <FormHeader />
-        </View>
-        {stepNr == 1 && (
-          <View style={styles.mainContainer}>
-            {!isKeyboardVisible && (
-              <View style={styles.mainLoginContainer}>
-                <NormalButton
-                  text={t("log-in")}
-                  onPress={() => navigation.navigate("LoginView")}
-                  disabled={!isConnection}
-                />
-                <NormalButton
-                  text={t("register-as-student")}
-                  onPress={() => navigation.navigate("CreateAccountView")}
-                  disabled={!isConnection}
-                />
-                {normalMessage && <NormalMessage text={normalMessage} />}
-              </View>
-            )}
-            <View style={styles.alternateLoginContainer}>
-              <SeparatorLine text={t("or-use-offline-only")} />
-              <TextBox
-                iconName="person-icon"
-                label={t("student-code")}
-                placeHolder={t("for-example-abbr") + " 123456ABCD"}
-                onChangeText={(text) => setStudentCode(text.trim())}
-                value={studentCode ?? ""}
-                autoCapitalize="characters"
-              />
-              <TextBox
-                iconName="person-icon"
-                label={`${t("name")}`}
-                value={fullName}
-                placeHolder={t("for-example-abbr") + " Andres Tamm"}
-                onChangeText={setFullName}
-                autoCapitalize="words"
+      {stepNr === 1 && (
+        <View style={styles.screenContent}>
+          {!isKeyboardVisible && (
+            <View style={styles.mainLoginContainer}>
+              <NormalButton
+                text={t("log-in")}
+                onPress={() => navigation.navigate("LoginView")}
+                disabled={!isConnection}
               />
               <NormalButton
-                text={t("continue")}
-                onPress={handleOfflineLogin}
-                disabled={!isStudentCodeValid() || !isNameFormValid() || isButtonDisabled}
+                text={t("register-as-student")}
+                onPress={() => navigation.navigate("CreateAccountView")}
+                disabled={!isConnection}
               />
+              {normalMessage && <NormalMessage text={normalMessage} />}
             </View>
+          )}
+          <View style={styles.alternateLoginContainer}>
+            <SeparatorLine text={t("or-use-offline-only")} />
+            <TextBox
+              iconName="person-icon"
+              label={t("student-code")}
+              placeHolder={t("for-example-abbr") + " 123456ABCD"}
+              onChangeText={(text) => setStudentCode(text.trim())}
+              value={studentCode ?? ""}
+              autoCapitalize="characters"
+            />
+            <TextBox
+              iconName="person-icon"
+              label={t("name")}
+              value={fullName}
+              placeHolder={t("for-example-abbr") + " Andres Tamm"}
+              onChangeText={setFullName}
+              autoCapitalize="words"
+            />
+            <NormalButton
+              text={t("continue")}
+              onPress={handleOfflineLogin}
+              disabled={!isStudentCodeValid() || !isNameFormValid() || isButtonDisabled}
+            />
           </View>
-        )}
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        </View>
+      )}
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 6,
-  },
-  messageContainer: {
-    flex: 0.5,
-  },
-  headerContainer: {
-    flex: 0.7,
-    justifyContent: "flex-end",
+  screenContent: {
+    gap: hp("15%"),
+    paddingHorizontal: wp("7%"),
   },
   mainLoginContainer: {
-    justifyContent: "center",
+    marginBottom: hp("3%"),
     alignItems: "center",
-    flex: 1,
     gap: hp("2%"),
   },
   alternateLoginContainer: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     gap: hp("2%"),
-  },
-  buttonContainer: {
-    alignItems: "center",
-    gap: hp("1%"),
   },
 });
 

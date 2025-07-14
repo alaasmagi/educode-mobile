@@ -1,23 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { Alert, View, StyleSheet, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useCameraPermissions } from "expo-camera";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-
 import NavigationProps from "../../types";
 import GlobalStyles from "../layout/styles/GlobalStyles";
-
 import FormHeader from "../layout/headers/FormHeader";
 import Greeting from "../layout/components/Greeting";
 import TextBox from "../layout/components/TextBox";
@@ -25,10 +13,10 @@ import NormalButton from "../layout/components/NormalButton";
 import NormalLink from "../layout/components/NormalLink";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import SuccessMessage from "../layout/components/SuccessMessage";
-
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { UserLogin, FetchAndSaveUserDataByUniId } from "../businesslogic/services/UserDataOnline";
 import { GetOfflineUserData } from "../businesslogic/services/UserDataOffline";
+import { ScreenContainer } from "../layout/containers/ScreenContainer";
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -39,7 +27,6 @@ function LoginView({ navigation, route }: NavigationProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-
   const isFormValid = uniId !== "" && password !== "";
 
   useEffect(() => {
@@ -71,14 +58,15 @@ function LoginView({ navigation, route }: NavigationProps) {
   const handleLogin = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
-    if (!(await checkPermissions())) return;
-
+    if (!(await checkPermissions())) {
+      setIsButtonDisabled(false);
+      return;
+    }
     const loginStatus = await UserLogin(uniId.trim(), password.trim());
-
     setIsButtonDisabled(false);
+
     if (loginStatus === true) {
       const fetchDataStatus = await FetchAndSaveUserDataByUniId(uniId.trim());
-
       if (fetchDataStatus === true) {
         const localData = await GetOfflineUserData();
         if (localData) {
@@ -94,67 +82,47 @@ function LoginView({ navigation, route }: NavigationProps) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+    <ScreenContainer
+      header={<FormHeader />}
+      scroll
+      dismissKeyboardOnPress
+      safeAreaStyle={GlobalStyles.anrdoidSafeArea}
+      contentContainerStyle={styles.scrollViewContent}
     >
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.scrollViewContent}>
-          <View style={styles.headerContainer}>
-            <FormHeader />
-            {!isKeyboardVisible && <Greeting text={t("hello-again")} />}
-          </View>
-
-          <View style={styles.textBoxContainer}>
-            <View style={styles.textBoxes}>
-              <TextBox
-                iconName="person-icon"
-                label="Uni-ID"
-                onChangeText={setUniId}
-                value={uniId}
-                autoCapitalize="none"
-              />
-              <TextBox
-                iconName="lock-icon"
-                label={t("password")}
-                isPassword
-                onChangeText={setPassword}
-                value={password}
-              />
-            </View>
-
-            <View style={styles.forgotPasswordContainer}>
-              <NormalLink text={t("forgot-password")} onPress={() => navigation.navigate("ForgotPasswordView")} />
-            </View>
-
-            <View style={styles.errorContainer}>
-              {!isKeyboardVisible && errorMessage && <ErrorMessage text={errorMessage} />}
-              {!isKeyboardVisible && successMessage && <SuccessMessage text={successMessage} />}
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid || isButtonDisabled} />
-            <NormalLink text={t("register-now")} onPress={() => navigation.navigate("CreateAccountView")} />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      {!isKeyboardVisible && (
+        <View style={styles.greetingContainer}>
+          <Greeting text={t("hello-again")} />
+        </View>
+      )}
+      <View style={styles.textBoxContainer}>
+        <View style={styles.textBoxes}>
+          <TextBox iconName="person-icon" label="Uni-ID" onChangeText={setUniId} value={uniId} autoCapitalize="none" />
+          <TextBox iconName="lock-icon" label={t("password")} isPassword onChangeText={setPassword} value={password} />
+        </View>
+        <View style={styles.forgotPasswordContainer}>
+          <NormalLink text={t("forgot-password")} onPress={() => navigation.navigate("ForgotPasswordView")} />
+        </View>
+        <View style={styles.errorContainer}>
+          {!isKeyboardVisible && errorMessage && <ErrorMessage text={errorMessage} />}
+          {!isKeyboardVisible && successMessage && <SuccessMessage text={successMessage} />}
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid || isButtonDisabled} />
+        <NormalLink text={t("register-now")} onPress={() => navigation.navigate("CreateAccountView")} />
+      </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  greetingContainer: {
+    marginBottom: hp("4%"),
+  },
   scrollViewContent: {
-    flexGrow: 1,
     justifyContent: "space-between",
   },
-  headerContainer: {
-    flex: 0.7,
-    justifyContent: "flex-end",
-    gap: hp("4%"),
-  },
   textBoxContainer: {
-    flex: 1,
     justifyContent: "center",
   },
   textBoxes: {
@@ -170,7 +138,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    flex: 2,
     justifyContent: "center",
     alignItems: "center",
     gap: hp("1%"),

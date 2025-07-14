@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#E8EEF1",
-    fontSize: wp("10%"),
+    fontSize: wp("7.8%"),
     alignSelf: "center",
   },
 });
