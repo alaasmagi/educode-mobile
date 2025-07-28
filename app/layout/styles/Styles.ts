@@ -6,13 +6,29 @@ export const Styles = {
   "normal-icon-color": "#E8EEF1" as ColorValue,
   "normal-card-background-color": "" as ColorValue,
 
-  "normal-icon-size": "",
+  "normal-icon-size": 32,
   "l-icon-size": "",
 
-  "normal-font-size": "",
+  "normal-button-font-size": 26,
   "l-font-size": "",
   "xl-font-size": "",
   "s-font-size": "",
+
+  "normal-button-background-color": "#262626" as ColorValue,
+  "normal-button-border-radius": 20,
+  "normal-button-border-thickness": 2,
+  "normal-button-border-color": "#1977E2" as ColorValue,
+
+  "textbox-border-thickness": 1,
+  "textbox-border-color": "#E8EEF1" as ColorValue,
+  "textbox-label-color": "#E8EEF1" as ColorValue,
+  "textbox-font-size": 20,
+  "textbox-active-border-color": "#1977E2" as ColorValue,
+  "textbox-border-radius": 20,
+  "textbox-icon-color": "#E8EEF1" as ColorValue,
+  "textbox-icon-size": 20,
+  "textbox-icon-thickness": 2,
+  "textbox-placeholder-color": "#BCBCBD" as ColorValue,
 
   // Message card styles
   "message-card-icon-thickness": 2,
@@ -41,7 +57,7 @@ export const Styles = {
   "wide-border-thickness": "",
   "narrow-border-thickness": "",
 
-  "normal-icon-thickness": "",
+  "normal-icon-thickness": 2,
   "wide-icon-thickness": "",
 
   // QR code styles

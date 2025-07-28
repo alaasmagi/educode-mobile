@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity } from "reac
 import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
+import { Styles } from "../styles/Styles";
 
 interface TextBoxProperties {
   iconName: string;
@@ -25,27 +26,22 @@ const styles = StyleSheet.create({
     paddingVertical: hp("0.1%"),
     paddingHorizontal: wp("2%"),
     gap: wp("1%"),
-    borderWidth: 1,
-    borderColor: "#E8EEF1",
-    borderRadius: wp("3%"),
+    borderWidth: Styles["textbox-border-thickness"],
+    borderColor: Styles["textbox-border-color"],
+    borderRadius: Styles["textbox-border-radius"],
   },
   label: {
-    color: "#E8EEF1",
-    fontSize: wp("4.5%"),
-  },
-  icon: {
-    width: wp("7%"),
-    height: wp("7%"),
-    resizeMode: "contain",
+    color: Styles["textbox-label-color"],
+    fontSize: Styles["textbox-font-size"],
   },
   input: {
-    color: "#E8EEF1",
-    fontSize: wp("5%"),
+    color: Styles["textbox-label-color"],
+    fontSize: Styles["textbox-font-size"],
     flex: 1,
   },
   inputDisabled: {
-    color: "#E8EEF1",
-    fontSize: wp("5%"),
+    color: Styles["textbox-label-color"],
+    fontSize: Styles["textbox-font-size"],
     flex: 1,
     opacity: 0.5,
   },
@@ -55,9 +51,9 @@ const styles = StyleSheet.create({
     gap: wp("1%"),
     paddingVertical: hp("0.1%"),
     paddingHorizontal: wp("2%"),
-    borderWidth: 1,
-    borderColor: "#1977E2",
-    borderRadius: wp("3%"),
+    borderWidth: Styles["textbox-border-thickness"],
+    borderColor: Styles["textbox-active-border-color"],
+    borderRadius: Styles["textbox-border-radius"],
   },
 });
 
@@ -77,10 +73,15 @@ const TextBox: React.FC<TextBoxProperties> = ({
     <View style={styles.textBoxContainer}>
       <Text style={styles.label}>{label}</Text>
       <View style={isFocused ? styles.inputFocused : styles.inputUnFocused}>
-        <Icon size={26} color="#E8EEF1" iconContent={IconContent[iconName]} strokeWidth={2} />
+        <Icon
+          size={Styles["textbox-icon-size"]}
+          color={Styles["textbox-icon-color"]}
+          iconContent={IconContent[iconName]}
+          strokeWidth={Styles["textbox-icon-thickness"]}
+        />
         <TextInput
           placeholder={placeHolder}
-          placeholderTextColor="#BCBCBD"
+          placeholderTextColor={Styles["textbox-placeholder-color"]}
           style={editable == false ? styles.inputDisabled : styles.input}
           scrollEnabled={true}
           numberOfLines={1}
@@ -95,10 +96,10 @@ const TextBox: React.FC<TextBoxProperties> = ({
         {isPassword && (
           <TouchableOpacity onPress={() => setIsPasswordVisible((prev) => !prev)}>
             <Icon
-              size={26}
-              color="#E8EEF1"
+              size={Styles["textbox-icon-size"]}
+              color={Styles["textbox-icon-color"]}
               iconContent={isPasswordVisible ? IconContent["visibility-on"] : IconContent["visibility-off"]}
-              strokeWidth={2}
+              strokeWidth={Styles["textbox-icon-thickness"]}
             />
           </TouchableOpacity>
         )}

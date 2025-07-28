@@ -1,20 +1,11 @@
 import React, { useState, useRef } from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  View,
-  TouchableWithoutFeedback,
-  LayoutChangeEvent,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, Image, View, TouchableWithoutFeedback, LayoutChangeEvent } from "react-native";
 import { Flags, IconContent } from "./Icons";
 import i18next from "../../businesslogic/services/i18next";
 import { SaveCurrentLanguage } from "../../businesslogic/services/UserDataOffline";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
+import { Styles } from "../styles/Styles";
 
 const languages = [
   { code: "et", icon: Flags["est-flag"] },
@@ -55,10 +46,7 @@ const LanguageSwitch = () => {
           setButtonWidth(event.nativeEvent.layout.width);
         }}
       >
-        <Image
-          source={languages.find((l) => l.code === currentLang)?.icon}
-          style={styles.image}
-        />
+        <Image source={languages.find((l) => l.code === currentLang)?.icon} style={styles.image} />
       </TouchableOpacity>
       {showDropdown && (
         <TouchableWithoutFeedback onPress={() => setShowDropdown(false)} style={styles.backDrop}>
@@ -69,14 +57,15 @@ const LanguageSwitch = () => {
                 setShowDropdown(false);
               }}
             >
-              <Icon size={24} color="#E8EEF1" iconContent={IconContent["arrow-up-icon"]} strokeWidth={2} />
+              <Icon
+                size={Styles["normal-icon-size"]}
+                color={Styles["normal-icon-color"]}
+                iconContent={IconContent["arrow-up-icon"]}
+                strokeWidth={Styles["normal-icon-thickness"]}
+              />
             </TouchableOpacity>
             {dropdownLanguages.map((item) => (
-              <TouchableOpacity
-                key={item.code}
-                style={styles.dropdownItem}
-                onPress={() => onSelectLanguage(item.code)}
-              >
+              <TouchableOpacity key={item.code} style={styles.dropdownItem} onPress={() => onSelectLanguage(item.code)}>
                 <Image source={item.icon} style={styles.image} />
               </TouchableOpacity>
             ))}
@@ -89,10 +78,10 @@ const LanguageSwitch = () => {
 
 const styles = StyleSheet.create({
   structure: {
-    backgroundColor: "#262626",
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    backgroundColor: Styles["normal-button-background-color"],
+    borderRadius: Styles["normal-button-border-radius"],
+    borderWidth: Styles["normal-button-border-thickness"],
+    borderColor: Styles["normal-button-border-color"],
     paddingVertical: hp("0.5%"),
     paddingHorizontal: wp("3%"),
     justifyContent: "center",
@@ -104,10 +93,10 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   dropdown: {
-    backgroundColor: "#232a2e",
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    backgroundColor: Styles["normal-button-background-color"],
+    borderRadius: Styles["normal-button-border-radius"],
+    borderWidth: Styles["normal-button-border-thickness"],
+    borderColor: Styles["normal-button-border-color"],
     alignSelf: "center",
     overflow: "hidden",
     position: "absolute",
@@ -125,10 +114,10 @@ const styles = StyleSheet.create({
     width: wp("8%"),
     resizeMode: "contain",
   },
-  backDrop :{
+  backDrop: {
     width: wp("100%"),
-    height: hp("100%")
-  }
+    height: hp("100%"),
+  },
 });
 
 export default LanguageSwitch;

@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface NormalButtonProperties {
   text: string;
@@ -10,10 +11,10 @@ interface NormalButtonProperties {
 
 const styles = StyleSheet.create({
   structure: {
-    backgroundColor: "#262626",
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    backgroundColor: Styles["normal-button-background-color"],
+    borderRadius: Styles["normal-button-border-radius"],
+    borderWidth: Styles["normal-border-thickness"],
+    borderColor: Styles["normal-button-border-color"],
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
@@ -22,10 +23,10 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   structureDisabled: {
-    backgroundColor: "#262626",
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    backgroundColor: Styles["normal-button-background-color"],
+    borderRadius: Styles["normal-button-border-radius"],
+    borderWidth: Styles["normal-border-thickness"],
+    borderColor: Styles["normal-button-border-color"],
     justifyContent: "center",
     alignItems: "center",
     width: wp("85%"),
@@ -34,9 +35,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   content: {
-    color: "#E8EEF1",
+    color: Styles["normal-font-color"],
     textAlign: "center",
-    fontSize: wp("6%"),
+    fontSize: Styles["normal-button-font-size"],
     fontWeight: "bold",
   },
 });
