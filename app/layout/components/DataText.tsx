@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface DataTextProperties {
   label: string;
@@ -23,12 +24,12 @@ const styles = StyleSheet.create({
     width: wp("90%"),
   },
   text: {
-    color: "#E8EEF1",
-    fontSize: wp("5%"),
+    color: Styles["data-text-font-color"],
+    fontSize: Styles["data-text-font-size"],
   },
   label: {
-    color: "#E8EEF1",
-    fontSize: wp("5%"),
+    color: Styles["data-text-font-color"],
+    fontSize: Styles["data-text-font-size"],
     fontWeight: "bold",
   },
 });

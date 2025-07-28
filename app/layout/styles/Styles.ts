@@ -1,4 +1,6 @@
 import { ColorValue } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+
 
 export const Styles = {
   // Overall UI styles
@@ -64,4 +66,15 @@ export const Styles = {
   "normal-qr-border-color": "" as ColorValue,
   "alert-qr-border-color": "" as ColorValue,
   "success-qr-border-color": "" as ColorValue,
+
+  "data-text-font-size": wp("5%"),
+  "data-text-font-color": "#E8EEF1" as ColorValue,
+
+  "normal-link-font-size": wp("4.5%"),
+  "normal-link-font-color": "#E8EEF1" as ColorValue,
+
+};
+
+const OverallUiStyles = {
+
 };
