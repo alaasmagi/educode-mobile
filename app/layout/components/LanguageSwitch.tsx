@@ -7,23 +7,24 @@ import {
   TouchableWithoutFeedback,
   LayoutChangeEvent,
 } from "react-native";
-import { Icons } from "./Icons";
+import { Flags, IconContent } from "./Icons";
 import i18next from "../../businesslogic/services/i18next";
 import { SaveCurrentLanguage } from "../../businesslogic/services/UserDataOffline";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Icon from "./Icon";
 
 const languages = [
-  { code: "et", icon: Icons["est-flag"] },
-  { code: "en", icon: Icons["eng-flag"] },
-  { code: "fi", icon: Icons["fin-flag"] },
-  { code: "lv", icon: Icons["lat-flag"] },
-  { code: "lt", icon: Icons["lit-flag"] },
-  { code: "ge", icon: Icons["ger-flag"] },
-  { code: "uk", icon: Icons["ukr-flag"] },
-  { code: "ru", icon: Icons["rus-flag"] },
+  { code: "et", icon: Flags["est-flag"] },
+  { code: "en", icon: Flags["eng-flag"] },
+  { code: "fi", icon: Flags["fin-flag"] },
+  { code: "lv", icon: Flags["lat-flag"] },
+  { code: "lt", icon: Flags["lit-flag"] },
+  { code: "ge", icon: Flags["ger-flag"] },
+  { code: "uk", icon: Flags["ukr-flag"] },
+  { code: "ru", icon: Flags["rus-flag"] },
 ];
 
 const LanguageSwitch = () => {
@@ -68,7 +69,7 @@ const LanguageSwitch = () => {
                 setShowDropdown(false);
               }}
             >
-              <Image source={Icons["arrow-up-icon"]} style={styles.image} />
+              <Icon size={24} color="#E8EEF1" iconContent={IconContent["arrow-up-icon"]} strokeWidth={2} />
             </TouchableOpacity>
             {dropdownLanguages.map((item) => (
               <TouchableOpacity

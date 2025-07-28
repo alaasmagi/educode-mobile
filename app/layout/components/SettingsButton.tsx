@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Image, StyleSheet } from "react-native";
-import { Icons } from "./Icons";
+import { IconContent } from "./Icons";
+import Icon from "./Icon";
 
 interface SettingsButtonProperties {
   onPress: () => void;
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
 const SettingsButton: React.FC<SettingsButtonProperties> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.structure} onPress={onPress}>
-      <Image source={Icons["account-settings-icon"]} style={styles.icon} />
+      <Icon size={32} color="#E8EEF1" iconContent={IconContent["account-settings-icon"]} strokeWidth={2} />
     </TouchableOpacity>
   );
 };

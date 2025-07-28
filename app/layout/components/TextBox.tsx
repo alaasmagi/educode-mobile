@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
-import { Icons } from "./Icons";
+import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import Icon from "./Icon";
 
 interface TextBoxProperties {
   iconName: string;
@@ -17,7 +18,6 @@ interface TextBoxProperties {
 const styles = StyleSheet.create({
   textBoxContainer: {
     width: wp("85%"),
-    gap: hp("0.5%"),
   },
   inputUnFocused: {
     flexDirection: "row",
@@ -77,7 +77,7 @@ const TextBox: React.FC<TextBoxProperties> = ({
     <View style={styles.textBoxContainer}>
       <Text style={styles.label}>{label}</Text>
       <View style={isFocused ? styles.inputFocused : styles.inputUnFocused}>
-        <Image source={Icons[iconName]} style={styles.icon} />
+        <Icon size={26} color="#E8EEF1" iconContent={IconContent[iconName]} strokeWidth={2} />
         <TextInput
           placeholder={placeHolder}
           placeholderTextColor="#BCBCBD"
@@ -94,7 +94,12 @@ const TextBox: React.FC<TextBoxProperties> = ({
         />
         {isPassword && (
           <TouchableOpacity onPress={() => setIsPasswordVisible((prev) => !prev)}>
-            <Image style={styles.icon} source={isPasswordVisible ? Icons["visibility-on"] : Icons["visibility-off"]} />
+            <Icon
+              size={26}
+              color="#E8EEF1"
+              iconContent={isPasswordVisible ? IconContent["visibility-on"] : IconContent["visibility-off"]}
+              strokeWidth={2}
+            />
           </TouchableOpacity>
         )}
       </View>

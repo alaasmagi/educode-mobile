@@ -24,6 +24,8 @@ import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/se
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import { ScreenContainer } from "../layout/containers/ScreenContainer";
+import SuccessMessage from "../layout/components/SuccessMessage";
+import ErrorMessage from "../layout/components/ErrorMessage";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();

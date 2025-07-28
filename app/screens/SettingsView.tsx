@@ -157,7 +157,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
           <View style={styles.deleteAccount}>
             <SeparatorLine text={t("delete-account")} />
             <TextBox
-              iconName="code-icon"
+              iconName="passcode-icon"
               value={confirmationText ?? ""}
               onChangeText={setConfirmationText}
               label={t("confirmation")}

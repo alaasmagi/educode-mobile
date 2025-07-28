@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity, Animated } from "react-native";
 import { CameraView } from "expo-camera";
-import { Icons } from "./Icons";
+import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { EQrStatus } from "../../models/EQrStatus";
+import Icon from "./Icon";
 
 interface QrScannerProperties {
   onQrScanned: (event: { data: string }) => void;
@@ -79,7 +80,7 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
         />
       </Animated.View>
       <View style={styles.sideContainer}>
-        <Image style={styles.icon} source={Icons["zoom-icon"]} />
+        <Icon size={35} color="#E8EEF1" iconContent={IconContent["zoom-icon"]} strokeWidth={2} />
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={() => setZoom(0.25)}>

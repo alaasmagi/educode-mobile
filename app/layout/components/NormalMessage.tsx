@@ -1,5 +1,8 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
+import { Styles } from "../styles/Styles";
+import Icon from "./Icon";
+import { IconContent } from "./Icons";
 
 interface NormalMessageProperties {
   text: string | null;
@@ -7,27 +10,39 @@ interface NormalMessageProperties {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     alignSelf: "center",
-    textAlign: "center",
     alignItems: "center",
-    backgroundColor: "#16325B",
-    padding: 15,
-    width: "90%",
-    borderRadius: 20,
-    borderColor: "#4c97ff",
-    borderWidth: 2,
+    backgroundColor: Styles["info-card-background-color"],
+    padding: 10,
+    width: "100%",
+    borderRadius: Styles["message-card-border-radius"],
+    borderColor: Styles["info-card-border-color"],
+    borderWidth: Styles["message-card-border-thickness"],
   },
-  content: {
+  icon: {
+    width: "15%",
+  },
+ content: {
+    width: "85%",
     fontWeight: "bold",
-    color: "#4c97ff",
     textAlign: "center",
-    fontSize: 18,
+    color: Styles["info-font-color"],
+    fontSize: Styles["message-card-font-size"],
   },
 });
 
 const NormalMessage: React.FC<NormalMessageProperties> = ({ text }) => {
   return (
     <View style={styles.container}>
+      <View style={styles.icon}>
+        <Icon
+          size={Styles["message-card-icon-size"]}
+          iconContent={IconContent["information-icon"]}
+          color={Styles["info-font-color"]}
+          strokeWidth={Styles["message-card-icon-thickness"]}
+        />
+      </View>
       <Text style={styles.content}>{text}</Text>
     </View>
   );

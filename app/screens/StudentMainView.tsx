@@ -32,6 +32,7 @@ import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import GetSixDigitTimeStamp from "../businesslogic/helpers/TimeStamp";
 import { EQrStatus } from "../models/EQrStatus";
+import { ScreenContainer } from "../layout/containers/ScreenContainer";
 
 function StudentMainView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -129,16 +130,14 @@ function StudentMainView({ navigation, route }: NavigationProps) {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
-      >
-        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-          <View style={styles.headerContainer}>
-            <NormalHeader navigation={navigation} route={route} />
-          </View>
+
+        <ScreenContainer
+          header={<NormalHeader navigation={navigation} route={route} />}
+          scroll
+          dismissKeyboardOnPress
+          safeAreaStyle={GlobalStyles.anrdoidSafeArea}
+          contentContainerStyle={styles.scrollViewContent}
+        >
           {!isKeyboardVisible && (<View style={styles.stepDividerContainer}>
             <StepDivider stepNumber={stepNr} label={stepNr === 1 ? t("step-scan-board") : t("step-scan-workplace")} />
           </View>)}
@@ -199,43 +198,32 @@ function StudentMainView({ navigation, route }: NavigationProps) {
               </View>
             </View>
           )}
-        </SafeAreaView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+        </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 0.7,
-    justifyContent: "center",
+   scrollViewContent: {
+    justifyContent: "space-between",
   },
   stepDividerContainer: {
-    flex: 0.5,
-    justifyContent: "center",
-    alignItems: "center",
+    marginVertical: hp("1%")
   },
   qrContainer: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
+    marginVertical: hp("1%")
   },
   manualInputContainer: {
-    flex: 2,
-    gap: hp("2%"),
-    alignItems: "center",
-    justifyContent: "center",
+    marginVertical: hp("1%"),
+    gap: hp("1%")
   },
   additionalFieldContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
   lowNavButtonContainer: {
-    gap: hp("0.5%"),
     alignItems: "center",
   },
   linkContainer: {
-    paddingBottom: wp("1%"),
     alignItems: "center",
     justifyContent: "flex-end",
   },

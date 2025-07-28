@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Icons } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface DataTextProperties {
