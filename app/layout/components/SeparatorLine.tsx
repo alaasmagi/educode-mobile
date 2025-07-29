@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface SeparatorLineProperties {
   text: string;
@@ -14,12 +15,12 @@ const styles = StyleSheet.create({
   },
   line: {
     flex: 1,
-    height: 1,
-    backgroundColor: "#E8EEF1",
+    height: Styles["separator-line-thickness"],
+    backgroundColor: Styles["separator-line-color"],
   },
   lineText: {
-    color: "#E8EEF1",
-    fontSize: wp("4%"),
+    color: Styles["separator-line-font-color"],
+    fontSize: Styles["separator-line-font-size"],
     marginHorizontal: wp("2%"),
   },
 });

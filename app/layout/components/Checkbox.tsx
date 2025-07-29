@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface CheckboxProps {
   label: string;
@@ -33,24 +34,24 @@ const styles = StyleSheet.create({
     gap: wp("3%"),
   },
   checkbox: {
-    width: 30,
-    height: 30,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    width: Styles["checkbox-size"],
+    height: Styles["checkbox-size"],
+    borderRadius: Styles["checkbox-border-radius"],
+    borderWidth: Styles["checkbox-border-thickness"],
+    borderColor: Styles["checkbox-border-color"],
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#262626",
+    backgroundColor: Styles["checkbox-background-color"],
   },
   innerCircle: {
-    width: 17,
-    height: 17,
-    borderRadius: 3,
-    backgroundColor: "#1977E2",
+    width: Styles["checkbox-inner-size"],
+    height: Styles["checkbox-inner-size"],
+    borderRadius: Styles["checkbox-inner-radius"],
+    backgroundColor: Styles["checkbox-inner-background-color"],
   },
   label: {
-    fontSize: wp("4.5%"),
-    color: "#E8EEF1",
+    fontSize: Styles["checkbox-font-size"],
+    color: Styles["checkbox-label-color"],
   },
 });
 

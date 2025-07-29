@@ -26,9 +26,9 @@ export const Styles = {
   "textbox-label-color": "#E8EEF1" as ColorValue,
   "textbox-font-size": 20,
   "textbox-active-border-color": "#1977E2" as ColorValue,
-  "textbox-border-radius": 20,
+  "textbox-border-radius": 15,
   "textbox-icon-color": "#E8EEF1" as ColorValue,
-  "textbox-icon-size": 20,
+  "textbox-icon-size": 28,
   "textbox-icon-thickness": 2,
   "textbox-placeholder-color": "#BCBCBD" as ColorValue,
 
@@ -72,6 +72,53 @@ export const Styles = {
 
   "normal-link-font-size": wp("4.5%"),
   "normal-link-font-color": "#E8EEF1" as ColorValue,
+
+  "checkbox-size": 30,
+  "checkbox-background-color": "#262626" as ColorValue,
+  "checkbox-border-radius": 8,
+  "checkbox-border-thickness": 2,
+  "checkbox-border-color": "#1977E2" as ColorValue,
+  "checkbox-inner-size": 17,
+  "checkbox-inner-radius": 3,
+  "checkbox-inner-background-color": "#1977E2" as ColorValue,
+  "checkbox-label-color": "#E8EEF1" as ColorValue,
+  "checkbox-font-size": wp("4.5%"),
+
+  "greeting-font-color": "#E8EEF1" as ColorValue,
+  "greeting-font-size": wp("7.8%"),
+
+  "mode-toggle-border-radius": 20,
+  "mode-toggle-background-color": "#525252" as ColorValue,
+  "mode-toggle-option-border-radius": 20,
+  "mode-toggle-selected-background-color": "#262626" as ColorValue,
+  "mode-toggle-selected-border-color": "#1977E2" as ColorValue,
+  "mode-toggle-selected-border-thickness": 2,
+  "mode-toggle-font-color": "#E8EEF1" as ColorValue,
+  "mode-toggle-font-size": wp("6%"),
+
+  "qr-generator-size": hp("32%"),
+  "qr-generator-border-radius": wp("8%"),
+  "qr-generator-border-thickness": wp("4%"),
+  "qr-generator-border-color": "#515151" as ColorValue,
+  "qr-generator-background-color": "#E8EEF1" as ColorValue,
+  "qr-generator-enlarged-size": hp("42%"),
+
+  "qr-scanner-camera-border-radius": wp("8%"),
+  "qr-scanner-camera-border-normal-color": "#515151" as ColorValue,
+  "qr-scanner-camera-border-success-color": "#2DD452" as ColorValue,
+  "qr-scanner-camera-border-alert-color": "#DD2D4A" as ColorValue,
+  "qr-scanner-camera-border-width": wp("4%"),
+  "qr-scanner-font-color": "#E8EEF1" as ColorValue,
+  "qr-scanner-font-size": wp("6%"),
+  "qr-scanner-icon-size": 36,
+  "qr-scanner-icon-color": "#E8EEF1" as ColorValue,
+  "qr-scanner-icon-thickness": 2,
+
+  "separator-line-thickness": 1,
+  "separator-line-color": "#E8EEF1" as ColorValue,
+  "separator-line-font-color": "#E8EEF1" as ColorValue,
+  "separator-line-font-size": wp("4%"),
+
 
 };
 

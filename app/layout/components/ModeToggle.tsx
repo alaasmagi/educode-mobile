@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface ModeToggleProperties {
   textLeft: string;
@@ -14,33 +15,33 @@ interface ModeToggleProperties {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "#525252",
-    borderRadius: 20,
-    padding: 2,
+    backgroundColor: Styles["mode-toggle-background-color"],
+    borderRadius: Styles["mode-toggle-border-radius"],
+    padding: 2, //TODO: wp responsive
   },
   containerDisabled: {
     flexDirection: "row",
-    backgroundColor: "#525252",
-    borderRadius: 20,
-    padding: 2,
+    backgroundColor: Styles["mode-toggle-background-color"],
+    borderRadius: Styles["mode-toggle-border-radius"],
+    padding: 2, //TODO: wp responsive
     opacity: 0.5,
   },
   option: {
     flex: 1,
     paddingVertical: hp("2%"),
-    borderRadius: 20,
+    borderRadius: Styles["mode-toggle-option-border-radius"],
     alignItems: "center",
     justifyContent: "center",
   },
   selected: {
-    backgroundColor: "#262626",
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    backgroundColor: Styles["mode-toggle-selected-background-color"],
+    borderWidth: Styles["mode-toggle-selected-border-thickness"],
+    borderColor: Styles["mode-toggle-selected-border-color"],
   },
   text: {
     textAlign: "center",
-    color: "#E8EEF1",
-    fontSize: wp("6%"),
+    color: Styles["mode-toggle-font-color"],
+    fontSize: Styles["mode-toggle-font-size"],
     fontWeight: "bold",
   },
 });

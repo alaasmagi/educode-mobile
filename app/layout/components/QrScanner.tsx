@@ -5,6 +5,7 @@ import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { EQrStatus } from "../../models/EQrStatus";
 import Icon from "./Icon";
+import { Styles } from "../styles/Styles";
 
 interface QrScannerProperties {
   onQrScanned: (event: { data: string }) => void;
@@ -18,21 +19,15 @@ const styles = StyleSheet.create({
   },
   camera: {
     aspectRatio: 1,
-    borderRadius: wp("8%"),
-    borderWidth: wp("4%"),
-    borderColor: "#515151",
+    borderRadius: Styles["qr-scanner-camera-border-radius"],
+    borderWidth: Styles["qr-scanner-camera-border-width"],
   },
   text: {
-    color: "#E8EEF1",
-    fontSize: wp("6%"),
+    color: Styles["qr-scanner-font-color"],
+    fontSize: Styles["qr-scanner-font-size"],
     fontWeight: "bold",
     paddingHorizontal: wp("1%"),
     paddingVertical: hp("0.5%"),
-  },
-  icon: {
-    width: wp("9.5%"),
-    height: wp("9.5%"),
-    resizeMode: "contain",
   },
   container: {
     paddingLeft: wp("8%"),
@@ -73,14 +68,23 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
             styles.camera,
             {
               borderColor:
-                qrStatus === EQrStatus.Incorrect ? "#DD2D4A" : qrStatus === EQrStatus.Correct ? "#2DD452" : "#515151",
+                qrStatus === EQrStatus.Incorrect
+                  ? Styles["qr-scanner-camera-border-alert-color"]
+                  : qrStatus === EQrStatus.Correct
+                  ? Styles["qr-scanner-camera-border-success-color"]
+                  : Styles["qr-scanner-camera-border-normal-color"],
             },
           ]}
           onBarcodeScanned={onQrScanned}
         />
       </Animated.View>
       <View style={styles.sideContainer}>
-        <Icon size={35} color="#E8EEF1" iconContent={IconContent["zoom-icon"]} strokeWidth={2} />
+        <Icon
+          size={Styles["qr-scanner-icon-size"]}
+          color={Styles["qr-scanner-icon-color"]}
+          iconContent={IconContent["zoom-icon"]}
+          strokeWidth={Styles["qr-scanner-icon-thickness"]}
+        />
 
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={() => setZoom(0.25)}>

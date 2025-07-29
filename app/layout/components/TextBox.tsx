@@ -18,6 +18,7 @@ interface TextBoxProperties {
 
 const styles = StyleSheet.create({
   textBoxContainer: {
+    alignSelf: "center",
     width: wp("85%"),
   },
   inputUnFocused: {

@@ -4,6 +4,7 @@ import QRCode from "react-native-qrcode-svg";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import * as Brightness from "expo-brightness";
+import { Styles } from "../styles/Styles";
 
 interface QrGeneratorProperties {
   value: string;
@@ -17,24 +18,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerNormal: {
-    height: hp("32%"),
-    width: hp("32%"),
+    height: Styles["qr-generator-size"],
+    width: Styles["qr-generator-size"],
     aspectRatio: 1,
-    borderRadius: wp("8%"),
-    borderWidth: wp("4%"),
-    backgroundColor: "#E8EEF1",
-    borderColor: "#515151",
+    borderRadius: Styles["qr-generator-border-radius"],
+    borderWidth: Styles["qr-generator-border-thickness"],
+    backgroundColor: Styles["qr-generator-background-color"],
+    borderColor: Styles["qr-generator-border-color"],
     alignItems: "center",
     justifyContent: "center",
   },
   containerEnlarged: {
-    height: hp("42%"),
-    width: hp("42%"),
+    height: Styles["qr-generator-enlarged-size"],
+    width: Styles["qr-generator-enlarged-size"],
     aspectRatio: 1,
-    borderRadius: wp("8%"),
-    borderWidth: wp("4%"),
-    backgroundColor: "#E8EEF1",
-    borderColor: "#515151",
+    borderRadius: Styles["qr-generator-border-radius"],
+    borderWidth: Styles["qr-generator-border-thickness"],
+    backgroundColor: Styles["qr-generator-background-color"],
+    borderColor: Styles["qr-generator-border-color"],
     alignItems: "center",
     justifyContent: "center",
   },
