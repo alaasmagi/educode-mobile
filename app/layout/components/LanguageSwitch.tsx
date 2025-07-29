@@ -1,11 +1,18 @@
 import React, { useState, useRef } from "react";
-import { TouchableOpacity, StyleSheet, Image, View, TouchableWithoutFeedback, LayoutChangeEvent } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  View,
+  TouchableWithoutFeedback,
+  LayoutChangeEvent,
+} from "react-native";
 import { Flags, IconContent } from "./Icons";
 import i18next from "../../businesslogic/services/i18next";
 import { SaveCurrentLanguage } from "../../businesslogic/services/UserDataOffline";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 const languages = [
   { code: "et", icon: Flags["est-flag"] },
@@ -19,12 +26,12 @@ const languages = [
 ];
 
 const LanguageSwitch = () => {
+  const { styles } = ApplyStyles();
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [buttonWidth, setButtonWidth] = useState<number>(100);
   const currentLang = i18next.language;
-
   const buttonRef = useRef<View>(null);
-
   const dropdownLanguages = languages.filter((l) => l.code !== currentLang);
 
   const onSelectLanguage = async (langCode: string) => {
@@ -35,10 +42,56 @@ const LanguageSwitch = () => {
     }
   };
 
+  const sheet = StyleSheet.create({
+    structure: {
+      backgroundColor: styles["normal-button-bg-color"],
+      borderRadius: styles["normal-button-border-radius"],
+      borderWidth: styles["normal-button-border-thickness"],
+      borderColor: styles["normal-button-border-color"],
+      paddingVertical: hp("0.5%"),
+      paddingHorizontal: wp("3%"),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    image: {
+      height: hp("4.5%"),
+      width: wp("9%"),
+      resizeMode: "contain",
+    },
+    dropdown: {
+      backgroundColor: styles["normal-button-bg-color"],
+      borderRadius: styles["normal-button-border-radius"],
+      borderWidth: styles["normal-button-border-thickness"],
+      borderColor: styles["normal-button-border-color"],
+      alignSelf: "center",
+      overflow: "hidden",
+      position: "absolute",
+      zIndex: 1,
+    },
+    dropdownItem: {
+      paddingVertical: hp("0.5%"),
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    imageDropdown: {
+      height: hp("2.7%"),
+      width: wp("8%"),
+      resizeMode: "contain",
+    },
+    backDrop: {
+      width: wp("100%"),
+      height: hp("100%"),
+      position: "absolute",
+      zIndex: 0,
+    },
+  });
+
   return (
     <View>
       <TouchableOpacity
-        style={styles.structure}
+        style={sheet.structure}
         ref={buttonRef}
         activeOpacity={0.8}
         onPress={() => setShowDropdown(!showDropdown)}
@@ -46,78 +99,38 @@ const LanguageSwitch = () => {
           setButtonWidth(event.nativeEvent.layout.width);
         }}
       >
-        <Image source={languages.find((l) => l.code === currentLang)?.icon} style={styles.image} />
+        <Image source={languages.find((l) => l.code === currentLang)?.icon} style={sheet.image} />
       </TouchableOpacity>
       {showDropdown && (
-        <TouchableWithoutFeedback onPress={() => setShowDropdown(false)} style={styles.backDrop}>
-          <View style={[styles.dropdown, { width: buttonWidth }]}>
-            <TouchableOpacity
-              style={[styles.dropdownItem]}
-              onPress={() => {
-                setShowDropdown(false);
-              }}
-            >
-              <Icon
-                size={Styles["normal-icon-size"]}
-                color={Styles["normal-icon-color"]}
-                iconContent={IconContent["arrow-up-icon"]}
-                strokeWidth={Styles["normal-icon-thickness"]}
-              />
-            </TouchableOpacity>
-            {dropdownLanguages.map((item) => (
-              <TouchableOpacity key={item.code} style={styles.dropdownItem} onPress={() => onSelectLanguage(item.code)}>
-                <Image source={item.icon} style={styles.image} />
+        <TouchableWithoutFeedback onPress={() => setShowDropdown(false)}>
+          <View style={sheet.backDrop}>
+            <View style={[sheet.dropdown, { width: buttonWidth }]}>
+              <TouchableOpacity
+                style={sheet.dropdownItem}
+                onPress={() => setShowDropdown(false)}
+              >
+                <Icon
+                  size={styles["normal-icon-size"]}
+                  color={styles["normal-icon-color"]}
+                  iconContent={IconContent["arrow-up-icon"]}
+                  strokeWidth={styles["normal-icon-thickness"]}
+                />
               </TouchableOpacity>
-            ))}
+              {dropdownLanguages.map((item) => (
+                <TouchableOpacity
+                  key={item.code}
+                  style={sheet.dropdownItem}
+                  onPress={() => onSelectLanguage(item.code)}
+                >
+                  <Image source={item.icon} style={sheet.imageDropdown} />
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </TouchableWithoutFeedback>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  structure: {
-    backgroundColor: Styles["normal-button-bg-color"],
-    borderRadius: Styles["normal-button-border-radius"],
-    borderWidth: Styles["normal-button-border-thickness"],
-    borderColor: Styles["normal-button-border-color"],
-    paddingVertical: hp("0.5%"),
-    paddingHorizontal: wp("3%"),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  image: {
-    height: hp("4.5%"),
-    width: wp("9%"),
-    resizeMode: "contain",
-  },
-  dropdown: {
-    backgroundColor: Styles["normal-button-bg-color"],
-    borderRadius: Styles["normal-button-border-radius"],
-    borderWidth: Styles["normal-button-border-thickness"],
-    borderColor: Styles["normal-button-border-color"],
-    alignSelf: "center",
-    overflow: "hidden",
-    position: "absolute",
-    zIndex: 1,
-  },
-  dropdownItem: {
-    paddingVertical: hp("0.5%"),
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: "transparent",
-  },
-  imageDropdown: {
-    height: hp("2.7%"),
-    width: wp("8%"),
-    resizeMode: "contain",
-  },
-  backDrop: {
-    width: wp("100%"),
-    height: hp("100%"),
-  },
-});
 
 export default LanguageSwitch;

@@ -11,16 +11,13 @@ import {
   Platform,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
 import NormalButton from "../layout/components/NormalButton";
 import NormalLink from "../layout/components/NormalLink";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import SuccessMessage from "../layout/components/SuccessMessage";
-
 import {
   DeleteCurrentLanguage,
   DeleteOfflineUserData,
@@ -32,6 +29,8 @@ import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import NormalHeader from "../layout/headers/NormalHeader";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import { useFocusEffect } from "@react-navigation/native";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -44,6 +43,10 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const isKeyboardVisible = KeyboardVisibilityHandler();
+
+  // THEME
+  const { theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
 
   useEffect(() => {
     if (!localData.uniId) {
@@ -72,7 +75,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const handleBackToHome = () => {
     navigation.navigate(localData.userType === "Student" ? "StudentMainView" : "TeacherMainView", { localData });
   };
-
   const isStudentCodeValid = () => RegexFilters.studentCode.test(newStudentCode);
 
   const handleDelete = async () => {
@@ -116,7 +118,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
       style={{ flex: 1 }}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
     >
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+      <SafeAreaView style={safeAreaStyle}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
@@ -131,12 +133,10 @@ function SettingsView({ navigation, route }: NavigationProps) {
             )}
           </View>
         )}
-
         <View style={styles.messageContainer}>
           {errorMessage && <ErrorMessage text={errorMessage} />}
           {successMessage && <SuccessMessage text={successMessage} />}
         </View>
-
         {isOfflineOnly ? (
           <View style={styles.firstOptionContainer}>
             <SeparatorLine text={t("offline-mode-settings")} />
@@ -170,7 +170,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
             />
           </View>
         )}
-
         <View style={styles.lowButtonContainer}>
           {!isKeyboardVisible && (
             <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />

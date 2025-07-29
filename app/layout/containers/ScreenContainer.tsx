@@ -11,8 +11,9 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
-import GlobalStyles from "../styles/GlobalStyles";
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { GetNativeSafeArea } from "../styles/NativeStyles";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 type ScreenContainerProps = {
   children: React.ReactNode;
@@ -32,19 +33,33 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
   scroll = false,
   keyboardVerticalOffsetIOS = 100,
   keyboardVerticalOffsetAndroid = -hp("9%"),
-  safeAreaStyle = GlobalStyles.anrdoidSafeArea,
+  safeAreaStyle,
 }) => {
+  const { theme } = ApplyStyles();
+
+  const defaultSafeAreaStyle = GetNativeSafeArea(theme);
+  const safeAreaViewStyle = safeAreaStyle ?? defaultSafeAreaStyle;
+
   const ContainerView = scroll ? ScrollView : View;
   const containerProps = scroll ? { keyboardShouldPersistTaps: "handled" as const } : {};
 
+  const sheet = StyleSheet.create({
+    header: {
+      marginVertical: hp("5%"),
+    },
+    structure: {
+      flex: 1,
+    }
+  });
+
   const Inner = (
     <KeyboardAvoidingView
-      style={styles.structure}
+      style={sheet.structure}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? keyboardVerticalOffsetIOS : keyboardVerticalOffsetAndroid}
     >
-      <SafeAreaView style={safeAreaStyle}>
-        {header ? <View style={styles.header}>{header}</View> : null}
+      <SafeAreaView style={safeAreaViewStyle}>
+        {header ? <View style={sheet.header}>{header}</View> : null}
         <ContainerView {...containerProps}>{children}</ContainerView>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -58,12 +73,3 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
   }
   return Inner;
 };
-
-const styles = StyleSheet.create({
-  header: {
-    marginVertical: hp("5%"),
-  },
-  structure: {
-    flex: 1,
-  }
-});

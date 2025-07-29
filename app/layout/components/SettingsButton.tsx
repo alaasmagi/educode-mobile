@@ -2,31 +2,32 @@ import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { IconContent } from "./Icons";
 import Icon from "./Icon";
-import { Styles } from "../styles/Styles";
-
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 interface SettingsButtonProperties {
   onPress: () => void;
 }
 
-const styles = StyleSheet.create({
-  structure: {
-    backgroundColor: Styles["settings-button-bg-color"],
-    borderRadius: Styles["settings-button-border-radius"],
-    borderWidth: Styles["settings-button-border-thickness"],
-    borderColor: Styles["settings-button-border-color"],
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-});
-
 const SettingsButton: React.FC<SettingsButtonProperties> = ({ onPress }) => {
+  const { styles } = ApplyStyles();
+
+  const sheet = StyleSheet.create({
+    structure: {
+      backgroundColor: styles["settings-button-bg-color"],
+      borderRadius: styles["settings-button-border-radius"],
+      borderWidth: styles["settings-button-border-thickness"],
+      borderColor: styles["settings-button-border-color"],
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+    },
+  });
+
   return (
-    <TouchableOpacity style={styles.structure} onPress={onPress}>
+    <TouchableOpacity style={sheet.structure} onPress={onPress}>
       <Icon
-        size={Styles["settings-button-icon-size"]}
-        color={Styles["settings-button-icon-color"]}
+        size={styles["settings-button-icon-size"]}
+        color={styles["settings-button-icon-color"]}
         iconContent={IconContent["account-settings-icon"]}
-        strokeWidth={Styles["settings-button-icon-thickness"]}
+        strokeWidth={styles["settings-button-icon-thickness"]}
       />
     </TouchableOpacity>
   );

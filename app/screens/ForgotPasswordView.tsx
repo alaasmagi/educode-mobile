@@ -9,7 +9,6 @@ import {
   Platform,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-
 import TextBox from "../layout/components/TextBox";
 import NormalButton from "../layout/components/NormalButton";
 import FormHeader from "../layout/headers/FormHeader";
@@ -18,33 +17,32 @@ import NormalLink from "../layout/components/NormalLink";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import NormalMessage from "../layout/components/NormalMessage";
 import UnderlineText from "../layout/components/UnderlineText";
-
 import NavigationProps from "../../types";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import { RequestOTP, VerifyOTP, ChangeUserPassword } from "../businesslogic/services/UserDataOnline";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import Constants from "expo-constants";
-
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 
 function ForgotPasswordView({ navigation, route }: NavigationProps) {
   const { localData } = route.params ?? {};
   const isNormalPassChange: boolean = route?.params?.isNormalPassChange ?? false;
-
   const [stepNr, setStepNr] = useState(1);
   const [uniId, setUniId] = useState("");
   const [emailCode, setEmailCode] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
+
+  const { theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
 
   useEffect(() => {
     preventScreenCaptureAsync();
@@ -52,14 +50,11 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       allowScreenCaptureAsync();
     };
   }, []);
-
   const isStudentIDFormValid = () => uniId != "";
   const isPasswordFormValid = () => password.length >= 8 && password === passwordAgain;
-
   useEffect(() => {
     setNormalMessage(!isStudentIDFormValid() ? t("all-fields-required-message") : "");
   }, [uniId]);
-
   useEffect(() => {
     if (password && password.length < 8) {
       setNormalMessage(t("password-length-message"));
@@ -69,7 +64,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       setNormalMessage("");
     }
   }, [password, passwordAgain]);
-
   const handleOTPRequest = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -81,7 +75,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       showError(String(status));
     }
   };
-
   const handleOTPVerification = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -93,7 +86,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       showError(String(status));
     }
   };
-
   const handlePasswordChange = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -107,12 +99,10 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
       showError(String(status));
     }
   };
-
   const showError = (message: string) => {
     setErrorMessage(t(message));
     setTimeout(() => setErrorMessage(null), 2000);
   };
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
@@ -120,7 +110,7 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
         style={{ flex: 1 }}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
       >
-        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+        <SafeAreaView style={safeAreaStyle}>
           <View style={styles.headerContainer}>
             <FormHeader />
             {!isKeyboardVisible && <Greeting text={isNormalPassChange ? t("change-password") : t("forgot-password")} />}
@@ -222,7 +212,6 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
                   </View>
                 )}
               </View>
-
               <View style={styles.buttonContainer}>
                 <NormalButton
                   text={t("continue")}

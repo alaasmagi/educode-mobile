@@ -1,49 +1,51 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
-import { Styles } from "../styles/Styles";
 import Icon from "./Icon";
 import { IconContent } from "./Icons";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface ErrorMessageProperties {
   text: string | null;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignSelf: "center",
-    alignItems: "center",
-    backgroundColor: Styles["alert-card-bg-color"],
-    padding: 10,
-    width: "100%",
-    borderRadius: Styles["message-card-border-radius"],
-    borderColor: Styles["alert-card-border-color"],
-    borderWidth: Styles["message-card-border-thickness"],
-  },
-  icon: {
-    width: "15%",
-  },
-  content: {
-    width: "85%",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: Styles["message-card-font-size"],
-    color: Styles["alert-font-color"],
-  },
-});
-
 const ErrorMessage: React.FC<ErrorMessageProperties> = ({ text }) => {
+  const { styles } = ApplyStyles();
+
+  const sheet = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignSelf: "center",
+      alignItems: "center",
+      backgroundColor: styles["alert-card-bg-color"],
+      padding: 10,
+      width: "100%",
+      borderRadius: styles["message-card-border-radius"],
+      borderColor: styles["alert-card-border-color"],
+      borderWidth: styles["message-card-border-thickness"],
+    },
+    icon: {
+      width: "15%",
+    },
+    content: {
+      width: "85%",
+      fontWeight: "bold",
+      textAlign: "center",
+      fontSize: styles["message-card-font-size"],
+      color: styles["alert-font-color"],
+    },
+  });
+
   return (
-    <View style={styles.container}>
-      <View style={styles.icon}>
+    <View style={sheet.container}>
+      <View style={sheet.icon}>
         <Icon
-          size={Styles["message-card-icon-size"]}
+          size={styles["message-card-icon-size"]}
           iconContent={IconContent["alert-icon"]}
-          color={Styles["alert-font-color"]}
-          strokeWidth={Styles["message-card-icon-thickness"]}
+          color={styles["alert-font-color"]}
+          strokeWidth={styles["message-card-icon-thickness"]}
         />
       </View>
-      <Text style={styles.content}>{text}</Text>
+      <Text style={sheet.content}>{text}</Text>
     </View>
   );
 };

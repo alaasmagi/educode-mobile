@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-
 import NavigationProps from "../../types";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import NormalLink from "../layout/components/NormalLink";
@@ -14,41 +18,55 @@ import QrGenerator from "../layout/components/QrGenerator";
 import SuccessMessage from "../layout/components/SuccessMessage";
 import ErrorMessage from "../layout/components/ErrorMessage";
 import UnderlineText from "../layout/components/UnderlineText";
-
 import { GenerateQrString } from "../businesslogic/services/QrGenLogic";
 import { AddAttendanceCheck } from "../businesslogic/services/CourseAttendanceData";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import IconDataText from "../layout/components/DataText";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   const { localData, attendanceId, workplaceId = null, stepNr: initialStep } = route.params;
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
+  const { theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
+
   const [isOnline, setIsOnline] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isModeToggleInLeftPos, setIsModeToggleInLeftPos] = useState<boolean>(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-
   const stepNr = initialStep + 1;
   const [qrValue, setQrValue] = useState(() =>
     GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000")
   );
-
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
+      setQrValue(
+        GenerateQrString(
+          localData.studentCode,
+          localData.fullName,
+          attendanceId,
+          workplaceId ?? "000000"
+        )
+      );
     }, 60000);
-
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
   const refreshQrCode = () => {
-    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
+    setQrValue(
+      GenerateQrString(
+        localData.studentCode,
+        localData.fullName,
+        attendanceId,
+        workplaceId ?? "000000"
+      )
+    );
   };
-
   const navigateBack = useCallback(() => {
     navigation.navigate("StudentMainView", {
       localData,
@@ -66,7 +84,6 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
       courseAttendanceId: attendanceId,
       workplaceId: parseInt(workplaceId) ?? null,
     };
-
     const status = await AddAttendanceCheck(attendanceCheck);
     setIsButtonDisabled(false);
     if (status === true) {
@@ -82,7 +99,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   };
 
   const renderSharedData = () => (
-    <View style={styles.data}>
+    <View style={stylesLocal.data}>
       <IconDataText label={t("name")} text={localData.fullName} />
       <IconDataText label={t("attendance-id")} text={attendanceId} />
       <IconDataText label={t("workplace-id")} text={workplaceId || t("not-available")} />
@@ -91,11 +108,11 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
-        <View style={styles.headerContainer}>
+      <SafeAreaView style={safeAreaStyle}>
+        <View style={stylesLocal.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
         </View>
-        <View style={styles.onlineToggleContainer}>
+        <View style={stylesLocal.onlineToggleContainer}>
           <ModeToggle
             textLeft={t("offline-mode")}
             textRight={t("online-mode")}
@@ -111,22 +128,22 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             isDisabled={localData.offlineOnly}
           />
         </View>
-        <View style={styles.stepDividerContainer}>
+        <View style={stylesLocal.stepDividerContainer}>
           <StepDivider label={t(isOnline ? "step-end-attendance" : "step-show-qr")} stepNumber={stepNr} />
         </View>
         {isOnline ? (
           <>
-            <View style={styles.qrContainer}>
-              <View style={styles.underlineText}>
+            <View style={stylesLocal.qrContainer}>
+              <View style={stylesLocal.underlineText}>
                 <UnderlineText text={t("verify-details")} />
               </View>
-              <View style={styles.dataContainer}>{renderSharedData()}</View>
-              <View style={styles.messageContainer}>
+              <View style={stylesLocal.dataContainer}>{renderSharedData()}</View>
+              <View style={stylesLocal.messageContainer}>
                 {successMessage && <SuccessMessage text={successMessage} />}
                 {errorMessage && <ErrorMessage text={errorMessage} />}
               </View>
             </View>
-            <View style={styles.lowNavButtonContainer}>
+            <View style={stylesLocal.lowNavButtonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
               <NormalButton text={t("check-in")} onPress={handleAttendanceCheckAdd} disabled={isButtonDisabled} />
             </View>
@@ -134,12 +151,12 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
         ) : (
           <>
             {!isKeyboardVisible && (
-              <View style={styles.qrContainer}>
+              <View style={stylesLocal.qrContainer}>
                 <QrGenerator value={qrValue} />
               </View>
             )}
             {renderSharedData()}
-            <View style={styles.lowNavButtonContainer}>
+            <View style={stylesLocal.lowNavButtonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={navigateBack} />
               <NormalButton text={t("refresh-qr")} onPress={refreshQrCode} disabled={isButtonDisabled} />
             </View>
@@ -150,7 +167,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesLocal = StyleSheet.create({
   headerContainer: {
     flex: 1,
     justifyContent: "center",

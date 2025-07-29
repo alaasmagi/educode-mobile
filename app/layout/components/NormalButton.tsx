@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface NormalButtonProperties {
   text: string;
@@ -9,47 +9,45 @@ interface NormalButtonProperties {
   disabled?: boolean;
 }
 
-const styles = StyleSheet.create({
-  structure: {
-    backgroundColor: Styles["normal-button-bg-color"],
-    borderRadius: Styles["normal-button-border-radius"],
-    borderWidth: Styles["normal-border-thickness"],
-    borderColor: Styles["normal-button-border-color"],
-    justifyContent: "center",
-    alignItems: "center",
-    width: wp("85%"),
-    paddingHorizontal: wp("3.5%"),
-    paddingVertical: hp("1.5%"),
-    opacity: 1,
-  },
-  structureDisabled: {
-    backgroundColor: Styles["normal-button-bg-color"],
-    borderRadius: Styles["normal-button-border-radius"],
-    borderWidth: Styles["normal-border-thickness"],
-    borderColor: Styles["normal-button-border-color"],
-    justifyContent: "center",
-    alignItems: "center",
-    width: wp("85%"),
-    paddingHorizontal: wp("3.5%"),
-    paddingVertical: hp("1.5%"),
-    opacity: 0.5,
-  },
-  content: {
-    color: Styles["normal-font-color"],
-    textAlign: "center",
-    fontSize: Styles["normal-button-font-size"],
-    fontWeight: "bold",
-  },
-});
-
 const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress, disabled }) => {
+  const { styles } = ApplyStyles();
+
+  const baseStructure = {
+    backgroundColor: styles["normal-button-bg-color"],
+    borderRadius: styles["normal-button-border-radius"],
+    borderWidth: styles["normal-button-border-thickness"] ?? styles["normal-border-thickness"],
+    borderColor: styles["normal-button-border-color"],
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    width: wp("85%"),
+    paddingHorizontal: wp("3.5%"),
+    paddingVertical: hp("1.5%"),
+  };
+
+  const sheet = StyleSheet.create({
+    structure: {
+      ...baseStructure,
+      opacity: 1,
+    },
+    structureDisabled: {
+      ...baseStructure,
+      opacity: 0.5,
+    },
+    content: {
+      color: styles["normal-font-color"],
+      textAlign: "center" as const,
+      fontSize: styles["normal-button-font-size"],
+      fontWeight: "bold" as const,
+    },
+  });
+
   return (
     <TouchableOpacity
-      style={disabled ? styles.structureDisabled : styles.structure}
+      style={disabled ? sheet.structureDisabled : sheet.structure}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={styles.content}>{text}</Text>
+      <Text style={sheet.content}>{text}</Text>
     </TouchableOpacity>
   );
 };

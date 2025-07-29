@@ -5,7 +5,6 @@ import { useCameraPermissions } from "expo-camera";
 import { useTranslation } from "react-i18next";
 import i18next from "../businesslogic/services/i18next";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalButton from "../layout/components/NormalButton";
 import SeparatorLine from "../layout/components/SeparatorLine";
 import TextBox from "../layout/components/TextBox";
@@ -24,8 +23,8 @@ import { FetchAndSaveUserDataByUniId, TestConnection } from "../businesslogic/se
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import { ScreenContainer } from "../layout/containers/ScreenContainer";
-import SuccessMessage from "../layout/components/SuccessMessage";
-import ErrorMessage from "../layout/components/ErrorMessage";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -37,9 +36,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [isConnection, setIsConnection] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-
   BackButtonHandler(navigation);
-
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -53,10 +50,8 @@ function InitialSelectionView({ navigation }: NavigationProps) {
       return () => backHandler.remove();
     }, [])
   );
-
   const isNameFormValid = () => fullName !== "" && !fullName.includes(";");
   const isStudentCodeValid = () => RegexFilters.studentCode.test(String(studentCode));
-
   useEffect(() => {
     const init = async () => {
       const connection = await TestConnection();
@@ -87,7 +82,6 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     };
     init();
   }, []);
-
   const handleOfflineLogin = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -110,15 +104,15 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     navigation.navigate("StudentMainView", { localData });
   };
 
+  const { styles, theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
+
   return (
-    <ScreenContainer
-      header={<FormHeader />}
-      safeAreaStyle={GlobalStyles.anrdoidSafeArea}
-    >
+    <ScreenContainer header={<FormHeader />} safeAreaStyle={safeAreaStyle}>
       {stepNr === 1 && (
-        <View style={styles.screenContent}>
+        <View style={stylesLocal.screenContent}>
           {!isKeyboardVisible && (
-            <View style={styles.mainLoginContainer}>
+            <View style={stylesLocal.mainLoginContainer}>
               <NormalButton
                 text={t("log-in")}
                 onPress={() => navigation.navigate("LoginView")}
@@ -132,7 +126,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
               {normalMessage && <NormalMessage text={normalMessage} />}
             </View>
           )}
-          <View style={styles.alternateLoginContainer}>
+          <View style={stylesLocal.alternateLoginContainer}>
             <SeparatorLine text={t("or-use-offline-only")} />
             <TextBox
               iconName="person-icon"
@@ -162,7 +156,7 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const stylesLocal = StyleSheet.create({
   screenContent: {
     gap: hp("15%"),
     paddingHorizontal: wp("7%"),

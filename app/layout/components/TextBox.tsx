@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Text, TouchableOpacity } from "react-nativ
 import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface TextBoxProperties {
   iconName: string;
@@ -16,48 +16,6 @@ interface TextBoxProperties {
   editable?: boolean;
 }
 
-const styles = StyleSheet.create({
-  textBoxContainer: {
-    alignSelf: "center",
-    width: wp("85%"),
-  },
-  inputUnFocused: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: hp("0.1%"),
-    paddingHorizontal: wp("2%"),
-    gap: wp("1%"),
-    borderWidth: Styles["textbox-border-thickness"],
-    borderColor: Styles["textbox-border-color"],
-    borderRadius: Styles["textbox-border-radius"],
-  },
-  label: {
-    color: Styles["textbox-font-color"],
-    fontSize: Styles["textbox-font-size"],
-  },
-  input: {
-    color: Styles["textbox-font-color"],
-    fontSize: Styles["textbox-font-size"],
-    flex: 1,
-  },
-  inputDisabled: {
-    color: Styles["textbox-font-color"],
-    fontSize: Styles["textbox-font-size"],
-    flex: 1,
-    opacity: 0.5,
-  },
-  inputFocused: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: wp("1%"),
-    paddingVertical: hp("0.1%"),
-    paddingHorizontal: wp("2%"),
-    borderWidth: Styles["textbox-border-thickness"],
-    borderColor: Styles["textbox-active-border-color"],
-    borderRadius: Styles["textbox-border-radius"],
-  },
-});
-
 const TextBox: React.FC<TextBoxProperties> = ({
   iconName,
   label,
@@ -68,22 +26,66 @@ const TextBox: React.FC<TextBoxProperties> = ({
   autoCapitalize = "sentences",
   editable = true,
 }) => {
+  const { styles } = ApplyStyles();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const sheet = StyleSheet.create({
+    textBoxContainer: {
+      alignSelf: "center",
+      width: wp("85%"),
+    },
+    inputUnFocused: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: hp("0.1%"),
+      paddingHorizontal: wp("2%"),
+      gap: wp("1%"),
+      borderWidth: styles["textbox-border-thickness"],
+      borderColor: styles["textbox-border-color"],
+      borderRadius: styles["textbox-border-radius"],
+    },
+    label: {
+      color: styles["textbox-font-color"],
+      fontSize: styles["textbox-font-size"],
+    },
+    input: {
+      color: styles["textbox-font-color"],
+      fontSize: styles["textbox-font-size"],
+      flex: 1,
+    },
+    inputDisabled: {
+      color: styles["textbox-font-color"],
+      fontSize: styles["textbox-font-size"],
+      flex: 1,
+      opacity: 0.5,
+    },
+    inputFocused: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: wp("1%"),
+      paddingVertical: hp("0.1%"),
+      paddingHorizontal: wp("2%"),
+      borderWidth: styles["textbox-border-thickness"],
+      borderColor: styles["textbox-active-border-color"],
+      borderRadius: styles["textbox-border-radius"],
+    },
+  });
+
   return (
-    <View style={styles.textBoxContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={isFocused ? styles.inputFocused : styles.inputUnFocused}>
+    <View style={sheet.textBoxContainer}>
+      <Text style={sheet.label}>{label}</Text>
+      <View style={isFocused ? sheet.inputFocused : sheet.inputUnFocused}>
         <Icon
-          size={Styles["textbox-icon-size"]}
-          color={Styles["textbox-icon-color"]}
+          size={styles["textbox-icon-size"]}
+          color={styles["textbox-icon-color"]}
           iconContent={IconContent[iconName]}
-          strokeWidth={Styles["textbox-icon-thickness"]}
+          strokeWidth={styles["textbox-icon-thickness"]}
         />
         <TextInput
           placeholder={placeHolder}
-          placeholderTextColor={Styles["textbox-placeholder-color"]}
-          style={editable == false ? styles.inputDisabled : styles.input}
+          placeholderTextColor={styles["textbox-placeholder-color"]}
+          style={editable == false ? sheet.inputDisabled : sheet.input}
           scrollEnabled={true}
           numberOfLines={1}
           secureTextEntry={isPassword && !isPasswordVisible}
@@ -95,12 +97,12 @@ const TextBox: React.FC<TextBoxProperties> = ({
           onBlur={() => setIsFocused(false)}
         />
         {isPassword && (
-          <TouchableOpacity onPress={() => setIsPasswordVisible((prev) => !prev)}>
+          <TouchableOpacity onPress={() => setIsPasswordVisible(prev => !prev)}>
             <Icon
-              size={Styles["textbox-icon-size"]}
-              color={Styles["textbox-icon-color"]}
+              size={styles["textbox-icon-size"]}
+              color={styles["textbox-icon-color"]}
               iconContent={isPasswordVisible ? IconContent["visibility-on"] : IconContent["visibility-off"]}
-              strokeWidth={Styles["textbox-icon-thickness"]}
+              strokeWidth={styles["textbox-icon-thickness"]}
             />
           </TouchableOpacity>
         )}

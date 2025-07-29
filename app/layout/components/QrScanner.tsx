@@ -5,44 +5,15 @@ import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { EQrStatus } from "../../models/EQrStatus";
 import Icon from "./Icon";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface QrScannerProperties {
   onQrScanned: (event: { data: string }) => void;
   qrStatus: EQrStatus;
 }
 
-const styles = StyleSheet.create({
-  animatedViewContainer: {
-    height: hp("32%"),
-    width: hp("32%"),
-  },
-  camera: {
-    aspectRatio: 1,
-    borderRadius: Styles["qr-scanner-camera-border-radius"],
-    borderWidth: Styles["qr-scanner-camera-border-width"],
-  },
-  text: {
-    color: Styles["qr-scanner-font-color"],
-    fontSize: Styles["qr-scanner-font-size"],
-    fontWeight: "bold",
-    paddingHorizontal: wp("1%"),
-    paddingVertical: hp("0.5%"),
-  },
-  container: {
-    paddingLeft: wp("8%"),
-    flexDirection: "row",
-    gap: wp("1%"),
-  },
-  sideContainer: {
-    justifyContent: "center",
-    gap: hp("3%"),
-  },
-  buttonsContainer: {
-    gap: hp("1%"),
-  },
-});
 const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => {
+  const { styles } = ApplyStyles();
   const [zoom, setZoom] = useState<number>(0.25);
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
@@ -59,39 +30,69 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
     }
   }, [qrStatus]);
 
+  const sheet = StyleSheet.create({
+    animatedViewContainer: {
+      height: hp("32%"),
+      width: hp("32%"),
+    },
+    camera: {
+      aspectRatio: 1,
+      borderRadius: styles["qr-scanner-camera-border-radius"],
+      borderWidth: styles["qr-scanner-camera-border-width"],
+    },
+    text: {
+      color: styles["qr-scanner-font-color"],
+      fontSize: styles["qr-scanner-font-size"],
+      fontWeight: "bold",
+      paddingHorizontal: wp("1%"),
+      paddingVertical: hp("0.5%"),
+    },
+    container: {
+      paddingLeft: wp("9%"),
+      flexDirection: "row",
+      gap: wp("1%"),
+    },
+    sideContainer: {
+      justifyContent: "center",
+      gap: hp("3%"),
+    },
+    buttonsContainer: {
+      gap: hp("1%"),
+    },
+  });
+
+  const borderColor =
+    qrStatus === EQrStatus.Incorrect
+      ? styles["qr-scanner-camera-border-alert-color"]
+      : qrStatus === EQrStatus.Correct
+      ? styles["qr-scanner-camera-border-success-color"]
+      : styles["qr-scanner-camera-border-normal-color"];
+
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.animatedViewContainer, { transform: [{ translateX: shakeAnim }] }]}>
+    <View style={sheet.container}>
+      <Animated.View style={[sheet.animatedViewContainer, { transform: [{ translateX: shakeAnim }] }]}>
         <CameraView
           zoom={zoom}
           style={[
-            styles.camera,
-            {
-              borderColor:
-                qrStatus === EQrStatus.Incorrect
-                  ? Styles["qr-scanner-camera-border-alert-color"]
-                  : qrStatus === EQrStatus.Correct
-                  ? Styles["qr-scanner-camera-border-success-color"]
-                  : Styles["qr-scanner-camera-border-normal-color"],
-            },
+            sheet.camera,
+            { borderColor },
           ]}
           onBarcodeScanned={onQrScanned}
         />
       </Animated.View>
-      <View style={styles.sideContainer}>
+      <View style={sheet.sideContainer}>
         <Icon
-          size={Styles["qr-scanner-icon-size"]}
-          color={Styles["qr-scanner-icon-color"]}
+          size={styles["qr-scanner-icon-size"]}
+          color={styles["qr-scanner-icon-color"]}
           iconContent={IconContent["zoom-icon"]}
-          strokeWidth={Styles["qr-scanner-icon-thickness"]}
+          strokeWidth={styles["qr-scanner-icon-thickness"]}
         />
-
-        <View style={styles.buttonsContainer}>
+        <View style={sheet.buttonsContainer}>
           <TouchableOpacity onPress={() => setZoom(0.25)}>
-            <Text style={styles.text}>1x</Text>
+            <Text style={sheet.text}>1x</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setZoom(0.5)}>
-            <Text style={styles.text}>2x</Text>
+            <Text style={sheet.text}>2x</Text>
           </TouchableOpacity>
         </View>
       </View>

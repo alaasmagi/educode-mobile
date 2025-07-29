@@ -11,8 +11,6 @@ import {
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-
-import GlobalStyles from "../layout/styles/GlobalStyles";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import ModeToggle from "../layout/components/ModeToggle";
@@ -29,12 +27,14 @@ import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import ToSixDigit from "../businesslogic/helpers/NumberConverter";
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import DataText from "../layout/components/DataText";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
+import { EQrStatus } from "../models/EQrStatus";
 
 function TeacherMainView({ navigation, route }) {
   const { localData } = route.params;
   const { t } = useTranslation();
   const isKeyboardVisible = KeyboardVisibilityHandler();
-
   const [qrScanView, setQrScanView] = useState(true);
   const [scanned, setScanned] = useState(false);
   const [currentAttendanceData, setCurrentAttendanceData] = useState<CourseAttendance | null>(null);
@@ -49,6 +49,10 @@ function TeacherMainView({ navigation, route }) {
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [isModeToggleInLeftPos, setIsModeToggleInLeftPos] = useState<boolean>(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  const [scanStatus, setScanStatus] = useState<EQrStatus>(EQrStatus.Undefined);
+
+  const { theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
 
   BackButtonHandler(navigation);
 
@@ -56,13 +60,12 @@ function TeacherMainView({ navigation, route }) {
     if (!scanned) {
       setScanned(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
       if (RegexFilters.attendanceCheckData.test(data)) {
         const attendanceCheckData = data.split(";");
         const timestamp = Math.floor(Date.now() / 1000);
-
         if (timestamp - parseInt(attendanceCheckData[0]) > 120) {
           setErrorMessage(t("timestamp-error"));
+          setScanStatus(EQrStatus.Incorrect);
         } else {
           const model: CreateAttendanceCheckModel = {
             courseAttendanceId: parseInt(attendanceCheckData[1]),
@@ -71,12 +74,13 @@ function TeacherMainView({ navigation, route }) {
             studentCode: attendanceCheckData[4],
           };
           const response = await AddAttendanceCheck(model);
-
           if (typeof response === "string") {
             setErrorMessage(t("student-already-registered"));
             setTimeout(() => setErrorMessage(null), 2000);
+            setScanStatus(EQrStatus.Incorrect);
           } else {
             setSuccessMessage(`${t("attendance-check-added-for")}: ${attendanceCheckData[3]}`);
+            setScanStatus(EQrStatus.Correct);
             setLastAddedStudentCode(attendanceCheckData[4]);
             setLastAddedStudentWorkplaceId(attendanceCheckData[2]);
             setTimeout(() => setSuccessMessage(null), 2000);
@@ -84,13 +88,16 @@ function TeacherMainView({ navigation, route }) {
         }
       } else {
         setErrorMessage(t("attendance-check-add-fail"));
+        setScanStatus(EQrStatus.Incorrect);
       }
-
       setTimeout(() => setScanned(false), 2000);
       setTimeout(() => setErrorMessage(null), 2000);
       setTimeout(() => setSuccessMessage(null), 2000);
+      clearScanStatus();
     }
   };
+
+  const clearScanStatus = () => setTimeout(() => setScanStatus(EQrStatus.Undefined), 2000);
 
   const fetchCurrentAttendance = async () => {
     const status = await GetCurrentAttendance(localData.uniId);
@@ -103,7 +110,6 @@ function TeacherMainView({ navigation, route }) {
 
   const isStudentCodeValid = () => RegexFilters.studentCode.test(studentCode);
   const isFullNameValid = () => fullName !== "" && !fullName.includes(";");
-
   const handleAddStudentManually = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -111,14 +117,12 @@ function TeacherMainView({ navigation, route }) {
       setErrorMessage(t("wrong-studentcode"));
       setTimeout(() => setErrorMessage(null), 2000);
     }
-
     const model: CreateAttendanceCheckModel = {
       studentCode: studentCode.toUpperCase(),
       fullName: fullName.trim(),
       courseAttendanceId: Number(currentAttendanceData!.attendanceId),
       workplaceId: parseInt(workplaceId) ?? null,
     };
-
     const response = await AddAttendanceCheck(model);
     setIsButtonDisabled(false);
     if (typeof response === "string") {
@@ -148,7 +152,7 @@ function TeacherMainView({ navigation, route }) {
         style={{ flex: 1 }}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
       >
-        <SafeAreaView style={GlobalStyles.anrdoidSafeArea}>
+        <SafeAreaView style={safeAreaStyle}>
           <View style={styles.headerContainer}>
             <NormalHeader navigation={navigation} route={route} />
           </View>
@@ -170,7 +174,6 @@ function TeacherMainView({ navigation, route }) {
               />
             </View>
           )}
-
           {!isKeyboardVisible && (
             <View style={styles.currentAttendanceContainer}>
               {currentAttendanceData ? (
@@ -186,11 +189,10 @@ function TeacherMainView({ navigation, route }) {
               )}
             </View>
           )}
-
           {qrScanView ? (
             <>
               <View style={styles.qrScannerContainer}>
-                {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} />}
+                {currentAttendanceData && <QrScanner onQrScanned={handleBarcodeScanned} qrStatus={scanStatus} />}
               </View>
               <View style={styles.messageContainer}>
                 {successMessage && !isKeyboardVisible && <SuccessMessage text={successMessage} />}
@@ -289,5 +291,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
 export default TeacherMainView;

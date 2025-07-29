@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface DataTextProperties {
   label: string;
@@ -9,29 +9,31 @@ interface DataTextProperties {
 }
 
 const DataText: React.FC<DataTextProperties> = ({ label, text }) => {
+  const { styles } = ApplyStyles();
+
+  const sheet = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      gap: hp("1%"),
+      width: wp("90%"),
+    },
+    text: {
+      color: styles["data-text-font-color"],
+      fontSize: styles["data-text-font-size"],
+    },
+    label: {
+      color: styles["data-text-font-color"],
+      fontSize: styles["data-text-font-size"],
+      fontWeight: "bold",
+    },
+  });
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label + ": "}</Text>
-      <Text style={styles.text}>{text}</Text>
+    <View style={sheet.container}>
+      <Text style={sheet.label}>{label + ": "}</Text>
+      <Text style={sheet.text}>{text}</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    gap: hp("1%"),
-    width: wp("90%"),
-  },
-  text: {
-    color: Styles["data-text-font-color"],
-    fontSize: Styles["data-text-font-size"],
-  },
-  label: {
-    color: Styles["data-text-font-color"],
-    fontSize: Styles["data-text-font-size"],
-    fontWeight: "bold",
-  },
-});
 
 export default DataText;

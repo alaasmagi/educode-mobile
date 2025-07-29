@@ -1,24 +1,26 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface NormalLinkProperties {
   text: string;
   onPress: () => void;
 }
 
-const styles = StyleSheet.create({
-  content: {
-    color: Styles["normal-link-font-color"],
-    fontSize: Styles["normal-link-font-size"],
-    textDecorationLine: "underline",
-  },
-});
-
 const NormalLink: React.FC<NormalLinkProperties> = ({ text, onPress }) => {
+  const { styles } = ApplyStyles();
+
+  const sheet = StyleSheet.create({
+    content: {
+      color: styles["normal-link-font-color"],
+      fontSize: styles["normal-link-font-size"],
+      textDecorationLine: "underline",
+    },
+  });
+
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.content}>{text}</Text>
+      <Text style={sheet.content}>{text}</Text>
     </TouchableOpacity>
   );
 };

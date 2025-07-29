@@ -5,7 +5,7 @@ import { useCameraPermissions } from "expo-camera";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import NavigationProps from "../../types";
-import GlobalStyles from "../layout/styles/GlobalStyles";
+// import NativeStyles from "../layout/styles/NativeStyles"; // <-- Ära kasuta seda!
 import FormHeader from "../layout/headers/FormHeader";
 import Greeting from "../layout/components/Greeting";
 import TextBox from "../layout/components/TextBox";
@@ -17,6 +17,8 @@ import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibility
 import { UserLogin, FetchAndSaveUserDataByUniId } from "../businesslogic/services/UserDataOnline";
 import { GetOfflineUserData } from "../businesslogic/services/UserDataOffline";
 import { ScreenContainer } from "../layout/containers/ScreenContainer";
+import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
+import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 
 function LoginView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -28,6 +30,10 @@ function LoginView({ navigation, route }: NavigationProps) {
   const isKeyboardVisible = KeyboardVisibilityHandler();
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const isFormValid = uniId !== "" && password !== "";
+
+  // THEME!
+  const { theme } = ApplyStyles();
+  const safeAreaStyle = GetNativeSafeArea(theme);
 
   useEffect(() => {
     preventScreenCaptureAsync();
@@ -64,7 +70,6 @@ function LoginView({ navigation, route }: NavigationProps) {
     }
     const loginStatus = await UserLogin(uniId.trim(), password.trim());
     setIsButtonDisabled(false);
-
     if (loginStatus === true) {
       const fetchDataStatus = await FetchAndSaveUserDataByUniId(uniId.trim());
       if (fetchDataStatus === true) {
@@ -86,7 +91,7 @@ function LoginView({ navigation, route }: NavigationProps) {
       header={<FormHeader />}
       scroll
       dismissKeyboardOnPress
-      safeAreaStyle={GlobalStyles.anrdoidSafeArea}
+      safeAreaStyle={safeAreaStyle}
       contentContainerStyle={styles.scrollViewContent}
     >
       {!isKeyboardVisible && (
@@ -143,5 +148,4 @@ const styles = StyleSheet.create({
     gap: hp("1%"),
   },
 });
-
 export default LoginView;

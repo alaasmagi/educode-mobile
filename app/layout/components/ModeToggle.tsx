@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface ModeToggleProperties {
   textLeft: string;
@@ -12,40 +12,6 @@ interface ModeToggleProperties {
   isDisabled?: boolean;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: Styles["mode-toggle-bg-color"],
-    borderRadius: Styles["mode-toggle-border-radius"],
-    padding: 2, //TODO: wp responsive
-  },
-  containerDisabled: {
-    flexDirection: "row",
-    backgroundColor: Styles["mode-toggle-bg-color"],
-    borderRadius: Styles["mode-toggle-border-radius"],
-    padding: 2, //TODO: wp responsive
-    opacity: 0.5,
-  },
-  option: {
-    flex: 1,
-    paddingVertical: hp("2%"),
-    borderRadius: Styles["mode-toggle-option-border-radius"],
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selected: {
-    backgroundColor: Styles["mode-toggle-selected-bg-color"],
-    borderWidth: Styles["mode-toggle-selected-border-thickness"],
-    borderColor: Styles["mode-toggle-selected-border-color"],
-  },
-  text: {
-    textAlign: "center",
-    color: Styles["mode-toggle-font-color"],
-    fontSize: Styles["mode-toggle-font-size"],
-    fontWeight: "bold",
-  },
-});
-
 const ModeToggle: React.FC<ModeToggleProperties> = ({
   textLeft,
   textRight,
@@ -54,21 +20,57 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
   isLeftSelected,
   isDisabled = false,
 }) => {
+  const { styles } = ApplyStyles();
+
+  const sheet = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      backgroundColor: styles["mode-toggle-bg-color"],
+      borderRadius: styles["mode-toggle-border-radius"],
+      padding: 2,
+    },
+    containerDisabled: {
+      flexDirection: "row",
+      backgroundColor: styles["mode-toggle-bg-color"],
+      borderRadius: styles["mode-toggle-border-radius"],
+      padding: 2,
+      opacity: 0.5,
+    },
+    option: {
+      flex: 1,
+      paddingVertical: hp("2%"),
+      borderRadius: styles["mode-toggle-option-border-radius"],
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    selected: {
+      backgroundColor: styles["mode-toggle-selected-bg-color"],
+      borderWidth: styles["mode-toggle-selected-border-thickness"],
+      borderColor: styles["mode-toggle-selected-border-color"],
+    },
+    text: {
+      textAlign: "center",
+      color: styles["mode-toggle-font-color"],
+      fontSize: styles["mode-toggle-font-size"],
+      fontWeight: "bold",
+    },
+  });
+
   return (
-    <View style={isDisabled ? styles.containerDisabled : styles.container}>
+    <View style={isDisabled ? sheet.containerDisabled : sheet.container}>
       <TouchableOpacity
-        style={[styles.option, isLeftSelected && styles.selected]}
+        style={[sheet.option, isLeftSelected && sheet.selected]}
         disabled={isDisabled}
         onPress={() => onPressLeft()}
       >
-        <Text style={styles.text}>{textLeft}</Text>
+        <Text style={sheet.text}>{textLeft}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.option, !isLeftSelected && styles.selected]}
+        style={[sheet.option, !isLeftSelected && sheet.selected]}
         disabled={isDisabled}
         onPress={() => onPressRight()}
       >
-        <Text style={styles.text}>{textRight}</Text>
+        <Text style={sheet.text}>{textRight}</Text>
       </TouchableOpacity>
     </View>
   );

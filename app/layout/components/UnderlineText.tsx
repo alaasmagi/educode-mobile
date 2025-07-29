@@ -1,24 +1,26 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
-import { Styles } from "../styles/Styles";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
-interface UnderlinetextProperties {
+interface UnderlineTextProperties {
   text: string;
 }
 
-const styles = StyleSheet.create({
-  text: {
-    color: Styles["underline-text-font-color"],
-    fontSize: Styles["underline-text-font-size"],
-    textDecorationLine: "underline",
-    textAlign: "center",
-    alignSelf: "center",
-    margin: 5,
-  },
-});
+const UnderlineText: React.FC<UnderlineTextProperties> = ({ text }) => {
+  const { styles } = ApplyStyles();
 
-const UnderlineText: React.FC<UnderlinetextProperties> = ({ text }) => {
-  return <Text style={styles.text}>{text}</Text>;
+  const sheet = StyleSheet.create({
+    text: {
+      color: styles["underline-text-font-color"],
+      fontSize: styles["underline-text-font-size"],
+      textDecorationLine: "underline",
+      textAlign: "center",
+      alignSelf: "center",
+      margin: 5,
+    },
+  });
+
+  return <Text style={sheet.text}>{text}</Text>;
 };
 
 export default UnderlineText;

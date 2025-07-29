@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Styles } from "../styles/Styles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 
 interface CheckboxProps {
   label: string;
@@ -10,49 +10,50 @@ interface CheckboxProps {
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange }) => {
+  const { styles } = ApplyStyles();
   const [isChecked, setIsChecked] = useState(checked);
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
-    if (onChange) {
-      onChange(!isChecked);
-    }
+    if (onChange) onChange(!isChecked);
   };
 
+  const sheet = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: wp("3%"),
+    },
+    checkbox: {
+      width: styles["checkbox-size"],
+      height: styles["checkbox-size"],
+      borderRadius: styles["checkbox-border-radius"],
+      borderWidth: styles["checkbox-border-thickness"],
+      borderColor: styles["checkbox-border-color"],
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: styles["checkbox-bg-color"],
+    },
+    innerCircle: {
+      width: styles["checkbox-inner-size"],
+      height: styles["checkbox-inner-size"],
+      borderRadius: styles["checkbox-inner-radius"],
+      backgroundColor: styles["checkbox-inner-bg-color"],
+    },
+    label: {
+      fontSize: styles["checkbox-font-size"],
+      color: styles["checkbox-font-color"],
+    },
+  });
+
   return (
-    <TouchableOpacity style={styles.container} onPress={toggleCheckbox}>
-      <View style={[styles.checkbox]}>{isChecked && <View style={styles.innerCircle} />}</View>
-      <Text style={styles.label}>{label}</Text>
+    <TouchableOpacity style={sheet.container} onPress={toggleCheckbox}>
+      <View style={sheet.checkbox}>
+        {isChecked && <View style={sheet.innerCircle} />}
+      </View>
+      <Text style={sheet.label}>{label}</Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: wp("3%"),
-  },
-  checkbox: {
-    width: Styles["checkbox-size"],
-    height: Styles["checkbox-size"],
-    borderRadius: Styles["checkbox-border-radius"],
-    borderWidth: Styles["checkbox-border-thickness"],
-    borderColor: Styles["checkbox-border-color"],
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Styles["checkbox-bg-color"],
-  },
-  innerCircle: {
-    width: Styles["checkbox-inner-size"],
-    height: Styles["checkbox-inner-size"],
-    borderRadius: Styles["checkbox-inner-radius"],
-    backgroundColor: Styles["checkbox-inner-bg-color"],
-  },
-  label: {
-    fontSize: Styles["checkbox-font-size"],
-    color: Styles["checkbox-font-color"],
-  },
-});
 
 export default Checkbox;
