@@ -41,17 +41,17 @@ const styles = StyleSheet.create({
     borderColor: Styles["checkbox-border-color"],
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Styles["checkbox-background-color"],
+    backgroundColor: Styles["checkbox-bg-color"],
   },
   innerCircle: {
     width: Styles["checkbox-inner-size"],
     height: Styles["checkbox-inner-size"],
     borderRadius: Styles["checkbox-inner-radius"],
-    backgroundColor: Styles["checkbox-inner-background-color"],
+    backgroundColor: Styles["checkbox-inner-bg-color"],
   },
   label: {
     fontSize: Styles["checkbox-font-size"],
-    color: Styles["checkbox-label-color"],
+    color: Styles["checkbox-font-color"],
   },
 });
 

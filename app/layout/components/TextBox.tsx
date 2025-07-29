@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
@@ -32,16 +32,16 @@ const styles = StyleSheet.create({
     borderRadius: Styles["textbox-border-radius"],
   },
   label: {
-    color: Styles["textbox-label-color"],
+    color: Styles["textbox-font-color"],
     fontSize: Styles["textbox-font-size"],
   },
   input: {
-    color: Styles["textbox-label-color"],
+    color: Styles["textbox-font-color"],
     fontSize: Styles["textbox-font-size"],
     flex: 1,
   },
   inputDisabled: {
-    color: Styles["textbox-label-color"],
+    color: Styles["textbox-font-color"],
     fontSize: Styles["textbox-font-size"],
     flex: 1,
     opacity: 0.5,

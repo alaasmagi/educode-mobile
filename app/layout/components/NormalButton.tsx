@@ -11,7 +11,7 @@ interface NormalButtonProperties {
 
 const styles = StyleSheet.create({
   structure: {
-    backgroundColor: Styles["normal-button-background-color"],
+    backgroundColor: Styles["normal-button-bg-color"],
     borderRadius: Styles["normal-button-border-radius"],
     borderWidth: Styles["normal-border-thickness"],
     borderColor: Styles["normal-button-border-color"],
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   structureDisabled: {
-    backgroundColor: Styles["normal-button-background-color"],
+    backgroundColor: Styles["normal-button-bg-color"],
     borderRadius: Styles["normal-button-border-radius"],
     borderWidth: Styles["normal-border-thickness"],
     borderColor: Styles["normal-button-border-color"],

@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
+import { Styles } from "../styles/Styles";
 
 interface UnderlinetextProperties {
   text: string;
@@ -7,8 +8,8 @@ interface UnderlinetextProperties {
 
 const styles = StyleSheet.create({
   text: {
-    color: "#E8EEF1",
-    fontSize: 25,
+    color: Styles["underline-text-font-color"],
+    fontSize: Styles["underline-text-font-size"],
     textDecorationLine: "underline",
     textAlign: "center",
     alignSelf: "center",

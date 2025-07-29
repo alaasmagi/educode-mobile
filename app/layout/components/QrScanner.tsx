@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Image, Text, TouchableOpacity, Animated } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Animated } from "react-native";
 import { CameraView } from "expo-camera";
 import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: Styles["info-card-background-color"],
+    backgroundColor: Styles["info-card-bg-color"],
     padding: 10,
     width: "100%",
     borderRadius: Styles["message-card-border-radius"],
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   icon: {
     width: "15%",
   },
- content: {
+  content: {
     width: "85%",
     fontWeight: "bold",
     textAlign: "center",

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: Styles["alert-card-background-color"],
+    backgroundColor: Styles["alert-card-bg-color"],
     padding: 10,
     width: "100%",
     borderRadius: Styles["message-card-border-radius"],

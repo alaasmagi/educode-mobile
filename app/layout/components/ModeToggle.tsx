@@ -15,13 +15,13 @@ interface ModeToggleProperties {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: Styles["mode-toggle-background-color"],
+    backgroundColor: Styles["mode-toggle-bg-color"],
     borderRadius: Styles["mode-toggle-border-radius"],
     padding: 2, //TODO: wp responsive
   },
   containerDisabled: {
     flexDirection: "row",
-    backgroundColor: Styles["mode-toggle-background-color"],
+    backgroundColor: Styles["mode-toggle-bg-color"],
     borderRadius: Styles["mode-toggle-border-radius"],
     padding: 2, //TODO: wp responsive
     opacity: 0.5,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   selected: {
-    backgroundColor: Styles["mode-toggle-selected-background-color"],
+    backgroundColor: Styles["mode-toggle-selected-bg-color"],
     borderWidth: Styles["mode-toggle-selected-border-thickness"],
     borderColor: Styles["mode-toggle-selected-border-color"],
   },
@@ -54,7 +54,6 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
   isLeftSelected,
   isDisabled = false,
 }) => {
-
   return (
     <View style={isDisabled ? styles.containerDisabled : styles.container}>
       <TouchableOpacity

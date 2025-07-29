@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: Styles["success-card-background-color"],
+    backgroundColor: Styles["success-card-bg-color"],
     padding: 10,
     borderRadius: Styles["message-card-border-radius"],
     borderColor: Styles["success-card-border-color"],

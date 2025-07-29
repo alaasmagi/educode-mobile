@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import * as Brightness from "expo-brightness";
 import { Styles } from "../styles/Styles";
 
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: Styles["qr-generator-border-radius"],
     borderWidth: Styles["qr-generator-border-thickness"],
-    backgroundColor: Styles["qr-generator-background-color"],
+    backgroundColor: Styles["qr-generator-bg-color"],
     borderColor: Styles["qr-generator-border-color"],
     alignItems: "center",
     justifyContent: "center",
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: Styles["qr-generator-border-radius"],
     borderWidth: Styles["qr-generator-border-thickness"],
-    backgroundColor: Styles["qr-generator-background-color"],
+    backgroundColor: Styles["qr-generator-bg-color"],
     borderColor: Styles["qr-generator-border-color"],
     alignItems: "center",
     justifyContent: "center",
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
 
 const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
   const [enlarged, setIsEnlarged] = useState(false);
-  const originalBrightness = useRef<number | null>(null);
 
   const restoreBrightness = async () => {
     await Brightness.restoreSystemBrightnessAsync();

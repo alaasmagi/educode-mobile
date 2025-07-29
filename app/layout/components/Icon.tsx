@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ColorValue } from "react-native";
-import Svg, { Path, SvgProps } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 
 interface IconProperties {
   size: number;

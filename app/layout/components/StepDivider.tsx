@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { Styles } from "../styles/Styles";
 
 interface StepDividerProps {
   stepNumber: number;
@@ -27,22 +28,22 @@ const styles = StyleSheet.create({
     gap: wp("3%"),
   },
   circle: {
-    width: wp("10%"),
-    height: hp("3.5%"),
-    borderRadius: wp("3%"),
-    backgroundColor: "#262626",
+    width: Styles["step-divider-circle-width"],
+    height: Styles["step-divider-circle-height"],
+    borderRadius: Styles["step-divider-border-radius"],
+    backgroundColor: Styles["step-divider-bg-color"],
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#1977E2",
+    borderWidth: Styles["step-divider-border-thickness"],
+    borderColor: Styles["step-divider-border-color"],
   },
   number: {
-    color: "#E8EEF1",
-    fontSize: wp("4.5%"),
+    color: Styles["step-divider-font-color"],
+    fontSize: Styles["step-divider-font-size"],
   },
   text: {
-    fontSize: wp("4.5%"),
-    color: "#E8EEF1",
+    fontSize: Styles["step-divider-font-size"],
+    color: Styles["step-divider-font-color"],
   },
 });
 
