@@ -12,7 +12,7 @@ import NavigationProps from "../../types";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
 import NormalLink from "../layout/components/NormalLink";
-import ModeToggle from "../layout/components/ModeToggle";
+import DualSwitch from "../layout/components/DualSwitch";
 import StepDivider from "../layout/components/StepDivider";
 import QrGenerator from "../layout/components/QrGenerator";
 import SuccessMessage from "../layout/components/SuccessMessage";
@@ -113,7 +113,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
           <NormalHeader navigation={navigation} route={route} />
         </View>
         <View style={stylesLocal.onlineToggleContainer}>
-          <ModeToggle
+          <DualSwitch
             textLeft={t("offline-mode")}
             textRight={t("online-mode")}
             isLeftSelected={isModeToggleInLeftPos}

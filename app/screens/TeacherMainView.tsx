@@ -13,7 +13,7 @@ import * as Haptics from "expo-haptics";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import NormalHeader from "../layout/headers/NormalHeader";
 import NormalButton from "../layout/components/NormalButton";
-import ModeToggle from "../layout/components/ModeToggle";
+import DualSwitch from "../layout/components/DualSwitch";
 import QrScanner from "../layout/components/QrScanner";
 import TextBox from "../layout/components/TextBox";
 import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibilityHandler";
@@ -158,7 +158,7 @@ function TeacherMainView({ navigation, route }) {
           </View>
           {!isKeyboardVisible && (
             <View style={styles.onlineToggleContainer}>
-              <ModeToggle
+              <DualSwitch
                 textLeft={t("scan-student")}
                 textRight={t("add-manually")}
                 isLeftSelected={isModeToggleInLeftPos}

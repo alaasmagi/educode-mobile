@@ -105,10 +105,10 @@ const LanguageSwitch = () => {
               }}
             >
               <Icon
-                size={Styles["normal-icon-size"]}
-                color={Styles["normal-icon-color"]}
+                size={styles["normal-icon-size"]}
+                color={styles["normal-icon-color"]}
                 iconContent={IconContent["arrow-up-icon"]}
-                strokeWidth={Styles["normal-icon-thickness"]}
+                strokeWidth={styles["normal-icon-thickness"]}
               />
             </TouchableOpacity>
             {dropdownLanguages.map((item) => (

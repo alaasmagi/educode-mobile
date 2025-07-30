@@ -12,7 +12,6 @@ const Greeting: React.FC<GreetingProperties> = ({ text }) => {
 
   const sheet = StyleSheet.create({
     content: {
-      fontWeight: "bold",
       textAlign: "center",
       color: styles["greeting-font-color"],
       fontSize: styles["greeting-font-size"],
