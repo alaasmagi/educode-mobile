@@ -44,7 +44,6 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
     text: {
       color: styles["qr-scanner-font-color"],
       fontSize: styles["qr-scanner-font-size"],
-      fontWeight: "bold",
       fontFamily: OverallUiStyles["default-heading-font-family"],
       paddingHorizontal: wp("1%"),
       paddingVertical: hp("0.5%"),

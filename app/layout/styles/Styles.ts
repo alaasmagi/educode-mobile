@@ -4,7 +4,7 @@ import { AppTheme } from "./ThemeStyles";
 
 export function Styles(theme: AppTheme) {
   return {
-    "normal-font-color": "#E8EEF1" as ColorValue,
+    "normal-font-color": theme["default-font-color"] as ColorValue,
     "normal-icon-color": "#E8EEF1" as ColorValue,
     "normal-card-bg-color": "" as ColorValue,
 
@@ -12,18 +12,16 @@ export function Styles(theme: AppTheme) {
     "l-icon-size": "",
 
     "normal-button-font-size": 26,
-    "l-font-size": "",
-    "xl-font-size": "",
-    "s-font-size": "",
 
-    "normal-button-bg-color": "#262626" as ColorValue,
+    "normal-button-bg-color": theme["button-bg-color"] as ColorValue,
     "normal-button-border-radius": 20,
     "normal-button-border-thickness": 2,
-    "normal-button-border-color": "#1977E2" as ColorValue,
+    "normal-button-border-color": theme["button-border-color"] as ColorValue,
+    "normal-button-font-color": theme["button-font-color"] as ColorValue,
 
     "textbox-border-thickness": 1,
     "textbox-border-color": "#E8EEF1" as ColorValue,
-    "textbox-font-color": "#E8EEF1" as ColorValue,
+    "textbox-font-color": theme["default-font-color"] as ColorValue,
     "textbox-font-size": 20,
     "textbox-active-border-color": "#1977E2" as ColorValue,
     "textbox-border-radius": 15,
@@ -68,10 +66,10 @@ export function Styles(theme: AppTheme) {
     "success-qr-border-color": "" as ColorValue,
 
     "data-text-font-size": wp("5%"),
-    "data-text-font-color": "#E8EEF1" as ColorValue,
+    "data-text-font-color": theme["default-font-color"] as ColorValue,
 
     "normal-link-font-size": wp("4.5%"),
-    "normal-link-font-color": "#E8EEF1" as ColorValue,
+    "normal-link-font-color": theme["default-font-color"] as ColorValue,
 
     "checkbox-size": 30,
     "checkbox-bg-color": "#262626" as ColorValue,
@@ -81,10 +79,10 @@ export function Styles(theme: AppTheme) {
     "checkbox-inner-size": 17,
     "checkbox-inner-radius": 3,
     "checkbox-inner-bg-color": "#1977E2" as ColorValue,
-    "checkbox-font-color": "#E8EEF1" as ColorValue,
+    "checkbox-font-color": theme["default-font-color"] as ColorValue,
     "checkbox-font-size": wp("4.5%"),
 
-    "greeting-font-color": "#E8EEF1" as ColorValue,
+    "greeting-font-color": theme["default-font-color"] as ColorValue,
     "greeting-font-size": wp("7.8%"),
 
     "mode-toggle-border-radius": 20,
@@ -93,14 +91,14 @@ export function Styles(theme: AppTheme) {
     "mode-toggle-selected-bg-color": "#262626" as ColorValue,
     "mode-toggle-selected-border-color": "#1977E2" as ColorValue,
     "mode-toggle-selected-border-thickness": 2,
-    "mode-toggle-font-color": "#E8EEF1" as ColorValue,
+    "mode-toggle-font-color": theme["default-font-color"] as ColorValue,
     "mode-toggle-font-size": wp("6%"),
 
     "qr-generator-size": hp("32%"),
     "qr-generator-border-radius": wp("8%"),
     "qr-generator-border-thickness": wp("4%"),
     "qr-generator-border-color": "#515151" as ColorValue,
-    "qr-generator-bg-color": "#E8EEF1" as ColorValue,
+    "qr-generator-bg-color": theme["default-font-color"] as ColorValue,
     "qr-generator-enlarged-size": hp("42%"),
 
     "qr-scanner-camera-border-radius": wp("8%"),
@@ -108,15 +106,15 @@ export function Styles(theme: AppTheme) {
     "qr-scanner-camera-border-success-color": "#2DD452" as ColorValue,
     "qr-scanner-camera-border-alert-color": "#DD2D4A" as ColorValue,
     "qr-scanner-camera-border-width": wp("4%"),
-    "qr-scanner-font-color": "#E8EEF1" as ColorValue,
+    "qr-scanner-font-color": theme["default-font-color"] as ColorValue,
     "qr-scanner-font-size": wp("6%"),
     "qr-scanner-icon-size": 36,
-    "qr-scanner-icon-color": "#E8EEF1" as ColorValue,
+    "qr-scanner-icon-color": theme["default-font-color"] as ColorValue,
     "qr-scanner-icon-thickness": 2,
 
     "separator-line-thickness": 1,
-    "separator-line-color": "#E8EEF1" as ColorValue,
-    "separator-line-font-color": "#E8EEF1" as ColorValue,
+    "separator-line-color": theme["default-font-color"] as ColorValue,
+    "separator-line-font-color": theme["default-font-color"] as ColorValue,
     "separator-line-font-size": wp("4%"),
 
     "settings-button-bg-color": "#262626" as ColorValue,
@@ -125,7 +123,7 @@ export function Styles(theme: AppTheme) {
     "settings-button-border-color": "#1977E2" as ColorValue,
 
     "settings-button-icon-size": 32,
-    "settings-button-icon-color": "#E8EEF1" as ColorValue,
+    "settings-button-icon-color": theme["default-font-color"] as ColorValue,
     "settings-button-icon-thickness": 2,
 
     "step-divider-circle-width": wp("10%"),
@@ -135,9 +133,9 @@ export function Styles(theme: AppTheme) {
     "step-divider-border-thickness": 2,
     "step-divider-bg-color": "#262626" as ColorValue,
     "step-divider-font-size": wp("4.5%"),
-    "step-divider-font-color": "#E8EEF1" as ColorValue,
+    "step-divider-font-color": theme["default-font-color"] as ColorValue,
 
-    "underline-text-font-color": "#E8EEF1" as ColorValue,
+    "underline-text-font-color": theme["default-font-color"] as ColorValue,
     "underline-text-font-size": 25,
   };
 }

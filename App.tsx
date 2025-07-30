@@ -12,10 +12,13 @@ import TeacherMainView from "./app/screens/TeacherMainView";
 import ForgotPasswordView from "./app/screens/ForgotPasswordView";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
+import { ApplyStyles } from "./app/businesslogic/hooks/SelectAppTheme";
+import { EAppTheme } from "./app/models/EAppTheme";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const {appTheme} = ApplyStyles();
   const [fontsLoaded] = useFonts({
     "Nunito-normal": require("./app/assets/fonts/Nunito-normal.ttf"),
     "Roboto-normal": require("./app/assets/fonts/Roboto-normal.ttf"),
@@ -28,7 +31,7 @@ export default function App() {
   return (
     <>
       <SafeAreaProvider>
-        <StatusBar style="light" />
+        <StatusBar style={appTheme === EAppTheme.Light ? "dark" : "light"} />
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="InitialSelectionView" component={InitialSelectionView} />

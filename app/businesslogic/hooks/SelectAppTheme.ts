@@ -1,13 +1,35 @@
 import { useColorScheme } from "react-native";
 import { DarkTheme, LightTheme, AppTheme } from "../../layout/styles/ThemeStyles";
 import { Styles } from "../../layout/styles/Styles";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
+import { EAppTheme } from "../../models/EAppTheme";
+import { GetCurrentTheme } from "../../businesslogic/services/UserDataOffline";
 
 export function ApplyStyles() {
-  const scheme = useColorScheme();
-  const theme: AppTheme = scheme === "dark" ? DarkTheme : LightTheme;
+  const systemScheme = useColorScheme();
+  const [appTheme, setAppTheme] = useState<EAppTheme>(EAppTheme.System);
 
+  useEffect(() => {
+    (async () => {
+      const storedTheme = await GetCurrentTheme();
+      setAppTheme(/*storedTheme ?? EAppTheme.System*/EAppTheme.Light);
+    })();
+  }, []);
+
+  let theme: AppTheme;
+  switch (appTheme) {
+    case EAppTheme.Dark:
+      theme = DarkTheme;
+      break;
+    case EAppTheme.Light:
+      theme = LightTheme;
+      break;
+    default:
+      theme = systemScheme === "light" ? DarkTheme : LightTheme; // INVERT THE LOGIC AFTER DEVELOPMENT
+      break;
+  }
+  
   const styles = useMemo(() => Styles(theme), [theme]);
 
-  return { theme, styles };
+  return { theme, styles, appTheme };
 }

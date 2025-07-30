@@ -1,6 +1,7 @@
 import Storage from "../data/LocalDataAccess";
 import { LocalKeys } from "../helpers/HardcodedLocalDataKeys";
 import LocalUserData from "../../models/LocalUserDataModel";
+import { EAppTheme } from "../../models/EAppTheme";
 
 export async function GetOfflineUserData(): Promise<LocalUserData | null> {
   const userData: LocalUserData | null = await Storage.getData(LocalKeys.userProfile);
@@ -42,8 +43,8 @@ export async function DeleteTempToken() {
 }
 
 export async function GetCurrentLanguage(): Promise<string | null> {
-  const token: string | null = await Storage.getData(LocalKeys.currentLanguage);
-  return token;
+  const language: string | null = await Storage.getData(LocalKeys.currentLanguage);
+  return language;
 }
 
 export async function SaveCurrentLanguage(currentLanguage: string) {
@@ -52,4 +53,17 @@ export async function SaveCurrentLanguage(currentLanguage: string) {
 
 export async function DeleteCurrentLanguage() {
   await Storage.removeData(LocalKeys.currentLanguage);
+}
+
+export async function GetCurrentTheme(): Promise<EAppTheme | null> {
+  const theme: EAppTheme | null = await Storage.getData(LocalKeys.appTheme);
+  return theme;
+}
+
+export async function SaveCurrentTheme(currentTheme: EAppTheme) {
+  await Storage.saveData(LocalKeys.appTheme, currentTheme);
+}
+
+export async function DeleteCurrentTheme() {
+  await Storage.removeData(LocalKeys.appTheme);
 }

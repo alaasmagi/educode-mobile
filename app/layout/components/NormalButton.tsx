@@ -35,7 +35,7 @@ const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress, disable
       opacity: 0.5,
     },
     content: {
-      color: styles["normal-font-color"],
+      color: styles["normal-button-font-color"],
       textAlign: "center" as const,
       fontSize: styles["normal-button-font-size"],
       fontFamily: OverallUiStyles["default-heading-font-family"]

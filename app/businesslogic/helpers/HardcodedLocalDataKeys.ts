@@ -3,4 +3,5 @@ export const LocalKeys = {
   localToken: "loginToken",
   currentLanguage: "currentLanguage",
   tempToken: "tempToken",
+  appTheme: "appTheme"
 };
