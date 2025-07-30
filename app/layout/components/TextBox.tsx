@@ -4,6 +4,7 @@ import { IconContent } from "./Icons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "./Icon";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface TextBoxProperties {
   iconName: string;
@@ -48,15 +49,18 @@ const TextBox: React.FC<TextBoxProperties> = ({
     label: {
       color: styles["textbox-font-color"],
       fontSize: styles["textbox-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"],
     },
     input: {
       color: styles["textbox-font-color"],
       fontSize: styles["textbox-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"],
       flex: 1,
     },
     inputDisabled: {
       color: styles["textbox-font-color"],
       fontSize: styles["textbox-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"],
       flex: 1,
       opacity: 0.5,
     },
@@ -97,7 +101,7 @@ const TextBox: React.FC<TextBoxProperties> = ({
           onBlur={() => setIsFocused(false)}
         />
         {isPassword && (
-          <TouchableOpacity onPress={() => setIsPasswordVisible(prev => !prev)}>
+          <TouchableOpacity onPress={() => setIsPasswordVisible((prev) => !prev)}>
             <Icon
               size={styles["textbox-icon-size"]}
               color={styles["textbox-icon-color"]}

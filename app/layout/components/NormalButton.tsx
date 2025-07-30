@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface NormalButtonProperties {
   text: string;
@@ -37,7 +38,7 @@ const NormalButton: React.FC<NormalButtonProperties> = ({ text, onPress, disable
       color: styles["normal-font-color"],
       textAlign: "center" as const,
       fontSize: styles["normal-button-font-size"],
-      fontWeight: "bold" as const,
+      fontFamily: OverallUiStyles["default-heading-font-family"]
     },
   });
 

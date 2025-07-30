@@ -24,7 +24,6 @@ const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
       allowScreenCaptureAsync();
       restoreBrightness();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -35,10 +34,8 @@ const QrGenerator: React.FC<QrGeneratorProperties> = ({ value }) => {
     } else {
       restoreBrightness();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enlarged]);
 
-  // StyleSheet renderi sees – reageerib theme muutusele
   const sheet = StyleSheet.create({
     overlay: {
       flex: 1,

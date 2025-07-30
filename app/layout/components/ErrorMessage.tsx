@@ -3,6 +3,7 @@ import { Text, StyleSheet, View } from "react-native";
 import Icon from "./Icon";
 import { IconContent } from "./Icons";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface ErrorMessageProperties {
   text: string | null;
@@ -32,6 +33,7 @@ const ErrorMessage: React.FC<ErrorMessageProperties> = ({ text }) => {
       textAlign: "center",
       fontSize: styles["message-card-font-size"],
       color: styles["alert-font-color"],
+      fontFamily: OverallUiStyles["default-font-family"],
     },
   });
 

@@ -11,10 +11,20 @@ import CompleteAttendanceView from "./app/screens/CompleteAttendanceVIew";
 import TeacherMainView from "./app/screens/TeacherMainView";
 import ForgotPasswordView from "./app/screens/ForgotPasswordView";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "Nunito-normal": require("./app/assets/fonts/Nunito-normal.ttf"),
+    "Roboto-normal": require("./app/assets/fonts/Roboto-normal.ttf"),
+    "Nunito-bold": require("./app/assets/fonts/Nunito-bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
     <>
       <SafeAreaProvider>

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface DataTextProperties {
   label: string;
@@ -20,11 +21,12 @@ const DataText: React.FC<DataTextProperties> = ({ label, text }) => {
     text: {
       color: styles["data-text-font-color"],
       fontSize: styles["data-text-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"]
     },
     label: {
       color: styles["data-text-font-color"],
       fontSize: styles["data-text-font-size"],
-      fontWeight: "bold",
+      fontFamily: OverallUiStyles["default-heading-font-family"],
     },
   });
 

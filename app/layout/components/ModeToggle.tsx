@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface ModeToggleProperties {
   textLeft: string;
@@ -53,6 +54,7 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
       color: styles["mode-toggle-font-color"],
       fontSize: styles["mode-toggle-font-size"],
       fontWeight: "bold",
+      fontFamily: OverallUiStyles["default-heading-font-family"]
     },
   });
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface CheckboxProps {
   label: string;
@@ -43,6 +44,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, checked = false, onChange })
     label: {
       fontSize: styles["checkbox-font-size"],
       color: styles["checkbox-font-color"],
+      fontFamily: OverallUiStyles["default-font-family"]
     },
   });
 

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface StepDividerProps {
   stepNumber: number;
@@ -36,6 +37,7 @@ const StepDivider: React.FC<StepDividerProps> = ({ stepNumber, label }) => {
     text: {
       fontSize: styles["step-divider-font-size"],
       color: styles["step-divider-font-color"],
+      fontFamily: OverallUiStyles["default-font-family"]
     },
   });
 

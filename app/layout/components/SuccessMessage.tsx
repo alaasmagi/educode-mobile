@@ -3,6 +3,7 @@ import { Text, StyleSheet, View } from "react-native";
 import { IconContent } from "./Icons";
 import Icon from "./Icon";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme"; 
+import { OverallUiStyles } from "../styles/Styles";
 
 interface SuccessMessageProperties {
   text: string | null;
@@ -32,6 +33,7 @@ const SuccessMessage: React.FC<SuccessMessageProperties> = ({ text }) => {
       textAlign: "center",
       color: styles["success-font-color"],
       fontSize: styles["message-card-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"]
     },
   });
 

@@ -6,6 +6,7 @@ export default {
     orientation: "portrait",
     userInterfaceStyle: "dark",
     newArchEnabled: true,
+    assetBundlePatterns: ["./app/assets/fonts/*"],
     splash: {
       backgroundColor: "#E8EEF1",
       image: "./app/assets/app-icons/splash/splash-light.png",
@@ -58,6 +59,7 @@ export default {
           imageWidth: 200,
         },
       ],
+      "expo-font",
     ],
     extra: {
       router: {

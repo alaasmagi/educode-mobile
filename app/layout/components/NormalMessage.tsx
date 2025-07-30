@@ -3,6 +3,7 @@ import { Text, StyleSheet, View } from "react-native";
 import Icon from "./Icon";
 import { IconContent } from "./Icons";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme"; 
+import { OverallUiStyles } from "../styles/Styles";
 
 interface NormalMessageProperties {
   text: string | null;
@@ -28,10 +29,10 @@ const NormalMessage: React.FC<NormalMessageProperties> = ({ text }) => {
     },
     content: {
       width: "85%",
-      fontWeight: "bold",
       textAlign: "center",
       color: styles["info-font-color"],
       fontSize: styles["message-card-font-size"],
+      fontFamily: OverallUiStyles["default-font-family"]
     },
   });
 

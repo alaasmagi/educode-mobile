@@ -141,3 +141,8 @@ export function Styles(theme: AppTheme) {
     "underline-text-font-size": 25,
   };
 }
+
+export const OverallUiStyles = {
+  "default-heading-font-family": "Nunito-bold",
+  "default-font-family": "Nunito-normal",
+};

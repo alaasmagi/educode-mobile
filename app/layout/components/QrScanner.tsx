@@ -6,6 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import { EQrStatus } from "../../models/EQrStatus";
 import Icon from "./Icon";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
+import { OverallUiStyles } from "../styles/Styles";
 
 interface QrScannerProperties {
   onQrScanned: (event: { data: string }) => void;
@@ -44,6 +45,7 @@ const QrScanner: React.FC<QrScannerProperties> = ({ onQrScanned, qrStatus }) => 
       color: styles["qr-scanner-font-color"],
       fontSize: styles["qr-scanner-font-size"],
       fontWeight: "bold",
+      fontFamily: OverallUiStyles["default-heading-font-family"],
       paddingHorizontal: wp("1%"),
       paddingVertical: hp("0.5%"),
     },
