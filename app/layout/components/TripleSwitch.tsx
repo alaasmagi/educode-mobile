@@ -4,21 +4,30 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 import { OverallUiStyles } from "../styles/Styles";
 
-interface ModeToggleProperties {
+type TripleSwitchSelection = "left" | "middle" | "right";
+interface TripleSwitchProperties {
   textLeft: string;
+  textMiddle: string;
   textRight: string;
   onPressLeft: () => void;
+  onPressMiddle: () => void;
   onPressRight: () => void;
   isLeftSelected: boolean;
+  isMidSelected: boolean;
+  isRightSelected: boolean;
   isDisabled?: boolean;
 }
 
-const ModeToggle: React.FC<ModeToggleProperties> = ({
+const TripleSwitch: React.FC<TripleSwitchProperties> = ({
   textLeft,
+  textMiddle,
   textRight,
   onPressLeft,
+  onPressMiddle,
   onPressRight,
   isLeftSelected,
+  isMidSelected,
+  isRightSelected,
   isDisabled = false,
 }) => {
   const { styles } = ApplyStyles();
@@ -53,7 +62,6 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
       textAlign: "center",
       color: styles["mode-toggle-font-color"],
       fontSize: styles["mode-toggle-font-size"],
-      fontWeight: "bold",
       fontFamily: OverallUiStyles["default-heading-font-family"]
     },
   });
@@ -68,7 +76,14 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
         <Text style={sheet.text}>{textLeft}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[sheet.option, !isLeftSelected && sheet.selected]}
+        style={[sheet.option, isMidSelected && sheet.selected]}
+        disabled={isDisabled}
+        onPress={() => onPressMiddle()}
+      >
+        <Text style={sheet.text}>{textMiddle}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[sheet.option, isRightSelected && sheet.selected]}
         disabled={isDisabled}
         onPress={() => onPressRight()}
       >
@@ -78,4 +93,4 @@ const ModeToggle: React.FC<ModeToggleProperties> = ({
   );
 };
 
-export default ModeToggle;
+export default TripleSwitch;
