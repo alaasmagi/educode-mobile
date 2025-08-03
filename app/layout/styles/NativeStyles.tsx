@@ -4,7 +4,7 @@ import { AppTheme } from "./ThemeStyles";
 
 export const GetNativeSafeArea = (theme: AppTheme) => ({
   flex: 1,
-  backgroundColor: theme["app-bg-color"],
+  backgroundColor: theme["darkgrey-white"],
   paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   paddingBottom: hp("2.5%"),
   paddingHorizontal: wp("5%"),

@@ -31,7 +31,7 @@ const StepDivider: React.FC<StepDividerProps> = ({ stepNumber, label }) => {
       borderColor: styles["step-divider-border-color"],
     },
     number: {
-      color: styles["step-divider-font-color"],
+      color: styles["step-divider-number-color"],
       fontSize: styles["step-divider-font-size"],
     },
     text: {

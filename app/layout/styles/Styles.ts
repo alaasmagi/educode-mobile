@@ -13,22 +13,22 @@ export function Styles(theme: AppTheme) {
 
     "normal-button-font-size": 26,
 
-    "normal-button-bg-color": theme["button-bg-color"] as ColorValue,
+    "normal-button-bg-color": theme["black-blue"] as ColorValue,
     "normal-button-border-radius": 20,
     "normal-button-border-thickness": 2,
-    "normal-button-border-color": theme["button-border-color"] as ColorValue,
+    "normal-button-border-color": theme["default-border-color"] as ColorValue,
     "normal-button-font-color": theme["button-font-color"] as ColorValue,
 
     "textbox-border-thickness": 1,
-    "textbox-border-color": "#E8EEF1" as ColorValue,
+    "textbox-border-color": theme["default-border-color"],
     "textbox-font-color": theme["default-font-color"] as ColorValue,
     "textbox-font-size": 20,
     "textbox-active-border-color": "#1977E2" as ColorValue,
     "textbox-border-radius": 15,
-    "textbox-icon-color": "#E8EEF1" as ColorValue,
+    "textbox-icon-color": theme["default-icon-color"],
     "textbox-icon-size": 28,
     "textbox-icon-thickness": 2,
-    "textbox-placeholder-color": "#BCBCBD" as ColorValue,
+    "textbox-placeholder-color": theme["default-placeholder-color"],
 
     // Message card styles
     "message-card-icon-thickness": 2,
@@ -72,13 +72,13 @@ export function Styles(theme: AppTheme) {
     "normal-link-font-color": theme["default-font-color"] as ColorValue,
 
     "checkbox-size": 30,
-    "checkbox-bg-color": "#262626" as ColorValue,
+    "checkbox-bg-color": theme["black-white"],
     "checkbox-border-radius": 8,
     "checkbox-border-thickness": 2,
-    "checkbox-border-color": "#1977E2" as ColorValue,
+    "checkbox-border-color": theme["default-border-color"],
     "checkbox-inner-size": 17,
     "checkbox-inner-radius": 3,
-    "checkbox-inner-bg-color": "#1977E2" as ColorValue,
+    "checkbox-inner-bg-color": theme["default-blue"] as ColorValue,
     "checkbox-font-color": theme["default-font-color"] as ColorValue,
     "checkbox-font-size": wp("4.5%"),
 
@@ -86,7 +86,7 @@ export function Styles(theme: AppTheme) {
     "greeting-font-size": wp("7.8%"),
 
     "mode-toggle-border-radius": 20,
-    "mode-toggle-bg-color": "#525252" as ColorValue,
+    "mode-toggle-bg-color": "#515151" as ColorValue,
     "mode-toggle-option-border-radius": 20,
     "mode-toggle-selected-bg-color": "#262626" as ColorValue,
     "mode-toggle-selected-border-color": "#1977E2" as ColorValue,
@@ -98,7 +98,7 @@ export function Styles(theme: AppTheme) {
     "qr-generator-border-radius": wp("8%"),
     "qr-generator-border-thickness": wp("4%"),
     "qr-generator-border-color": "#515151" as ColorValue,
-    "qr-generator-bg-color": theme["default-font-color"] as ColorValue,
+    "qr-generator-bg-color": theme["default-white"] as ColorValue,
     "qr-generator-enlarged-size": hp("42%"),
 
     "qr-scanner-camera-border-radius": wp("8%"),
@@ -117,25 +117,26 @@ export function Styles(theme: AppTheme) {
     "separator-line-font-color": theme["default-font-color"] as ColorValue,
     "separator-line-font-size": wp("4%"),
 
-    "settings-button-bg-color": "#262626" as ColorValue,
+    "settings-button-bg-color": theme["black-blue"],
     "settings-button-border-radius": 20,
     "settings-button-border-thickness": 2,
-    "settings-button-border-color": "#1977E2" as ColorValue,
+    "settings-button-border-color": theme["default-border-color"], 
 
     "settings-button-icon-size": 32,
-    "settings-button-icon-color": theme["default-font-color"] as ColorValue,
+    "settings-button-icon-color": theme["button-font-color"] as ColorValue,
     "settings-button-icon-thickness": 2,
 
     "step-divider-circle-width": wp("10%"),
     "step-divider-circle-height": hp("3.5%"),
     "step-divider-border-radius": wp("3%"),
-    "step-divider-border-color": "#1977E2" as ColorValue,
+    "step-divider-border-color": theme["default-border-color"],
     "step-divider-border-thickness": 2,
-    "step-divider-bg-color": "#262626" as ColorValue,
+    "step-divider-bg-color": theme["black-blue"],
     "step-divider-font-size": wp("4.5%"),
-    "step-divider-font-color": theme["default-font-color"] as ColorValue,
+    "step-divider-font-color": theme["default-font-color"],
+    "step-divider-number-color": theme["button-font-color"],
 
-    "underline-text-font-color": theme["default-font-color"] as ColorValue,
+    "underline-text-font-color": theme["default-font-color"],
     "underline-text-font-size": 25,
   };
 }
