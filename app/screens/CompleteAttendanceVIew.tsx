@@ -19,6 +19,8 @@ import CreateAttendanceCheckModel from "../models/CreateAttendanceCheckModel";
 import IconDataText from "../layout/components/DataText";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
+import { IconContent } from "../layout/components/Icons";
+import Icon from "../layout/components/Icon";
 
 function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   const { localData, attendanceId, workplaceId = null, stepNr: initialStep } = route.params;
@@ -143,7 +145,9 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
         <View style={stylesLocal.onlineToggleContainer}>
           <DualSwitch
             textLeft={t("offline-mode")}
+            iconLeft={IconContent["offline-icon"]}
             textRight={t("online-mode")}
+            iconRight={IconContent["online-icon"]}
             isLeftSelected={isModeToggleInLeftPos}
             onPressLeft={() => {
               setIsOnline(false);

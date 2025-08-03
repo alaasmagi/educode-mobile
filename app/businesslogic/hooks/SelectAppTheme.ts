@@ -12,7 +12,7 @@ export function ApplyStyles() {
   useEffect(() => {
     (async () => {
       const storedTheme = await GetCurrentTheme();
-      setAppTheme(/*storedTheme ?? EAppTheme.System*/EAppTheme.Dark);
+      setAppTheme(storedTheme ?? EAppTheme.System);
     })();
   }, []);
 
@@ -25,7 +25,7 @@ export function ApplyStyles() {
       theme = LightTheme;
       break;
     default:
-      theme = systemScheme === "light" ? LightTheme : DarkTheme; // INVERT THE LOGIC AFTER DEVELOPMENT
+      theme = systemScheme === "light" ? LightTheme : DarkTheme; 
       break;
   }
   

@@ -21,6 +21,7 @@ import SuccessMessage from "../layout/components/SuccessMessage";
 import {
   DeleteCurrentLanguage,
   DeleteOfflineUserData,
+  SaveCurrentTheme,
   SaveOfflineUserData,
 } from "../businesslogic/services/UserDataOffline";
 import { DeleteUser } from "../businesslogic/services/UserDataOnline";
@@ -32,8 +33,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 import TripleSwitch from "../layout/components/TripleSwitch";
-import Icon from "../layout/components/Icon";
 import { IconContent } from "../layout/components/Icons";
+import { EAppTheme } from "../models/EAppTheme";
+import NormalMessage from "../layout/components/NormalMessage";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -44,11 +46,19 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const [newStudentCode, setNewStudentCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
-  const { theme } = ApplyStyles();
+  const { theme, appTheme } = ApplyStyles();
+
+  const [selectedTheme, setSelectedTheme] = useState<EAppTheme>(appTheme);
   const safeAreaStyle = GetNativeSafeArea(theme);
+
+  useEffect(() => {
+  setSelectedTheme(appTheme);
+}, [appTheme]);
 
   useEffect(() => {
     if (!localData.uniId) {
@@ -114,6 +124,12 @@ function SettingsView({ navigation, route }: NavigationProps) {
 
   BackButtonHandler(navigation);
 
+  const handleThemeSelection = async (selectedTheme: EAppTheme) => {
+    Alert.alert(t("restart-needed"), t("theme-restart-message"));
+    await SaveCurrentTheme(selectedTheme);
+    setSelectedTheme(selectedTheme);
+  };
+
   const styles = StyleSheet.create({
     headerContainer: {
       flex: 1,
@@ -161,16 +177,25 @@ function SettingsView({ navigation, route }: NavigationProps) {
           <TripleSwitch
             textLeft="Light"
             iconLeft={IconContent["lightmode-icon"]}
-            onPressLeft={() => {}}
-            isLeftSelected={false}
+            onPressLeft={() => {
+              setSelectedTheme(EAppTheme.Light);
+              handleThemeSelection(EAppTheme.Light);
+            }}
+            isLeftSelected={selectedTheme === EAppTheme.Light}
             textMiddle="System"
             iconMiddle={IconContent["device-icon"]}
-            onPressMiddle={() => {}}
-            isMidSelected={false}
+            onPressMiddle={() => {
+              setSelectedTheme(EAppTheme.System);
+              handleThemeSelection(EAppTheme.System);
+            }}
+            isMidSelected={selectedTheme === EAppTheme.System}
             textRight="Dark"
             iconRight={IconContent["darkmode-icon"]}
-            onPressRight={() => {}}
-            isRightSelected={true}
+            onPressRight={() => {
+              setSelectedTheme(EAppTheme.Dark);
+              handleThemeSelection(EAppTheme.Dark);
+            }}
+            isRightSelected={selectedTheme === EAppTheme.Dark}
           />
         </View>
         {!isOfflineOnly && (
@@ -186,6 +211,7 @@ function SettingsView({ navigation, route }: NavigationProps) {
         )}
         <View style={styles.messageContainer}>
           {errorMessage && <ErrorMessage text={errorMessage} />}
+          {normalMessage && <NormalMessage text={normalMessage} />}
           {successMessage && <SuccessMessage text={successMessage} />}
         </View>
         {isOfflineOnly ? (

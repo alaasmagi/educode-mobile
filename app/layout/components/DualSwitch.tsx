@@ -3,10 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 import { OverallUiStyles } from "../styles/Styles";
+import Icon from "./Icon";
 
 interface DualSwitchProperties {
   textLeft: string;
+  iconLeft: string;
   textRight: string;
+  iconRight: string;
   onPressLeft: () => void;
   onPressRight: () => void;
   isLeftSelected: boolean;
@@ -15,7 +18,9 @@ interface DualSwitchProperties {
 
 const DualSwitch: React.FC<DualSwitchProperties> = ({
   textLeft,
+  iconLeft,
   textRight,
+  iconRight,
   onPressLeft,
   onPressRight,
   isLeftSelected,
@@ -39,6 +44,7 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
     },
     option: {
       flex: 1,
+      gap: 5,
       paddingVertical: hp("2%"),
       borderRadius: styles["dual-switch-option-border-radius"],
       alignItems: "center",
@@ -53,7 +59,7 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
       textAlign: "center",
       color: styles["dual-switch-font-color"],
       fontSize: styles["dual-switch-font-size"],
-      fontFamily: OverallUiStyles["default-heading-font-family"]
+      fontFamily: OverallUiStyles["default-heading-font-family"],
     },
   });
 
@@ -64,6 +70,12 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
         disabled={isDisabled}
         onPress={() => onPressLeft()}
       >
+        <Icon
+          size={styles["dual-switch-icon-size"]}
+          color={styles["dual-switch-icon-color"]}
+          iconContent={iconLeft}
+          strokeWidth={styles["dual-switch-icon-thickness"]}
+        />
         <Text style={sheet.text}>{textLeft}</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -71,6 +83,12 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
         disabled={isDisabled}
         onPress={() => onPressRight()}
       >
+        <Icon
+          size={styles["dual-switch-icon-size"]}
+          color={styles["dual-switch-icon-color"]}
+          iconContent={iconRight}
+          strokeWidth={styles["dual-switch-icon-thickness"]}
+        />
         <Text style={sheet.text}>{textRight}</Text>
       </TouchableOpacity>
     </View>

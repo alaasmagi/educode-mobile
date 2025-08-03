@@ -15,6 +15,8 @@ const Icon: React.FC<IconProperties> = ({
   size,
   color,
   iconContent,
+
+  
   strokeWidth,
   strokeLinecap = "round",
   strokeLinejoin = "round",

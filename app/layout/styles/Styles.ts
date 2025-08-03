@@ -83,7 +83,10 @@ export function Styles(theme: AppTheme) {
     "dual-switch-selected-border-color": theme["default-blue"],
     "dual-switch-selected-border-thickness": 2,
     "dual-switch-font-color": theme["default-white"],
-    "dual-switch-font-size": wp("6%"),
+    "dual-switch-font-size": wp("5%"),
+    "dual-switch-icon-color": theme["default-white"],
+    "dual-switch-icon-size": 34,
+    "dual-switch-icon-thickness": 2,
 
     "qr-generator-size": hp("32%"),
     "qr-generator-border-radius": wp("8%"),
@@ -111,7 +114,7 @@ export function Styles(theme: AppTheme) {
     "settings-button-bg-color": theme["black-blue"],
     "settings-button-border-radius": 20,
     "settings-button-border-thickness": 2,
-    "settings-button-border-color": theme["blue-black"], 
+    "settings-button-border-color": theme["blue-black"],
 
     "settings-button-icon-size": 32,
     "settings-button-icon-color": theme["default-white"],
