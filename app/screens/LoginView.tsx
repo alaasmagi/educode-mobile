@@ -5,7 +5,6 @@ import { useCameraPermissions } from "expo-camera";
 import { preventScreenCaptureAsync, allowScreenCaptureAsync } from "expo-screen-capture";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import NavigationProps from "../../types";
-// import NativeStyles from "../layout/styles/NativeStyles"; // <-- Ära kasuta seda!
 import FormHeader from "../layout/headers/FormHeader";
 import Greeting from "../layout/components/Greeting";
 import TextBox from "../layout/components/TextBox";
@@ -31,7 +30,6 @@ function LoginView({ navigation, route }: NavigationProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const isFormValid = uniId !== "" && password !== "";
 
-  // THEME!
   const { theme } = ApplyStyles();
   const safeAreaStyle = GetNativeSafeArea(theme);
 
@@ -86,6 +84,35 @@ function LoginView({ navigation, route }: NavigationProps) {
     }
   };
 
+  const styles = StyleSheet.create({
+    greetingContainer: {
+      marginBottom: hp("4%"),
+    },
+    scrollViewContent: {
+      justifyContent: "space-between",
+    },
+    textBoxContainer: {
+      justifyContent: "center",
+    },
+    textBoxes: {
+      alignItems: "center",
+      gap: hp("3%"),
+    },
+    forgotPasswordContainer: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      width: wp("85%"),
+    },
+    errorContainer: {
+      marginTop: 10,
+    },
+    buttonContainer: {
+      justifyContent: "center",
+      alignItems: "center",
+      gap: hp("1%"),
+    },
+  });
+
   return (
     <ScreenContainer
       header={<FormHeader />}
@@ -120,32 +147,4 @@ function LoginView({ navigation, route }: NavigationProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  greetingContainer: {
-    marginBottom: hp("4%"),
-  },
-  scrollViewContent: {
-    justifyContent: "space-between",
-  },
-  textBoxContainer: {
-    justifyContent: "center",
-  },
-  textBoxes: {
-    alignItems: "center",
-    gap: hp("3%"),
-  },
-  forgotPasswordContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    width: wp("85%"),
-  },
-  errorContainer: {
-    marginTop: 10,
-  },
-  buttonContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    gap: hp("1%"),
-  },
-});
 export default LoginView;

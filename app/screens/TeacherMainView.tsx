@@ -145,6 +145,53 @@ function TeacherMainView({ navigation, route }) {
     return () => clearInterval(interval);
   }, []);
 
+  const styles = StyleSheet.create({
+    headerContainer: {
+      flex: 0.8,
+      justifyContent: "center",
+    },
+    onlineToggleContainer: {
+      flex: 0.8,
+      justifyContent: "center",
+    },
+    currentAttendanceContainer: {
+      flex: 0.5,
+      justifyContent: "center",
+      marginBottom: 10,
+    },
+    qrScannerContainer: {
+      flex: 2,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    textBoxes: {
+      width: wp("90%"),
+      justifyContent: "center",
+      alignItems: "center",
+      gap: hp("2%"),
+    },
+    manualInputContainer: {
+      flex: 2,
+      gap: hp("3%"),
+      justifyContent: "flex-end",
+      alignItems: "center",
+    },
+    messageContainer: {
+      flex: 1,
+      justifyContent: "flex-start",
+      marginTop: hp("2%"),
+    },
+    data: {
+      alignSelf: "center",
+      width: wp("90%"),
+      borderWidth: 2,
+      borderColor: theme["lightgray-gray"],
+      borderRadius: 20,
+      gap: hp("0.2%"),
+      padding: 10,
+    },
+  });
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
@@ -245,50 +292,4 @@ function TeacherMainView({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 0.8,
-    justifyContent: "center",
-  },
-  onlineToggleContainer: {
-    flex: 0.8,
-    justifyContent: "center",
-  },
-  currentAttendanceContainer: {
-    flex: 0.5,
-    justifyContent: "center",
-    marginBottom: 10,
-  },
-  qrScannerContainer: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textBoxes: {
-    width: wp("90%"),
-    justifyContent: "center",
-    alignItems: "center",
-    gap: hp("2%"),
-  },
-  manualInputContainer: {
-    flex: 2,
-    gap: hp("3%"),
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  messageContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-    marginTop: hp("2%"),
-  },
-  data: {
-    alignSelf: "center",
-    width: wp("90%"),
-    borderWidth: 2,
-    borderColor: "#BCBCBD",
-    borderRadius: 20,
-    gap: hp("0.2%"),
-    padding: 10,
-  },
-});
 export default TeacherMainView;

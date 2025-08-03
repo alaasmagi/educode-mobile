@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Keyboard,
-  View,
-} from "react-native";
+import { Keyboard, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
 import NavigationProps from "../../types";
@@ -119,12 +116,39 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     });
   };
 
+  const stylesLocal = StyleSheet.create({
+    scrollViewContent: {
+      justifyContent: "space-between",
+    },
+    stepDividerContainer: {
+      marginVertical: hp("1%"),
+    },
+    qrContainer: {
+      marginVertical: hp("1%"),
+    },
+    manualInputContainer: {
+      marginVertical: hp("1%"),
+      gap: hp("1%"),
+    },
+    additionalFieldContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    lowNavButtonContainer: {
+      alignItems: "center",
+    },
+    linkContainer: {
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+  });
+
   return (
     <ScreenContainer
       header={<NormalHeader navigation={navigation} route={route} />}
       scroll
       dismissKeyboardOnPress
-      safeAreaStyle={safeAreaStyle}      
+      safeAreaStyle={safeAreaStyle}
       contentContainerStyle={stylesLocal.scrollViewContent}
     >
       {!isKeyboardVisible && (
@@ -176,7 +200,9 @@ function StudentMainView({ navigation, route }: NavigationProps) {
             value={workplaceId}
             onChangeText={(text) => setWorkplaceId(text.trim())}
           />
-          <View style={stylesLocal.additionalFieldContainer}>{errorMessage && <ErrorMessage text={errorMessage} />}</View>
+          <View style={stylesLocal.additionalFieldContainer}>
+            {errorMessage && <ErrorMessage text={errorMessage} />}
+          </View>
           <View style={stylesLocal.lowNavButtonContainer}>
             <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
             <NormalButton
@@ -190,32 +216,5 @@ function StudentMainView({ navigation, route }: NavigationProps) {
     </ScreenContainer>
   );
 }
-
-const stylesLocal = StyleSheet.create({
-  scrollViewContent: {
-    justifyContent: "space-between",
-  },
-  stepDividerContainer: {
-    marginVertical: hp("1%"),
-  },
-  qrContainer: {
-    marginVertical: hp("1%"),
-  },
-  manualInputContainer: {
-    marginVertical: hp("1%"),
-    gap: hp("1%"),
-  },
-  additionalFieldContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  lowNavButtonContainer: {
-    alignItems: "center",
-  },
-  linkContainer: {
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-});
 
 export default StudentMainView;

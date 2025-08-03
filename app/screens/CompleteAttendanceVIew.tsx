@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import NavigationProps from "../../types";
@@ -45,27 +39,13 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
   );
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setQrValue(
-        GenerateQrString(
-          localData.studentCode,
-          localData.fullName,
-          attendanceId,
-          workplaceId ?? "000000"
-        )
-      );
+      setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
     }, 60000);
     return () => clearInterval(intervalId);
   }, [localData.studentCode, attendanceId, workplaceId]);
 
   const refreshQrCode = () => {
-    setQrValue(
-      GenerateQrString(
-        localData.studentCode,
-        localData.fullName,
-        attendanceId,
-        workplaceId ?? "000000"
-      )
-    );
+    setQrValue(GenerateQrString(localData.studentCode, localData.fullName, attendanceId, workplaceId ?? "000000"));
   };
   const navigateBack = useCallback(() => {
     navigation.navigate("StudentMainView", {
@@ -97,6 +77,54 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
       setTimeout(() => setErrorMessage(null), 2000);
     }
   };
+
+  const stylesLocal = StyleSheet.create({
+    headerContainer: {
+      flex: 1,
+      justifyContent: "center",
+    },
+    onlineToggleContainer: {
+      flex: 1,
+      justifyContent: "center",
+    },
+    stepDividerContainer: {
+      flex: 0.5,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    qrContainer: {
+      flex: 3,
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    dataContainer: {
+      flex: 1,
+    },
+    data: {
+      alignSelf: "center",
+      width: wp("90%"),
+      borderWidth: 2,
+      borderColor: theme["lightgray-gray"],
+      borderRadius: 20,
+      gap: hp("0.2%"),
+      padding: 10,
+    },
+    messageContainer: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+    lowNavButtonContainer: {
+      flex: 1,
+      gap: 4,
+      justifyContent: "flex-end",
+      alignItems: "center",
+    },
+    underlineText: {
+      marginTop: hp("5%"),
+      marginBottom: hp("0.5%"),
+    },
+  });
 
   const renderSharedData = () => (
     <View style={stylesLocal.data}>
@@ -166,53 +194,5 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
     </TouchableWithoutFeedback>
   );
 }
-
-const stylesLocal = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  onlineToggleContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  stepDividerContainer: {
-    flex: 0.5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  qrContainer: {
-    flex: 3,
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  dataContainer: {
-    flex: 1,
-  },
-  data: {
-    alignSelf: "center",
-    width: wp("90%"),
-    borderWidth: 2,
-    borderColor: "#BCBCBD",
-    borderRadius: 20,
-    gap: hp("0.2%"),
-    padding: 10,
-  },
-  messageContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  lowNavButtonContainer: {
-    flex: 1,
-    gap: 4,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  underlineText: {
-    marginTop: hp("5%"),
-    marginBottom: hp("0.5%"),
-  },
-});
 
 export default CompleteAttendanceView;

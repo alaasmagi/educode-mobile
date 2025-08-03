@@ -25,6 +25,8 @@ import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import { ScreenContainer } from "../layout/containers/ScreenContainer";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
+import ErrorMessage from "../layout/components/ErrorMessage";
+import SuccessMessage from "../layout/components/SuccessMessage";
 
 function InitialSelectionView({ navigation }: NavigationProps) {
   const { t } = useTranslation();
@@ -107,6 +109,22 @@ function InitialSelectionView({ navigation }: NavigationProps) {
   const { styles, theme } = ApplyStyles();
   const safeAreaStyle = GetNativeSafeArea(theme);
 
+  const stylesLocal = StyleSheet.create({
+    screenContent: {
+      gap: hp("15%"),
+      paddingHorizontal: wp("7%"),
+    },
+    mainLoginContainer: {
+      marginBottom: hp("3%"),
+      alignItems: "center",
+      gap: hp("2%"),
+    },
+    alternateLoginContainer: {
+      alignItems: "center",
+      gap: hp("2%"),
+    },
+  });
+
   return (
     <ScreenContainer header={<FormHeader />} safeAreaStyle={safeAreaStyle}>
       {stepNr === 1 && (
@@ -155,21 +173,5 @@ function InitialSelectionView({ navigation }: NavigationProps) {
     </ScreenContainer>
   );
 }
-
-const stylesLocal = StyleSheet.create({
-  screenContent: {
-    gap: hp("15%"),
-    paddingHorizontal: wp("7%"),
-  },
-  mainLoginContainer: {
-    marginBottom: hp("3%"),
-    alignItems: "center",
-    gap: hp("2%"),
-  },
-  alternateLoginContainer: {
-    alignItems: "center",
-    gap: hp("2%"),
-  },
-});
 
 export default InitialSelectionView;

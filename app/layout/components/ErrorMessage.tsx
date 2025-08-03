@@ -4,6 +4,7 @@ import Icon from "./Icon";
 import { IconContent } from "./Icons";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
 import { OverallUiStyles } from "../styles/Styles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 interface ErrorMessageProperties {
   text: string | null;
@@ -19,7 +20,7 @@ const ErrorMessage: React.FC<ErrorMessageProperties> = ({ text }) => {
       alignItems: "center",
       backgroundColor: styles["alert-card-bg-color"],
       padding: 10,
-      width: "100%",
+      width: wp("85%"),
       borderRadius: styles["message-card-border-radius"],
       borderColor: styles["alert-card-border-color"],
       borderWidth: styles["message-card-border-thickness"],
@@ -29,7 +30,6 @@ const ErrorMessage: React.FC<ErrorMessageProperties> = ({ text }) => {
     },
     content: {
       width: "85%",
-      fontWeight: "bold",
       textAlign: "center",
       fontSize: styles["message-card-font-size"],
       color: styles["alert-font-color"],

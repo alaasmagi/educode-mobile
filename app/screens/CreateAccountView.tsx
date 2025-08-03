@@ -116,6 +116,42 @@ function CreateAccountView({ navigation }: NavigationProps) {
       showTemporaryError(t(String(status)));
     }
   }, [uniId, studentCode, fullName, password, navigation, t, showTemporaryError]);
+
+  const styles = StyleSheet.create({
+    headerContainer: {
+      flex: 1.2,
+      justifyContent: "flex-end",
+      gap: hp("4%"),
+    },
+    textBoxContainer: {
+      flex: 1.5,
+      gap: hp("2%"),
+      justifyContent: "center",
+    },
+    data: {
+      alignSelf: "center",
+      width: wp("90%"),
+      borderWidth: 2,
+      borderColor: theme["lightgray-gray"],
+      borderRadius: 20,
+      gap: hp("0.2%"),
+      padding: 10,
+    },
+    textBoxes: {
+      gap: hp("1%"),
+      alignItems: "center",
+    },
+    errorContainer: {
+      marginTop: hp("2%"),
+    },
+    buttonContainer: {
+      flex: 1.5,
+      gap: hp("1%"),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
   const renderStep = () => {
     const sharedMessage = !isKeyboardVisible && (normalMessage || errorMessage);
     const messageComponent = errorMessage ? (
@@ -285,40 +321,5 @@ function CreateAccountView({ navigation }: NavigationProps) {
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1.2,
-    justifyContent: "flex-end",
-    gap: hp("4%"),
-  },
-  textBoxContainer: {
-    flex: 1.5,
-    gap: hp("2%"),
-    justifyContent: "center",
-  },
-  data: {
-    alignSelf: "center",
-    width: wp("90%"),
-    borderWidth: 2,
-    borderColor: "#BCBCBD",
-    borderRadius: 20,
-    gap: hp("0.2%"),
-    padding: 10,
-  },
-  textBoxes: {
-    gap: hp("1%"),
-    alignItems: "center",
-  },
-  errorContainer: {
-    marginTop: hp("2%"),
-  },
-  buttonContainer: {
-    flex: 1.5,
-    gap: hp("1%"),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default CreateAccountView;

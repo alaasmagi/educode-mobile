@@ -4,6 +4,7 @@ import Icon from "./Icon";
 import { IconContent } from "./Icons";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme"; 
 import { OverallUiStyles } from "../styles/Styles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 interface NormalMessageProperties {
   text: string | null;
@@ -19,7 +20,7 @@ const NormalMessage: React.FC<NormalMessageProperties> = ({ text }) => {
       alignItems: "center",
       backgroundColor: styles["info-card-bg-color"],
       padding: 10,
-      width: "100%",
+      width: wp("85%"),
       borderRadius: styles["message-card-border-radius"],
       borderColor: styles["info-card-border-color"],
       borderWidth: styles["message-card-border-thickness"],

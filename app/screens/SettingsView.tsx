@@ -31,6 +31,9 @@ import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
 import { useFocusEffect } from "@react-navigation/native";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
+import TripleSwitch from "../layout/components/TripleSwitch";
+import Icon from "../layout/components/Icon";
+import { IconContent } from "../layout/components/Icons";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -44,7 +47,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const isKeyboardVisible = KeyboardVisibilityHandler();
 
-  // THEME
   const { theme } = ApplyStyles();
   const safeAreaStyle = GetNativeSafeArea(theme);
 
@@ -112,6 +114,39 @@ function SettingsView({ navigation, route }: NavigationProps) {
 
   BackButtonHandler(navigation);
 
+  const styles = StyleSheet.create({
+    headerContainer: {
+      flex: 1,
+      justifyContent: "center",
+    },
+    firstOptionContainer: {
+      flex: 1.5,
+      width: wp("90%"),
+      gap: hp("2%"),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    themeSwitcherContainer: {
+      flex: 0.5,
+    },
+    messageContainer: {
+      flex: 0.2,
+    },
+    deleteAccount: {
+      flex: 1.5,
+      width: wp("90%"),
+      justifyContent: "center",
+      alignItems: "center",
+      gap: hp("2%"),
+    },
+    lowButtonContainer: {
+      flex: 1.5,
+      gap: hp("2%"),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -121,6 +156,22 @@ function SettingsView({ navigation, route }: NavigationProps) {
       <SafeAreaView style={safeAreaStyle}>
         <View style={styles.headerContainer}>
           <NormalHeader navigation={navigation} route={route} />
+        </View>
+        <View style={styles.themeSwitcherContainer}>
+          <TripleSwitch
+            textLeft="Light"
+            iconLeft={IconContent["lightmode-icon"]}
+            onPressLeft={() => {}}
+            isLeftSelected={false}
+            textMiddle="System"
+            iconMiddle={IconContent["device-icon"]}
+            onPressMiddle={() => {}}
+            isMidSelected={false}
+            textRight="Dark"
+            iconRight={IconContent["darkmode-icon"]}
+            onPressRight={() => {}}
+            isRightSelected={true}
+          />
         </View>
         {!isOfflineOnly && (
           <View style={styles.firstOptionContainer}>
@@ -182,35 +233,5 @@ function SettingsView({ navigation, route }: NavigationProps) {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  firstOptionContainer: {
-    flex: 1.5,
-    width: wp("90%"),
-    gap: hp("2%"),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  messageContainer: {
-    flex: 1,
-  },
-  deleteAccount: {
-    flex: 1.5,
-    width: wp("90%"),
-    justifyContent: "center",
-    alignItems: "center",
-    gap: hp("2%"),
-  },
-  lowButtonContainer: {
-    flex: 1.5,
-    gap: hp("2%"),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default SettingsView;

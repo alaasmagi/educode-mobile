@@ -26,33 +26,33 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
   const sheet = StyleSheet.create({
     container: {
       flexDirection: "row",
-      backgroundColor: styles["mode-toggle-bg-color"],
-      borderRadius: styles["mode-toggle-border-radius"],
+      backgroundColor: styles["dual-switch-bg-color"],
+      borderRadius: styles["dual-switch-border-radius"],
       padding: 2,
     },
     containerDisabled: {
       flexDirection: "row",
-      backgroundColor: styles["mode-toggle-bg-color"],
-      borderRadius: styles["mode-toggle-border-radius"],
+      backgroundColor: styles["dual-switch-bg-color"],
+      borderRadius: styles["dual-switch-border-radius"],
       padding: 2,
       opacity: 0.5,
     },
     option: {
       flex: 1,
       paddingVertical: hp("2%"),
-      borderRadius: styles["mode-toggle-option-border-radius"],
+      borderRadius: styles["dual-switch-option-border-radius"],
       alignItems: "center",
       justifyContent: "center",
     },
     selected: {
-      backgroundColor: styles["mode-toggle-selected-bg-color"],
-      borderWidth: styles["mode-toggle-selected-border-thickness"],
-      borderColor: styles["mode-toggle-selected-border-color"],
+      backgroundColor: styles["dual-switch-selected-bg-color"],
+      borderWidth: styles["dual-switch-selected-border-thickness"],
+      borderColor: styles["dual-switch-selected-border-color"],
     },
     text: {
       textAlign: "center",
-      color: styles["mode-toggle-font-color"],
-      fontSize: styles["mode-toggle-font-size"],
+      color: styles["dual-switch-font-color"],
+      fontSize: styles["dual-switch-font-size"],
       fontFamily: OverallUiStyles["default-heading-font-family"]
     },
   });

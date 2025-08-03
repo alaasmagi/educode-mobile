@@ -4,6 +4,8 @@ import { IconContent } from "./Icons";
 import Icon from "./Icon";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme"; 
 import { OverallUiStyles } from "../styles/Styles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+
 
 interface SuccessMessageProperties {
   text: string | null;
@@ -14,7 +16,7 @@ const SuccessMessage: React.FC<SuccessMessageProperties> = ({ text }) => {
 
   const sheet = StyleSheet.create({
     container: {
-      width: "100%",
+      width: wp("85%"),
       flexDirection: "row",
       alignSelf: "center",
       alignItems: "center",
@@ -29,7 +31,6 @@ const SuccessMessage: React.FC<SuccessMessageProperties> = ({ text }) => {
     },
     content: {
       width: "85%",
-      fontWeight: "bold",
       textAlign: "center",
       color: styles["success-font-color"],
       fontSize: styles["message-card-font-size"],

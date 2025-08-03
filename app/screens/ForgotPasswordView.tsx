@@ -103,6 +103,33 @@ function ForgotPasswordView({ navigation, route }: NavigationProps) {
     setErrorMessage(t(message));
     setTimeout(() => setErrorMessage(null), 2000);
   };
+
+  const styles = StyleSheet.create({
+    headerContainer: {
+      flex: 1,
+      justifyContent: "flex-end",
+      gap: hp("4%"),
+    },
+    textBoxContainer: {
+      flex: 1.5,
+      gap: hp("2%"),
+      justifyContent: "center",
+    },
+    textBoxes: {
+      gap: hp("1%"),
+      alignItems: "center",
+    },
+    errorContainer: {
+      marginTop: hp("2%"),
+    },
+    buttonContainer: {
+      flex: 2,
+      gap: hp("1%"),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
