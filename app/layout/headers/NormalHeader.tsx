@@ -4,11 +4,11 @@ import LanguageSwitch from "../components/LanguageSwitch";
 import SettingsButton from "../components/SettingsButton";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
-import { EAppTheme } from "../../models/EAppTheme";
+import { LightTheme } from "../styles/ThemeStyles";
 
 function NormalHeader({ navigation, route }) {
   const { localData } = route.params;
-  const { appTheme } = ApplyStyles();
+  const { theme, appTheme } = ApplyStyles();
 
   return (
     <View style={styles.structure}>
@@ -16,7 +16,7 @@ function NormalHeader({ navigation, route }) {
         style={styles.logo}
         resizeMode="contain"
         source={
-          appTheme === EAppTheme.Light
+          theme["black-white"] === LightTheme["black-white"]
             ? require("../../assets/app-logos/logo-light.png")
             : require("../../assets/app-logos/logo-dark.png")
         }

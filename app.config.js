@@ -4,7 +4,7 @@ export default {
     slug: "educode-mobile",
     version: "1.0.0",
     orientation: "portrait",
-    userInterfaceStyle: "dark",
+    userInterfaceStyle: "automatic",
     newArchEnabled: true,
     assetBundlePatterns: ["./app/assets/fonts/*"],
     splash: {

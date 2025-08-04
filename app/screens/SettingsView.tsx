@@ -29,7 +29,7 @@ import KeyboardVisibilityHandler from "../businesslogic/hooks/KeyboardVisibility
 import BackButtonHandler from "../businesslogic/hooks/BackButtonHandler";
 import NormalHeader from "../layout/headers/NormalHeader";
 import { RegexFilters } from "../businesslogic/helpers/RegexFilters";
-import { useFocusEffect } from "@react-navigation/native";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 import TripleSwitch from "../layout/components/TripleSwitch";
@@ -57,8 +57,8 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const safeAreaStyle = GetNativeSafeArea(theme);
 
   useEffect(() => {
-  setSelectedTheme(appTheme);
-}, [appTheme]);
+    setSelectedTheme(appTheme);
+  }, [appTheme]);
 
   useEffect(() => {
     if (!localData.uniId) {
@@ -125,9 +125,14 @@ function SettingsView({ navigation, route }: NavigationProps) {
   BackButtonHandler(navigation);
 
   const handleThemeSelection = async (selectedTheme: EAppTheme) => {
-    Alert.alert(t("restart-needed"), t("theme-restart-message"));
     await SaveCurrentTheme(selectedTheme);
     setSelectedTheme(selectedTheme);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "SettingsView", params: { localData } }],
+      })
+    );
   };
 
   const styles = StyleSheet.create({

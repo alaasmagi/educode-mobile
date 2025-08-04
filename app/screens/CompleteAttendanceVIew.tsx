@@ -149,6 +149,7 @@ function CompleteAttendanceView({ navigation, route }: NavigationProps) {
             textRight={t("online-mode")}
             iconRight={IconContent["online-icon"]}
             isLeftSelected={isModeToggleInLeftPos}
+            isRightSelected={!isModeToggleInLeftPos}
             onPressLeft={() => {
               setIsOnline(false);
               setIsModeToggleInLeftPos(true);

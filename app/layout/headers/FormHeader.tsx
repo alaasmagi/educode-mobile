@@ -3,10 +3,10 @@ import { Image, StyleSheet, View } from "react-native";
 import LanguageSwitch from "../components/LanguageSwitch";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { ApplyStyles } from "../../businesslogic/hooks/SelectAppTheme";
-import { EAppTheme } from "../../models/EAppTheme";
+import { LightTheme } from "../styles/ThemeStyles";
 
 const FormHeader = () => {
-  const { appTheme } = ApplyStyles();
+  const { theme, appTheme } = ApplyStyles();
 
   return (
     <View style={styles.structure}>
@@ -14,7 +14,7 @@ const FormHeader = () => {
         style={styles.logo}
         resizeMode="contain"
         source={
-          appTheme === EAppTheme.Light
+          theme["black-white"] === LightTheme["black-white"]
             ? require("../../assets/app-logos/logo-light.png")
             : require("../../assets/app-logos/logo-dark.png")
         }

@@ -13,6 +13,7 @@ interface DualSwitchProperties {
   onPressLeft: () => void;
   onPressRight: () => void;
   isLeftSelected: boolean;
+  isRightSelected: boolean;
   isDisabled?: boolean;
 }
 
@@ -24,6 +25,7 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
   onPressLeft,
   onPressRight,
   isLeftSelected,
+  isRightSelected,
   isDisabled = false,
 }) => {
   const { styles } = ApplyStyles();
@@ -79,7 +81,7 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
         <Text style={sheet.text}>{textLeft}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[sheet.option, !isLeftSelected && sheet.selected]}
+        style={[sheet.option, isRightSelected && sheet.selected]}
         disabled={isDisabled}
         onPress={() => onPressRight()}
       >
