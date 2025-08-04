@@ -112,5 +112,9 @@
   "format": "formatas:",
   "confirmation": "Patvirtinimas",
   "delete-my-data": "Ištrinti mano vartotojo duomenis",
-  "attendance-check-add-fail": "Nepavyko pridėti studento į pamoką"
+  "attendance-check-add-fail": "Nepavyko pridėti studento į pamoką",
+
+  "light-theme": "Šviesi",
+  "system-theme": "Automatinė",
+  "dark-theme": "Tamsi"
 }

@@ -112,5 +112,9 @@
   "format": "muoto:",
   "confirmation": "Vahvistus",
   "delete-my-data": "Poista käyttäjätietoni",
-  "attendance-check-add-fail": "Opiskelijan lisääminen oppitunnille epäonnistui"
+  "attendance-check-add-fail": "Opiskelijan lisääminen oppitunnille epäonnistui",
+
+  "light-theme": "Vaalea",
+  "system-theme": "Automaattinen",
+  "dark-theme": "Tumma"
 }

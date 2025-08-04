@@ -112,5 +112,9 @@
   "format": "формат:",
   "confirmation": "Підтвердження",
   "delete-my-data": "Видалити мої дані користувача",
-  "attendance-check-add-fail": "Не вдалося додати студента до заняття"
+  "attendance-check-add-fail": "Не вдалося додати студента до заняття",
+
+  "light-theme": "Світла",
+  "system-theme": "Автоматична",
+  "dark-theme": "Темна"
 }

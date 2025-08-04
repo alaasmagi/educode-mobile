@@ -112,5 +112,9 @@
   "format": "Format:",
   "confirmation": "Bestätigung",
   "delete-my-data": "Meine Benutzerdaten löschen",
-  "attendance-check-add-fail": "Das Hinzufügen des Studenten zum Kurs ist fehlgeschlagen"
+  "attendance-check-add-fail": "Das Hinzufügen des Studenten zum Kurs ist fehlgeschlagen",
+
+  "light-theme": "Hell",
+  "system-theme": "Automatisch",
+  "dark-theme": "Dunkel"
 }

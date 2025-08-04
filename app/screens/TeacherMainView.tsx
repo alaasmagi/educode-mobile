@@ -30,6 +30,7 @@ import DataText from "../layout/components/DataText";
 import { ApplyStyles } from "../businesslogic/hooks/SelectAppTheme";
 import { GetNativeSafeArea } from "../layout/styles/NativeStyles";
 import { EQrStatus } from "../models/EQrStatus";
+import { IconContent } from "../layout/components/Icons";
 
 function TeacherMainView({ navigation, route }) {
   const { localData } = route.params;
@@ -207,8 +208,11 @@ function TeacherMainView({ navigation, route }) {
             <View style={styles.onlineToggleContainer}>
               <DualSwitch
                 textLeft={t("scan-student")}
+                iconLeft={IconContent["qr-scan-icon"]}
                 textRight={t("add-manually")}
+                iconRight={IconContent["passcode-icon"]}
                 isLeftSelected={isModeToggleInLeftPos}
+                isRightSelected={!isModeToggleInLeftPos}
                 onPressLeft={() => {
                   setQrScanView(true);
                   setIsModeToggleInLeftPos(true);

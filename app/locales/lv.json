@@ -112,5 +112,9 @@
   "format": "formāts:",
   "confirmation": "Apstiprinājums",
   "delete-my-data": "Dzēst manus datus",
-  "attendance-check-add-fail": "Studenta pievienošana nodarbībai neizdevās"
+  "attendance-check-add-fail": "Studenta pievienošana nodarbībai neizdevās",
+
+  "light-theme": "Gaišā",
+  "system-theme": "Automātiskā",
+  "dark-theme": "Tumšā"
 }

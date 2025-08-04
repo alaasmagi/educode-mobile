@@ -180,21 +180,21 @@ function SettingsView({ navigation, route }: NavigationProps) {
         </View>
         <View style={styles.themeSwitcherContainer}>
           <TripleSwitch
-            textLeft="Light"
+            textLeft={t("light-theme")}
             iconLeft={IconContent["lightmode-icon"]}
             onPressLeft={() => {
               setSelectedTheme(EAppTheme.Light);
               handleThemeSelection(EAppTheme.Light);
             }}
             isLeftSelected={selectedTheme === EAppTheme.Light}
-            textMiddle="System"
+            textMiddle={t("system-theme")}
             iconMiddle={IconContent["device-icon"]}
             onPressMiddle={() => {
               setSelectedTheme(EAppTheme.System);
               handleThemeSelection(EAppTheme.System);
             }}
             isMidSelected={selectedTheme === EAppTheme.System}
-            textRight="Dark"
+            textRight={t("dark-theme")}
             iconRight={IconContent["darkmode-icon"]}
             onPressRight={() => {
               setSelectedTheme(EAppTheme.Dark);

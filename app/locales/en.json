@@ -115,5 +115,9 @@
   "format": "format:",
   "confirmation": "Confirmation",
   "delete-my-data": "Delete my user data",
-  "attendance-check-add-fail": "Student could not be added to attendance"
+  "attendance-check-add-fail": "Student could not be added to attendance",
+
+  "light-theme": "Light",
+  "system-theme": "Automatic",
+  "dark-theme": "Dark"
 }
