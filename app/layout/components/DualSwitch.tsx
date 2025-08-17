@@ -35,7 +35,6 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
       flexDirection: "row",
       backgroundColor: styles["dual-switch-bg-color"],
       borderRadius: styles["dual-switch-border-radius"],
-      padding: 2,
     },
     containerDisabled: {
       flexDirection: "row",
@@ -47,7 +46,7 @@ const DualSwitch: React.FC<DualSwitchProperties> = ({
     option: {
       flex: 1,
       gap: 5,
-      paddingVertical: hp("2%"),
+      paddingVertical: hp("1%"),
       borderRadius: styles["dual-switch-option-border-radius"],
       alignItems: "center",
       justifyContent: "center",

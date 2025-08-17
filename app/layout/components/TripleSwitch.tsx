@@ -44,7 +44,6 @@ const TripleSwitch: React.FC<TripleSwitchProperties> = ({
       flexDirection: "row",
       backgroundColor: styles["triple-switch-bg-color"],
       borderRadius: styles["triple-switch-border-radius"],
-      padding: 2,
     },
     containerDisabled: {
       flexDirection: "row",
@@ -56,7 +55,7 @@ const TripleSwitch: React.FC<TripleSwitchProperties> = ({
     option: {
       flex: 1,
       gap: 5,
-      paddingVertical: hp("2%"),
+      paddingVertical: hp("1%"),
       borderRadius: styles["triple-switch-option-border-radius"],
       alignItems: "center",
       justifyContent: "center",

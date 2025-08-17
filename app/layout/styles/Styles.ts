@@ -17,7 +17,7 @@ export function Styles(theme: AppTheme) {
     "normal-button-font-color": theme["default-white"],
 
     "textbox-border-thickness": 1,
-    "textbox-border-color": theme["blue-black"],
+    "textbox-border-color": theme["white-black"],
     "textbox-font-color": theme["white-black"],
     "textbox-font-size": 20,
     "textbox-active-border-color": theme["default-blue"],

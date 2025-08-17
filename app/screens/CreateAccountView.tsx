@@ -141,8 +141,8 @@ function CreateAccountView({ navigation }: NavigationProps) {
       gap: hp("1%"),
       alignItems: "center",
     },
-    errorContainer: {
-      marginTop: hp("2%"),
+    messageContainer: {
+      marginVertical: hp("2%"),
     },
     buttonContainer: {
       flex: 1.5,
@@ -174,7 +174,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   autoCapitalize="words"
                 />
               </View>
-              {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
+              <View style={styles.messageContainer}>{sharedMessage && messageComponent}</View>
             </View>
             <View style={styles.buttonContainer}>
               <NormalButton
@@ -208,7 +208,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   onChangeText={(text) => setStudentCode(text.trim())}
                 />
               </View>
-              {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
+              <View style={styles.messageContainer}>{sharedMessage && messageComponent}</View>
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(1)} />
@@ -230,14 +230,14 @@ function CreateAccountView({ navigation }: NavigationProps) {
               />
               <View style={styles.textBoxes}>
                 <TextBox
-                  iconName="pincode-icon"
+                  iconName="passcode-icon"
                   label={t("one-time-key")}
                   value={emailCode}
                   placeHolder={t("for-example-abbr") + " 123456"}
                   onChangeText={(text) => setEmailCode(text.trim())}
                 />
               </View>
-              {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
+              <View style={styles.messageContainer}>{sharedMessage && messageComponent}</View>
             </View>
             <View style={styles.buttonContainer}>
               {!isKeyboardVisible && <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(2)} />}
@@ -269,7 +269,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                   onChangeText={setPasswordAgain}
                 />
               </View>
-              {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
+              <View style={styles.messageContainer}>{sharedMessage && messageComponent}</View>
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(3)} />
@@ -292,7 +292,7 @@ function CreateAccountView({ navigation }: NavigationProps) {
                 <DataText label={"Uni-ID"} text={uniId} />
                 <DataText label={t("student-code")} text={studentCode.toUpperCase()} />
               </View>
-              {sharedMessage && <View style={styles.errorContainer}>{messageComponent}</View>}
+              <View style={styles.messageContainer}>{sharedMessage && messageComponent}</View>
             </View>
             <View style={styles.buttonContainer}>
               <NormalLink text={t("something-wrong-back")} onPress={() => setStepNr(4)} />

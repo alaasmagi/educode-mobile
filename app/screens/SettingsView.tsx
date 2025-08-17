@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import NavigationProps from "../../types";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Alert,
-  BackHandler,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, Alert, BackHandler, Keyboard } from "react-native";
 import { useTranslation } from "react-i18next";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import SeparatorLine from "../layout/components/SeparatorLine";
@@ -36,6 +27,7 @@ import TripleSwitch from "../layout/components/TripleSwitch";
 import { IconContent } from "../layout/components/Icons";
 import { EAppTheme } from "../models/EAppTheme";
 import NormalMessage from "../layout/components/NormalMessage";
+import { ScreenContainer } from "../layout/containers/ScreenContainer";
 
 function SettingsView({ navigation, route }: NavigationProps) {
   const { t } = useTranslation();
@@ -44,15 +36,12 @@ function SettingsView({ navigation, route }: NavigationProps) {
   const [isOfflineOnly, setIsOfflineOnly] = useState(false);
   const [confirmationText, setConfirmationText] = useState<string | null>(null);
   const [newStudentCode, setNewStudentCode] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>("null");
+  const [successMessage, setSuccessMessage] = useState<string | null>();
   const [normalMessage, setNormalMessage] = useState<string | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-
   const isKeyboardVisible = KeyboardVisibilityHandler();
-
   const { theme, appTheme } = ApplyStyles();
-
   const [selectedTheme, setSelectedTheme] = useState<EAppTheme>(appTheme);
   const safeAreaStyle = GetNativeSafeArea(theme);
 
@@ -88,7 +77,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
     navigation.navigate(localData.userType === "Student" ? "StudentMainView" : "TeacherMainView", { localData });
   };
   const isStudentCodeValid = () => RegexFilters.studentCode.test(newStudentCode);
-
   const handleDelete = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -103,14 +91,12 @@ function SettingsView({ navigation, route }: NavigationProps) {
       setTimeout(() => setErrorMessage(null), 2000);
     }
   };
-
   const handleLogout = async () => {
     setIsButtonDisabled(true);
     await DeleteOfflineUserData();
     setIsButtonDisabled(false);
     navigation.navigate("InitialSelectionView");
   };
-
   const handleStudentCodeChange = async () => {
     Keyboard.dismiss();
     setIsButtonDisabled(true);
@@ -121,7 +107,6 @@ function SettingsView({ navigation, route }: NavigationProps) {
     setSuccessMessage(t("studentcode-change-success"));
     setTimeout(() => setSuccessMessage(null), 2000);
   };
-
   BackButtonHandler(navigation);
 
   const handleThemeSelection = async (selectedTheme: EAppTheme) => {
@@ -136,133 +121,133 @@ function SettingsView({ navigation, route }: NavigationProps) {
   };
 
   const styles = StyleSheet.create({
-    headerContainer: {
-      flex: 1,
-      justifyContent: "center",
-    },
     firstOptionContainer: {
-      flex: 1.5,
       width: wp("90%"),
       gap: hp("2%"),
       justifyContent: "center",
       alignItems: "center",
+      alignSelf: "center",
+
     },
     themeSwitcherContainer: {
-      flex: 0.5,
-    },
-    messageContainer: {
-      flex: 0.2,
-    },
-    deleteAccount: {
-      flex: 1.5,
-      width: wp("90%"),
       justifyContent: "center",
       alignItems: "center",
-      gap: hp("2%"),
+      alignSelf: "center",
+      width: wp("90%"),
+      marginVertical: hp("2%"),
+    },
+    messageContainer: {
+      alignItems: "center",
+      marginTop: hp("11.5%"),
+      minHeight:hp("6%"),
+      marginVertical: hp("0.5%")
+    },
+    deleteAccount: {
+      width: wp("90%"),
+      marginVertical:hp("2%"),
+      justifyContent: "center",
+      alignItems: "center",
+      gap: hp("1%"),
+      alignSelf: "center",
     },
     lowButtonContainer: {
-      flex: 1.5,
-      gap: hp("2%"),
+      gap: hp("1%"),
       justifyContent: "center",
       alignItems: "center",
     },
   });
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : -hp("9%")}
+    <ScreenContainer
+      header={<NormalHeader navigation={navigation} route={route} />}
+      scroll
+      dismissKeyboardOnPress
+      safeAreaStyle={safeAreaStyle}
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
     >
-      <SafeAreaView style={safeAreaStyle}>
-        <View style={styles.headerContainer}>
-          <NormalHeader navigation={navigation} route={route} />
+      {!isKeyboardVisible && (<View style={styles.themeSwitcherContainer}>
+        <TripleSwitch
+          textLeft={t("light-theme")}
+          iconLeft={IconContent["lightmode-icon"]}
+          onPressLeft={() => {
+            setSelectedTheme(EAppTheme.Light);
+            handleThemeSelection(EAppTheme.Light);
+          }}
+          isLeftSelected={selectedTheme === EAppTheme.Light}
+          textMiddle={t("system-theme")}
+          iconMiddle={IconContent["device-icon"]}
+          onPressMiddle={() => {
+            setSelectedTheme(EAppTheme.System);
+            handleThemeSelection(EAppTheme.System);
+          }}
+          isMidSelected={selectedTheme === EAppTheme.System}
+          textRight={t("dark-theme")}
+          iconRight={IconContent["darkmode-icon"]}
+          onPressRight={() => {
+            setSelectedTheme(EAppTheme.Dark);
+            handleThemeSelection(EAppTheme.Dark);
+          }}
+          isRightSelected={selectedTheme === EAppTheme.Dark}
+        />
+      </View>)}
+      {!isOfflineOnly && (
+        <View style={styles.firstOptionContainer}>
+          {!isKeyboardVisible && (
+            <NormalButton
+              text={t("change-password")}
+              onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
+              disabled={isButtonDisabled}
+            />
+          )}
         </View>
-        <View style={styles.themeSwitcherContainer}>
-          <TripleSwitch
-            textLeft={t("light-theme")}
-            iconLeft={IconContent["lightmode-icon"]}
-            onPressLeft={() => {
-              setSelectedTheme(EAppTheme.Light);
-              handleThemeSelection(EAppTheme.Light);
-            }}
-            isLeftSelected={selectedTheme === EAppTheme.Light}
-            textMiddle={t("system-theme")}
-            iconMiddle={IconContent["device-icon"]}
-            onPressMiddle={() => {
-              setSelectedTheme(EAppTheme.System);
-              handleThemeSelection(EAppTheme.System);
-            }}
-            isMidSelected={selectedTheme === EAppTheme.System}
-            textRight={t("dark-theme")}
-            iconRight={IconContent["darkmode-icon"]}
-            onPressRight={() => {
-              setSelectedTheme(EAppTheme.Dark);
-              handleThemeSelection(EAppTheme.Dark);
-            }}
-            isRightSelected={selectedTheme === EAppTheme.Dark}
+      )}
+      {!isKeyboardVisible && (<View style={styles.messageContainer}>
+        {errorMessage && <ErrorMessage text={errorMessage} />}
+        {normalMessage && <NormalMessage text={normalMessage} />}
+        {successMessage && <SuccessMessage text={successMessage} />}
+      </View>)}
+      {isOfflineOnly ? (
+        <View style={styles.firstOptionContainer}>
+          <SeparatorLine text={t("offline-mode-settings")} />
+          <TextBox
+            iconName="person-icon"
+            value={newStudentCode}
+            onChangeText={(text) => setNewStudentCode(text.trim())}
+            label={t("student-code")}
+            autoCapitalize="characters"
+          />
+          <NormalButton
+            text={t("save-account-changes")}
+            onPress={handleStudentCodeChange}
+            disabled={!isStudentCodeValid() || isButtonDisabled}
           />
         </View>
-        {!isOfflineOnly && (
-          <View style={styles.firstOptionContainer}>
-            {!isKeyboardVisible && (
-              <NormalButton
-                text={t("change-password")}
-                onPress={() => navigation.navigate("ForgotPasswordView", { isNormalPassChange: true, localData })}
-                disabled={isButtonDisabled}
-              />
-            )}
-          </View>
-        )}
-        <View style={styles.messageContainer}>
-          {errorMessage && <ErrorMessage text={errorMessage} />}
-          {normalMessage && <NormalMessage text={normalMessage} />}
-          {successMessage && <SuccessMessage text={successMessage} />}
+      ) : (
+        <View style={styles.deleteAccount}>
+          <SeparatorLine text={t("delete-account")} />
+          <TextBox
+            iconName="passcode-icon"
+            value={confirmationText ?? ""}
+            onChangeText={setConfirmationText}
+            label={t("confirmation")}
+            placeHolder={t("type-delete")}
+          />
+          <NormalButton
+            text={t("delete-account")}
+            disabled={confirmationText !== "DELETE" || isButtonDisabled}
+            onPress={handleDelete}
+          />
         </View>
-        {isOfflineOnly ? (
-          <View style={styles.firstOptionContainer}>
-            <SeparatorLine text={t("offline-mode-settings")} />
-            <TextBox
-              iconName="person-icon"
-              value={newStudentCode}
-              onChangeText={(text) => setNewStudentCode(text.trim())}
-              label={t("student-code")}
-              autoCapitalize="characters"
-            />
-            <NormalButton
-              text={t("save-account-changes")}
-              onPress={handleStudentCodeChange}
-              disabled={!isStudentCodeValid() || isButtonDisabled}
-            />
-          </View>
-        ) : (
-          <View style={styles.deleteAccount}>
-            <SeparatorLine text={t("delete-account")} />
-            <TextBox
-              iconName="passcode-icon"
-              value={confirmationText ?? ""}
-              onChangeText={setConfirmationText}
-              label={t("confirmation")}
-              placeHolder={t("type-delete")}
-            />
-            <NormalButton
-              text={t("delete-account")}
-              disabled={confirmationText !== "DELETE" || isButtonDisabled}
-              onPress={handleDelete}
-            />
-          </View>
+      )}
+      <View style={styles.lowButtonContainer}>
+        {!isKeyboardVisible && (
+          <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />
         )}
-        <View style={styles.lowButtonContainer}>
-          {!isKeyboardVisible && (
-            <NormalButton text={t("back-to-home")} onPress={handleBackToHome} disabled={isButtonDisabled} />
-          )}
-          {!isKeyboardVisible && (
-            <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
-          )}
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        {!isKeyboardVisible && (
+          <NormalLink text={!isOfflineOnly ? t("log-out") : t("delete-my-data")} onPress={handleLogout} />
+        )}
+      </View>
+    </ScreenContainer>
   );
 }
-
 export default SettingsView;

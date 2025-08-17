@@ -96,15 +96,17 @@ function LoginView({ navigation, route }: NavigationProps) {
     },
     textBoxes: {
       alignItems: "center",
-      gap: hp("3%"),
+      gap: hp("2%"),
     },
     forgotPasswordContainer: {
       flexDirection: "row",
       justifyContent: "flex-end",
       width: wp("85%"),
     },
-    errorContainer: {
-      marginTop: 10,
+    messageContainer: {
+      alignItems: "center",
+      minHeight: hp("6%"),
+      marginVertical: hp("0.5%"),
     },
     buttonContainer: {
       justifyContent: "center",
@@ -134,10 +136,10 @@ function LoginView({ navigation, route }: NavigationProps) {
         <View style={styles.forgotPasswordContainer}>
           <NormalLink text={t("forgot-password")} onPress={() => navigation.navigate("ForgotPasswordView")} />
         </View>
-        <View style={styles.errorContainer}>
+        {!isKeyboardVisible && (<View style={styles.messageContainer}>
           {!isKeyboardVisible && errorMessage && <ErrorMessage text={errorMessage} />}
           {!isKeyboardVisible && successMessage && <SuccessMessage text={successMessage} />}
-        </View>
+        </View>)}
       </View>
       <View style={styles.buttonContainer}>
         <NormalButton text={t("log-in")} onPress={handleLogin} disabled={!isFormValid || isButtonDisabled} />

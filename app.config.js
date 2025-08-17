@@ -53,7 +53,7 @@ export default {
           backgroundColor: "#E8EEF1",
           image: "./app/assets/app-icons/splash/splash-light.png",
           dark: {
-            backgroundColor: "#000000",
+            backgroundColor: "#343434",
             image: "./app/assets/app-icons/splash/splash-dark.png",
           },
           imageWidth: 200,
